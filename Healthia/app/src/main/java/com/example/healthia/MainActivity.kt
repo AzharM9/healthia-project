@@ -16,14 +16,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sectionPagerAdapter = SectionPagerAdapter(this, supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.viewPager)
-        viewPager.adapter = sectionPagerAdapter
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
-
-        supportActionBar?.elevation = 0f
-
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)

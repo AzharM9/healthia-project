@@ -6,14 +6,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class SectionPagerAdapter(private val mContext: Context, fm: FragmentManager) :
+class SectionPagerAdapter(private val mContext: Fragment, fm: FragmentManager) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val TAB_TITLES =
         intArrayOf(R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3)
 
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getItem(position: Int): Fragment {
@@ -21,6 +21,7 @@ class SectionPagerAdapter(private val mContext: Context, fm: FragmentManager) :
         when (position) {
             0 -> fragment = FeedsFragment()
             1 -> fragment = ForumFragment()
+            2 -> fragment = ArticleFragment()
         }
         return fragment as Fragment
     }

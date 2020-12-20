@@ -15,4 +15,6 @@
     <string name="tab_text_1">Feeds</string>
     <string name="tab_text_2">Forums</string>
     <string name="tab_text_3">Articles</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_articles_fragment">This is Article Fragment</string>
 </resources>
