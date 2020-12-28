@@ -1,21 +1,21 @@
 <resources>
     <string name="app_name">Healthia</string>
     <string name="title_home">Home</string>
-    <string name="title_search">Search</string>
-    <string name="hello_search_fragment">This is search Fragment</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="hello_panicBtn_fragment">This is panic button Fragment</string>
-    <string name="title_panicBtn">Panic Button</string>
-    <string name="title_profile">Profile</string>
-    <string name="title_Message">Message</string>
-    <string name="hello_profile_fragment">This is profile Fragment</string>
     <string name="title_timeline">Timeline</string>
+    <string name="title_search">Search</string>
+    <string name="title_panicBtn">Panic Button</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_message">Message</string>
+    <string name="hello_panicBtn_fragment">This is panic button Fragment</string>
+    <string name="hello_profile_fragment">This is profile Fragment</string>
     <string name="hello_timeline_fragment">This is timeline Fragment</string>
     <string name="hello_feed_fragment">This is feeds Fragment</string>
     <string name="hello_forum_fragment">This is forums Fragment</string>
+    <string name="hello_search_fragment">This is search Fragment</string>
+    <string name="hello_notifications_fragment">This is notification Fragment</string>
+    <string name="hello_articles_fragment">This is Article Fragment</string>
     <string name="tab_text_1">Feeds</string>
     <string name="tab_text_2">Forums</string>
     <string name="tab_text_3">Articles</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_articles_fragment">This is Article Fragment</string>
 </resources>

@@ -9,7 +9,11 @@
         android:id="@+id/navigation_timeline"
         android:name="com.example.healthia.TimelineFragment"
         android:label="@string/title_timeline"
-        tools:layout="@layout/fragment_timeline"/>
+        tools:layout="@layout/fragment_timeline">
+        <action
+            android:id="@+id/action_navigation_timeline_to_navigation_message"
+            app:destination="@id/navigation_message" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"
@@ -24,8 +28,24 @@
         tools:layout="@layout/fragment_panic_button"/>
 
     <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.healthia.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications"/>
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.healthia.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile"/>
+
+    <fragment
+        android:id="@+id/navigation_message"
+        android:name="com.example.healthia.MessageFragment"
+        android:label="@string/title_message"
+        tools:layout="@layout/fragment_message">
+        <action
+            android:id="@+id/action_navigation_message_to_navigation_timeline"
+            app:destination="@id/navigation_timeline" />
+    </fragment>
 </navigation>
