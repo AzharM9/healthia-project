@@ -4,20 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager.widget.ViewPager
 import com.example.healthia.database.QueryHelper
-import com.example.healthia.ui.notifications.NotificationsFragment
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
+    //firebase auth
+    var firebaseAuth: FirebaseAuth? = null
     private lateinit var queryHelper: QueryHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +28,20 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
+        //init
+        firebaseAuth = FirebaseAuth.getInstance()
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
                 R.id.navigation_timeline, R.id.navigation_search,
-                R.id.navigation_panicBtn, R.id.navigation_notifications, R.id.navigation_profile))
+                R.id.navigation_panicBtn, R.id.navigation_notifications, R.id.navigation_profile
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -51,7 +57,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.action_logout){
+            firebaseAuth?.signOut()
+            checkUserStatus()
+        }
+
         return item.onNavDestinationSelected(findNavController(R.id.nav_host_fragment))
+    }
+    
+    override fun onStart() {
+        //check on start of app
+        checkUserStatus()
+        super.onStart()
+    }
+
+    private fun checkUserStatus() {
+        //get current user
+        val user = firebaseAuth?.currentUser
+        if (user != null) {
+            //Go to Timeline
+        } else {
+            //user not signed in, go LoginOrRegisterActivity
+            startActivity(Intent(this@MainActivity, LoginOrRegisterActivity::class.java))
+            finish()
+        }
     }
 
     override fun onDestroy() {
