@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:gravity="center_horizontal" />
@@ -28,7 +28,7 @@
         <EditText
             android:id="@+id/emailEt"
             android:inputType="textEmailAddress"
-            android:hint="Email"
+            android:hint="@string/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -46,7 +46,7 @@
         <EditText
             android:id="@+id/passwordEt"
             android:inputType="textPassword"
-            android:hint="Password"
+            android:hint="@string/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -54,7 +54,7 @@
     <!--    Button Register User    -->
     <Button
         android:id="@+id/login_btn"
-        android:text="Login"
+        android:text="@string/login"
         android:layout_below="@id/passwordTIL"
         android:layout_centerHorizontal="true"
         style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
@@ -66,7 +66,7 @@
         android:id="@+id/not_have_accountTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Not have account? Register"
+        android:text="@string/not_have_account_register"
         android:textAlignment="center"
         android:gravity="center_horizontal"
         android:layout_below="@id/login_btn"

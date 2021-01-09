@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        queryHelper = QueryHelper.getInstance(applicationContext)
-        queryHelper.open()
+//        queryHelper = QueryHelper.getInstance(applicationContext)
+//        queryHelper.open()
 
     }
 
@@ -84,8 +84,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        queryHelper.close()
-    }
 }

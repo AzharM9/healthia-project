@@ -7,6 +7,7 @@
     android:padding="20dp"
     tools:context=".RegisterActivity">
 
+<!--    Text view label register-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
         android:textSize="25sp"
         android:gravity="center_horizontal" />
 
-    <!--    EditText Input Email-->
+<!--    EditText Input Email-->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--    EditText: Input Password -->
+<!--    EditText: Input Password -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,23 +51,22 @@
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--    Button Register User    -->
+<!--    Button Register User    -->
     <Button
         android:id="@+id/register_btn"
         android:text="@string/register"
-        android:layout_marginTop="16dp"
         android:layout_below="@id/passwordTIL"
         android:layout_centerHorizontal="true"
         style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!--    TextView go to loginActivity-->
+<!--    TextView go to loginActivity-->
     <TextView
         android:id="@+id/have_accountTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have account? Login"
+        android:text="@string/already_have_account_login"
         android:textAlignment="center"
         android:gravity="center_horizontal"
         android:layout_below="@id/register_btn"
