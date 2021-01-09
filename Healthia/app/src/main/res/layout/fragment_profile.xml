@@ -6,9 +6,16 @@
     android:background="#F1EDED"
     tools:context=".ProfileFragment">
 
+    <include
+        android:id="@+id/progressBar"
+        android:visibility="visible"
+        layout="@layout/progressbar_layout"/>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/profileScrollView"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -80,6 +87,7 @@
 <!--    Floating action button-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
+        android:visibility="gone"
         android:src="@drawable/ic_edit_white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

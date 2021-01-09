@@ -24,6 +24,7 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_profile.*
 import java.util.*
 
 /**
@@ -137,6 +138,10 @@ class ProfileFragment : Fragment() {
                     } catch (e: Exception) {
                         //if there is any exception while getting image the set default
                     }
+
+                    progressBar.visibility = View.GONE
+                    profileScrollView.visibility = View.VISIBLE
+                    fab.visibility = View.VISIBLE
                 }
             }
 
@@ -324,7 +329,7 @@ class ProfileFragment : Fragment() {
 
                 //picking from gallery, first check if storage permission allowed or not
                 if (grantResults.size > 0) {
-                    val writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    val writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                     if (writeStorageAccepted) {
                         //permission enabled
                         pickFromGallery()
