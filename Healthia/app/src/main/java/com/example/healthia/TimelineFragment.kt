@@ -1,10 +1,8 @@
 package com.example.healthia
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 
@@ -23,18 +21,14 @@ class TimelineFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var tabs: TabLayout
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }*/
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        //enable option menu on fragment
+        setHasOptionsMenu(true)
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_timeline, container, false)
         viewPager = view.findViewById(R.id.viewPager)
@@ -45,6 +39,13 @@ class TimelineFragment : Fragment() {
         tabs.setupWithViewPager(viewPager)
 
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        //inflating menu
+        inflater.inflate(R.menu.option_menu, menu)
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     companion object {

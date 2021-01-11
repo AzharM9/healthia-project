@@ -7,9 +7,9 @@
         android:title="@string/title_timeline"/>
 
     <item
-        android:id="@+id/navigation_search"
-        android:icon="@drawable/ic_baseline_explore_24"
-        android:title="@string/title_search" />
+        android:id="@+id/navigation_users"
+        android:icon="@drawable/ic_users_black"
+        android:title="@string/users" />
 
     <item
         android:id="@+id/navigation_panicBtn"

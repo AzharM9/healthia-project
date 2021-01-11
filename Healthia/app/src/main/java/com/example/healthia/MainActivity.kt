@@ -10,7 +10,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.healthia.database.QueryHelper
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -18,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     //firebase auth
     var firebaseAuth: FirebaseAuth? = null
-    private lateinit var queryHelper: QueryHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,24 +36,22 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_timeline, R.id.navigation_search,
+                R.id.navigation_timeline, R.id.navigation_users,
                 R.id.navigation_panicBtn, R.id.navigation_notifications, R.id.navigation_profile
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-//        queryHelper = QueryHelper.getInstance(applicationContext)
-//        queryHelper.open()
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.option_menu, menu)
-        return true
-    }
-
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val inflater = menuInflater
+//        inflater.inflate(R.menu.option_menu, menu)
+//        return true
+//    }
+//
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.action_logout){

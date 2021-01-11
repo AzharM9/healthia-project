@@ -16,10 +16,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_search"
-        android:name="com.example.healthia.SearchFragment"
-        android:label="@string/title_search"
-        tools:layout="@layout/fragment_search"/>
+        android:id="@+id/navigation_users"
+        android:name="com.example.healthia.UsersFragment"
+        android:label="@string/users"
+        tools:layout="@layout/fragment_users"/>
 
     <fragment
         android:id="@+id/navigation_panicBtn"

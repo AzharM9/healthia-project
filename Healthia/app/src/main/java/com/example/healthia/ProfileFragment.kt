@@ -11,9 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -72,8 +70,8 @@ class ProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mParam1 = arguments!!.getString(ARG_PARAM1)
-            mParam2 = arguments!!.getString(ARG_PARAM2)
+            mParam1 = requireArguments().getString(ARG_PARAM1)
+            mParam2 = requireArguments().getString(ARG_PARAM2)
         }
     }
 
@@ -81,6 +79,9 @@ class ProfileFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        //to show menu option in fragment
+        setHasOptionsMenu(true)
 
         //init firebase
         firebaseAuth = FirebaseAuth.getInstance()
@@ -153,11 +154,16 @@ class ProfileFragment : Fragment() {
         return view
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.option_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     private fun checkStoragePermission(): Boolean {
         //check if storage permission is enabled or not
         //return true if enabled
         //return false if not enabled
-        return (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED)
     }
 
@@ -170,9 +176,9 @@ class ProfileFragment : Fragment() {
         //check if storage permission is enabled or not
         //return true if enabled
         //return false if not enabled
-        val result = (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.CAMERA)
+        val result = (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED)
-        val result1 = (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val result1 = (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED)
         return result && result1
     }

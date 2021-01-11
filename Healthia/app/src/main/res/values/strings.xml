@@ -25,4 +25,7 @@
     <string name="logout">Logout</string>
     <string name="not_have_account_register">Not have account? Register</string>
     <string name="already_have_account_login">Already have account? Login</string>
+    <string name="person_email">Person Email</string>
+    <string name="person_name">Person Name</string>
+    <string name="users">Users</string>
 </resources>
