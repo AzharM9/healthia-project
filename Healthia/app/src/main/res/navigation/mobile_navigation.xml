@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_timeline"
-        android:name="com.example.healthia.TimelineFragment"
+        android:name="com.example.healthia.home.TimelineFragment"
         android:label="@string/title_timeline"
         tools:layout="@layout/fragment_timeline">
         <action
@@ -17,35 +17,34 @@
 
     <fragment
         android:id="@+id/navigation_users"
-        android:name="com.example.healthia.UsersFragment"
+        android:name="com.example.healthia.home.UsersFragment"
         android:label="@string/users"
         tools:layout="@layout/fragment_users"/>
 
     <fragment
         android:id="@+id/navigation_panicBtn"
-        android:name="com.example.healthia.PanicButtonFragment"
+        android:name="com.example.healthia.home.PanicButtonFragment"
         android:label="@string/title_panicBtn"
         tools:layout="@layout/fragment_panic_button"/>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.healthia.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications"/>
-
-    <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.healthia.ProfileFragment"
+        android:name="com.example.healthia.home.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile"/>
 
     <fragment
         android:id="@+id/navigation_message"
-        android:name="com.example.healthia.MessageFragment"
+        android:name="com.example.healthia.home.MessageFragment"
         android:label="@string/title_message"
         tools:layout="@layout/fragment_message">
         <action
             android:id="@+id/action_navigation_message_to_navigation_timeline"
             app:destination="@id/navigation_timeline" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.healthia.home.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
 </navigation>
