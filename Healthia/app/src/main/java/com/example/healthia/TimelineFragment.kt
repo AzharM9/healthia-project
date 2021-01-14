@@ -41,13 +41,6 @@ class TimelineFragment : Fragment() {
         return view
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        //inflating menu
-        inflater.inflate(R.menu.option_menu, menu)
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of
