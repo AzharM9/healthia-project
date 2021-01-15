@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import java.util.*
 
-class AdapterChat(var context: Context, var chatList: MutableList<ModelChat?>?, var imageUrl: String) : RecyclerView.Adapter<AdapterChat.MyHolder>() {
+class AdapterChat(var context: Context, var chatList: List<ModelChat?>, var imageUrl: String?) : RecyclerView.Adapter<AdapterChat.MyHolder>() {
     var fUser: FirebaseUser? = null
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): MyHolder {
         //inflate layouts; row_chat_left.xml for receiver, row_chat_right.xml for sender
@@ -37,12 +37,12 @@ class AdapterChat(var context: Context, var chatList: MutableList<ModelChat?>?, 
 
     override fun onBindViewHolder(myHolder: MyHolder, i: Int) {
         // get data
-        val message = chatList?.get(i)?.message
-        val timestamp = chatList?.get(i)?.timestamp
+        val message = chatList[i]?.message
+        val timestamp = chatList[i]?.timestamp
 
         //convert time stamp
         val cal = Calendar.getInstance(Locale.ENGLISH)
-        cal.timeInMillis = timestamp?.toLong() ?: 0
+        cal.timeInMillis = timestamp!!.toLong()
         val datetime = DateFormat.format("dd/MM/yyyy hh:mm aa", cal).toString()
 
         //set data
@@ -67,8 +67,8 @@ class AdapterChat(var context: Context, var chatList: MutableList<ModelChat?>?, 
         }
 
         //set seen/delivered
-        if (i == chatList!!.size - 1) {
-            if (chatList!![i]!!.isSeen) {
+        if (i == chatList.size - 1) {
+            if (chatList[i]!!.isSeen) {
                 myHolder.isSeenTv.text = "Seen"
             } else {
                 myHolder.isSeenTv.text = "Delivered"
@@ -80,7 +80,7 @@ class AdapterChat(var context: Context, var chatList: MutableList<ModelChat?>?, 
 
     private fun deleteMessage(position: Int) {
         val myUID = FirebaseAuth.getInstance().currentUser!!.uid
-        val msgTimeStamp = chatList?.get(position)?.timestamp
+        val msgTimeStamp = chatList[position]?.timestamp
         val dbRef = FirebaseDatabase.getInstance().getReference("Chats")
         val query = dbRef.orderByChild("timestamp").equalTo(msgTimeStamp)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -106,13 +106,13 @@ class AdapterChat(var context: Context, var chatList: MutableList<ModelChat?>?, 
     }
 
     override fun getItemCount(): Int {
-        return chatList?.size!!
+        return chatList.size
     }
 
     override fun getItemViewType(position: Int): Int {
         //get currently sign in user
         fUser = FirebaseAuth.getInstance().currentUser
-        return if (chatList?.get(position)?.sender == fUser!!.uid) {
+        return if (chatList[position]?.sender == fUser!!.uid) {
             MSG_TYPE_RIGHT
         } else {
             MSG_TYPE_LEFT

@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.text.format.DateFormat
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -25,6 +23,7 @@ import java.util.*
 
 class ChatActivity : AppCompatActivity() {
     //views from xml
+    var toolbar: Toolbar? = null
     var recyclerView: RecyclerView? = null
     var profileIv: ImageView? = null
     var nameTv: TextView? = null
@@ -70,7 +69,7 @@ class ChatActivity : AppCompatActivity() {
         recyclerView?.layoutManager = linearLayoutManager
 
         //create api service
-        apiService = Client.getRetrofit("https://fcm.googleapis.com/")?.create(APIService::class.java)
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/")!!.create(APIService::class.java)
         val intent = intent
         hisUid = intent.getStringExtra("hisUid")
 
@@ -141,7 +140,7 @@ class ChatActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds in snapshot.children) {
                     val chat = ds.getValue(ModelChat::class.java)
-                    if (chat!!.receiver == myUid && chat.sender == hisUid) {
+                    if (chat?.receiver == myUid && chat?.sender == hisUid) {
                         val hasSeenMap = HashMap<String, Any>()
                         hasSeenMap["isSeen"] = true
                         ds.ref.updateChildren(hasSeenMap)
@@ -158,15 +157,15 @@ class ChatActivity : AppCompatActivity() {
         val dbRef = FirebaseDatabase.getInstance().getReference("Chats")
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                chatList?.clear()
+                (chatList as ArrayList<ModelChat?>).clear()
                 for (ds in snapshot.children) {
                     val chat = ds.getValue(ModelChat::class.java)
                     if (chat?.receiver == myUid && chat?.sender == hisUid ||
                             chat?.receiver == hisUid && chat?.sender == myUid) {
-                        chatList?.add(chat)
+                        (chatList as ArrayList<ModelChat?>).add(chat)
                     }
                     // adapter
-                    adapterChat = AdapterChat(this@ChatActivity, chatList, hisImage!!)
+                    adapterChat = AdapterChat(this@ChatActivity, chatList as ArrayList<ModelChat?>, hisImage)
                     adapterChat!!.notifyDataSetChanged()
                     //set adapter to recyclerview
                     recyclerView!!.adapter = adapterChat
@@ -192,9 +191,35 @@ class ChatActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(ModelUser::class.java)
                 if (notify) {
-                    sendNotification(hisUid, user!!.name, message)
+                    sendNotification(hisUid, user?.name, message)
                 }
                 notify = false
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+        //create chatList node/child in firebase database
+        val chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(myUid!!)
+                .child(hisUid!!)
+        chatRef1.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) {
+                    chatRef1.child("id").setValue(hisUid)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+        val chatRef2 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(hisUid!!)
+                .child(myUid!!)
+        chatRef2.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) {
+                    chatRef2.child("id").setValue(myUid)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -209,9 +234,9 @@ class ChatActivity : AppCompatActivity() {
                 for (ds in snapshot.children) {
                     val token = ds.getValue(Token::class.java)
                     val data = Data(myUid, "$name: $message", "New Message", hisUid, R.drawable.ic_default_img)
-                    val sender = Sender(data, token!!.token)
+                    val sender = Sender(data, token?.token)
                     apiService!!.sendNotification(sender)
-                            ?.enqueue(object : Callback<Response?> {
+                            .enqueue(object : Callback<Response?> {
                                 override fun onResponse(call: Call<Response?>, response: retrofit2.Response<Response?>) {
                                     Toast.makeText(this@ChatActivity, "" + response.message(), Toast.LENGTH_SHORT).show()
                                 }
@@ -235,11 +260,11 @@ class ChatActivity : AppCompatActivity() {
             myUid = user.uid //currently sign in user's
         } else {
             //user not signed in, go to main activity
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, LoginOrRegisterActivity::class.java))
             finish()
         }
     }
-//
+
     private fun checkOnlineStatus(status: String) {
         val dbRef = FirebaseDatabase.getInstance().getReference("Users").child(myUid!!)
         val hashMap = HashMap<String, Any>()
@@ -247,14 +272,14 @@ class ChatActivity : AppCompatActivity() {
         //update value of online status of current user
         dbRef.updateChildren(hashMap)
     }
-//
+
     override fun onStart() {
         checkUserStatus()
         //set online
         checkOnlineStatus("online")
         super.onStart()
     }
-//
+
     override fun onPause() {
         super.onPause()
         val timestamp = System.currentTimeMillis().toString()

@@ -9,6 +9,7 @@ import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.healthia.LoginOrRegisterActivity
 import com.example.healthia.MainActivity
 import com.example.healthia.R
 import com.example.healthia.adapters.UserAdapter
@@ -153,7 +154,7 @@ class UsersFragment : Fragment() {
 //            mProfileTv.setText(user.getEmail());
         } else {
             //user not signed in, go to main activity
-            startActivity(Intent(activity, MainActivity::class.java))
+            startActivity(Intent(activity, LoginOrRegisterActivity::class.java))
             requireActivity().finish()
         }
     }

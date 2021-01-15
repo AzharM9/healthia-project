@@ -11,8 +11,8 @@
         android:label="@string/title_timeline"
         tools:layout="@layout/fragment_timeline">
         <action
-            android:id="@+id/action_navigation_timeline_to_navigation_message"
-            app:destination="@id/navigation_message" />
+            android:id="@+id/action_navigation_timeline_to_navigation_chatlist"
+            app:destination="@id/navigation_chatlist" />
     </fragment>
 
     <fragment
@@ -33,18 +33,21 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile"/>
 
-    <fragment
-        android:id="@+id/navigation_message"
-        android:name="com.example.healthia.home.MessageFragment"
-        android:label="@string/title_message"
-        tools:layout="@layout/fragment_message">
-        <action
-            android:id="@+id/action_navigation_message_to_navigation_timeline"
-            app:destination="@id/navigation_timeline" />
-    </fragment>
+
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.healthia.home.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/navigation_chatlist"
+        android:name="com.example.healthia.home.ChatListFragment"
+        android:label="fragment_chat_list"
+        tools:layout="@layout/fragment_chat_list" >
+        <action
+            android:id="@+id/action_navigation_chatlist_to_navigation_timeline"
+            app:destination="@id/navigation_timeline"
+            app:popUpTo="@id/navigation_timeline"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

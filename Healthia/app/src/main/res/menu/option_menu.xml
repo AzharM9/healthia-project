@@ -12,7 +12,7 @@
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
-    <item android:id="@+id/navigation_message"
+    <item android:id="@+id/navigation_chatlist"
         android:title="@string/title_message"
         android:icon="@drawable/ic_chat_menu"
         app:showAsAction="always" />

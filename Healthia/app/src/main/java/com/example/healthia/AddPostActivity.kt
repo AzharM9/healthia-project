@@ -299,7 +299,7 @@ class AddPostActivity : AppCompatActivity() {
             uid = user.uid
         } else {
             //user not signed in, go to main activity
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, LoginOrRegisterActivity::class.java))
             finish()
         }
     }

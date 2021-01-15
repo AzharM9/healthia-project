@@ -9,12 +9,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.healthia.ChatActivity
-import com.example.healthia.models.ModelUser
 import com.example.healthia.R
+import com.example.healthia.models.ModelUser
 import com.squareup.picasso.Picasso
 
 class UserAdapter     //constructor
-    (var context: Context, var userList: MutableList<ModelUser?>?) : RecyclerView.Adapter<UserAdapter.MyHolder>() {
+(var context: Context?, var userList: List<ModelUser?>?) : RecyclerView.Adapter<UserAdapter.MyHolder>() {
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MyHolder {
         //inflate layout(item_row_user.xml)
         val view = LayoutInflater.from(context).inflate(R.layout.item_row_users, viewGroup, false)
@@ -23,19 +23,19 @@ class UserAdapter     //constructor
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         //get data
-        val hisUID = userList?.get(position)?.uid
-        val userImage = userList?.get(position)?.image
-        val userName = userList?.get(position)?.name
-        val userEmail = userList?.get(position)?.email
+        val hisUID = userList!![position]?.uid
+        val userImage = userList!![position]?.image
+        val userName = userList!![position]?.name
+        val userEmail = userList!![position]?.email
 
         //set daata
         holder.mNameTv.text = userName
         holder.mEmailTv.text = userEmail
         try {
             Picasso.get()
-                .load(userImage)
-                .placeholder(R.drawable.ic_default)
-                .into(holder.mAvatarTv)
+                    .load(userImage)
+                    .placeholder(R.drawable.ic_default_img)
+                    .into(holder.mAvatarTv)
         } catch (e: Exception) {
         }
 
@@ -43,12 +43,12 @@ class UserAdapter     //constructor
         holder.itemView.setOnClickListener { v: View? ->
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("hisUid", hisUID)
-            context.startActivity(intent)
+            context!!.startActivity(intent)
         }
     }
 
     override fun getItemCount(): Int {
-        return userList?.size!!
+        return userList!!.size
     }
 
     //view holder class

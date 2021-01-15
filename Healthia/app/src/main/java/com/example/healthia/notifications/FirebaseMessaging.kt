@@ -68,13 +68,13 @@ class FirebaseMessaging : FirebaseMessagingService() {
         val title = remoteMessage.data["title"]
         val body = remoteMessage.data["body"]
         val notification = remoteMessage.notification
-        val i = user?.replace("[\\D]".toRegex(), "")?.toInt()
+        val i = user!!.replace("[\\D]".toRegex(), "").toInt()
         val intent = Intent(this, ChatActivity::class.java)
         val bundle = Bundle()
         bundle.putString("hisUid", user)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pIntent = PendingIntent.getActivity(this, i!!, intent, PendingIntent.FLAG_ONE_SHOT)
+        val pIntent = PendingIntent.getActivity(this, i, intent, PendingIntent.FLAG_ONE_SHOT)
         val defSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notification1 = OreoAndAboveNotification(this)
         val builder = notification1.getOnNotifications(title, body, pIntent, defSoundUri, icon)
