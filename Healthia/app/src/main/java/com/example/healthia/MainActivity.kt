@@ -2,7 +2,6 @@ package com.example.healthia
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,16 +9,25 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.healthia.notifications.Token
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.iid.FirebaseInstanceId
 
 class MainActivity : AppCompatActivity() {
 
     //firebase auth
     var firebaseAuth: FirebaseAuth? = null
 
+    //views
+    //    TextView mProfileTv;
+    var mUID: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //change logo in toolbar
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setLogo(R.drawable.ic_baseline_healing_24)
         supportActionBar?.setDisplayUseLogoEnabled(true)
@@ -43,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        checkUserStatus()
+        //update token
+        updateToken(FirebaseInstanceId.getInstance().token)
 
     }
 
@@ -52,6 +63,18 @@ class MainActivity : AppCompatActivity() {
 //        return true
 //    }
 //
+
+    override fun onResume() {
+        checkUserStatus()
+        super.onResume()
+    }
+
+    fun updateToken(token: String?) {
+        val ref = FirebaseDatabase.getInstance().getReference("Tokens")
+        val mToken = Token(token)
+        ref.child(mUID!!).setValue(mToken)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.action_logout){
@@ -73,6 +96,12 @@ class MainActivity : AppCompatActivity() {
         val user = firebaseAuth?.currentUser
         if (user != null) {
             //Go to Timeline
+            mUID = user.uid
+            // save uid of currently signed in user in shared preferences
+            val sp = getSharedPreferences("SP_USER", MODE_PRIVATE)
+            val editor = sp.edit()
+            editor.putString("Current_USERID", mUID)
+            editor.apply()
         } else {
             //user not signed in, go LoginOrRegisterActivity
             startActivity(Intent(this@MainActivity, LoginOrRegisterActivity::class.java))

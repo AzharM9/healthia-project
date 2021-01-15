@@ -90,6 +90,7 @@ class LoginActivity : AppCompatActivity() {
                             hashMap["email"] = email
                             hashMap["uid"] = uid
                             hashMap["name"] = ""
+                            hashMap["onlineStatus"] = "online"
                             hashMap["phone"] = ""
                             hashMap["image"] = ""
                             hashMap["cover"] = ""

@@ -72,7 +72,7 @@ class UsersFragment : Fragment() {
         //get all data from path
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                userList!!.clear()
+                userList.clear()
                 for (ds in dataSnapshot.children) {
                     val modelUser = ds.getValue(ModelUser::class.java)
 
@@ -83,19 +83,19 @@ class UsersFragment : Fragment() {
                     //get all searched users except currently signed user
                     if (modelUser?.uid != fUser!!.uid) {
                         if (modelUser?.name?.toLowerCase()!!.contains(query.toLowerCase()) ||
-                                modelUser?.email?.toLowerCase()!!.contains(query.toLowerCase())) {
-                            userList!!.add(modelUser)
+                                modelUser.email?.toLowerCase()!!.contains(query.toLowerCase())) {
+                            userList.add(modelUser)
                         }
                     }
 
                     //adapter
-                    userAdapter = UserAdapter(activity, userList)
+                    userAdapter = UserAdapter(activity!!, userList)
 
                     //refresh adapter
-                    userAdapter!!.notifyDataSetChanged()
+                    userAdapter.notifyDataSetChanged()
 
                     //set adapter to recycler view
-                    recyclerView!!.adapter = userAdapter
+                    recyclerView.adapter = userAdapter
                 }
             }
 
@@ -113,7 +113,7 @@ class UsersFragment : Fragment() {
 
     //get all data from path
             Unit
-        private get() {
+        get() {
             //get current user
             val fUser = FirebaseAuth.getInstance().currentUser
 
@@ -123,20 +123,20 @@ class UsersFragment : Fragment() {
             //get all data from path
             ref.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    userList!!.clear()
+                    userList.clear()
                     for (ds in dataSnapshot.children) {
                         val modelUser = ds.getValue(ModelUser::class.java)
 
                         //get all users except currently signed user
                         if (modelUser?.uid != fUser!!.uid) {
-                            userList!!.add(modelUser)
+                            userList.add(modelUser)
                         }
 
                         //adapter
-                        userAdapter = UserAdapter(activity, userList)
+                        userAdapter = UserAdapter(activity!!, userList)
 
                         //set adapter to recycler view
-                        recyclerView!!.adapter = userAdapter
+                        recyclerView.adapter = userAdapter
                     }
                 }
 
@@ -154,7 +154,7 @@ class UsersFragment : Fragment() {
         } else {
             //user not signed in, go to main activity
             startActivity(Intent(activity, MainActivity::class.java))
-            activity!!.finish()
+            requireActivity().finish()
         }
     }
 

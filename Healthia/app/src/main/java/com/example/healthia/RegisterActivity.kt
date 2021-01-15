@@ -91,6 +91,7 @@ class RegisterActivity : AppCompatActivity() {
                         hashMap["email"] = email
                         hashMap["uid"] = uid
                         hashMap["name"] = ""
+                        hashMap["onlineStatus"] = "online"
                         hashMap["phone"] = "" //will add later (e.g edit profile)
                         hashMap["image"] = "" //will add later (e.g edit profile)
                         hashMap["cover"] = "" //will add later (e.g edit profile)
