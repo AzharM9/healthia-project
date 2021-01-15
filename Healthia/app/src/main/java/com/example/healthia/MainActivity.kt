@@ -52,8 +52,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         checkUserStatus()
-        //update token
-        updateToken(FirebaseInstanceId.getInstance().token)
+
 
     }
 
@@ -102,6 +101,9 @@ class MainActivity : AppCompatActivity() {
             val editor = sp.edit()
             editor.putString("Current_USERID", mUID)
             editor.apply()
+
+            //update token
+            updateToken(FirebaseInstanceId.getInstance().token)
         } else {
             //user not signed in, go LoginOrRegisterActivity
             startActivity(Intent(this@MainActivity, LoginOrRegisterActivity::class.java))

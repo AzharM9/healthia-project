@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.healthia.AddPostActivity
 import com.example.healthia.LoginOrRegisterActivity
 import com.example.healthia.R
-import com.example.healthia.models.ModelPost
 import com.example.healthia.adapters.PostsAdapter
+import com.example.healthia.models.ModelPost
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -99,7 +99,7 @@ class FeedsFragment : Fragment() {
                     postList!!.add(modelPost)
 
                     //adapter
-                    postsAdapter = PostsAdapter(activity, postList)
+                    postsAdapter = PostsAdapter(activity!!, postList)
 
                     //set adapter to recyclerView
                     recyclerView!!.adapter = postsAdapter
@@ -128,7 +128,7 @@ class FeedsFragment : Fragment() {
                         postList!!.add(modelPost)
 
                         //adapter
-                        postsAdapter = PostsAdapter(activity, postList)
+                        postsAdapter = PostsAdapter(activity!!, postList)
 
                         //set adapter to recyclerView
                         recyclerView!!.adapter = postsAdapter

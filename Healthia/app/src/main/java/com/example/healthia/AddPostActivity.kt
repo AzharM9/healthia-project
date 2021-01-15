@@ -5,6 +5,8 @@ import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,6 +22,8 @@ import com.example.healthia.AddPostActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class AddPostActivity : AppCompatActivity() {
@@ -38,10 +42,15 @@ class AddPostActivity : AppCompatActivity() {
     lateinit var uploadBtn: Button
 
     //user info
-    var name: String? = null
-    var email: String? = null
-    var uid: String? = null
-    var dp: String? = null
+    lateinit var name: String
+    lateinit var email: String
+    lateinit var uid: String
+    lateinit var dp: String
+
+    //info of post to be edited
+    lateinit var editTitle: String
+    lateinit var editDescription: String
+    lateinit var editImage: String
 
     //image picked will be samed in this uri
     var image_uri: Uri? = null
@@ -58,11 +67,35 @@ class AddPostActivity : AppCompatActivity() {
         actionBar!!.setDisplayHomeAsUpEnabled(true)
 
         //init permissions arrays
-        cameraPermissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        cameraPermissions =
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         pd = ProgressDialog(this)
         firebaseAuth = FirebaseAuth.getInstance()
         checkUserStatus()
+
+        //init views
+        titleEt = findViewById(R.id.pTitleEt)
+        descriptionEt = findViewById(R.id.pDescriptionEt)
+        imageIv = findViewById(R.id.pImageIv)
+        uploadBtn = findViewById(R.id.pUploadBtn)
+
+        //get data throough intent from previous activity's adapter for edit
+        val intent = intent
+        val isUpdateKey = "" + intent.getStringExtra("key")
+        val editPostId = "" + intent.getStringExtra("editPostId")
+        //validate if we came here to update post i.e. came from postAdapter
+        if (isUpdateKey == "editPost") {
+            //update
+            actionBar!!.setTitle("Update Post")
+            uploadBtn.setText("Update")
+            loadPostData(editPostId)
+        } else {
+            //add
+            actionBar!!.setTitle("Add New Post")
+            uploadBtn.setText("Upload")
+        }
+
         actionBar!!.subtitle = email
 
         //get some info of current user to include in post
@@ -80,18 +113,13 @@ class AddPostActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
 
-        //init views
-        titleEt = findViewById(R.id.pTitleEt)
-        descriptionEt = findViewById(R.id.pDescriptionEt)
-        imageIv = findViewById(R.id.pImageIv)
-        uploadBtn = findViewById(R.id.pUploadBtn)
+
 
         //get image from camera gallery on click
         imageIv.setOnClickListener(View.OnClickListener { ShowImagePickDialog() })
 
         //upload button click listener
-        uploadBtn.setOnClickListener(View.OnClickListener {
-            //get data (title, description) from EditText
+        uploadBtn.setOnClickListener(View.OnClickListener { //get data (title, description) from EditText
             val title = titleEt.getText().toString().trim { it <= ' ' }
             val description = descriptionEt.getText().toString().trim { it <= ' ' }
             if (TextUtils.isEmpty(title)) {
@@ -99,71 +127,272 @@ class AddPostActivity : AppCompatActivity() {
                 return@OnClickListener
             }
             if (TextUtils.isEmpty(description)) {
-                Toast.makeText(this@AddPostActivity, "Enter description...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AddPostActivity, "Enter description...", Toast.LENGTH_SHORT)
+                    .show()
                 return@OnClickListener
             }
-            if (image_uri == null) {
-                //post without image
-                uploadData(title, description, "noImage")
+            if (isUpdateKey == "editPost") {
+                beginUpdate(title, description, editPostId)
             } else {
-                //post with image
-                uploadData(title, description, image_uri.toString())
+                uploadData(title, description)
             }
         })
     }
 
-    private fun uploadData(title: String, description: String, uri: String) {
+    private fun beginUpdate(title: String, description: String, editPostId: String) {
+        pd!!.setMessage("Update Post...")
+        pd!!.show()
+        if (editImage != "noImage") {
+            //was with image
+            updateWasWithImage(title, description, editPostId)
+        } else if (imageIv!!.drawable != null) {
+            //was without image, but now has image in imageview
+            updateWithNowImage(title, description, editPostId)
+        } else {
+            //without image and still no image in imageView
+            updateWithoutImage(title, description, editPostId)
+        }
+        finish()
+    }
+
+    private fun updateWithoutImage(title: String, description: String, editPostId: String) {
+        val hashMap = HashMap<String, Any?>()
+
+        //put post info
+        hashMap["uid"] = uid
+        hashMap["uName"] = name
+        hashMap["uEmail"] = email
+        hashMap["uDp"] = dp
+        hashMap["pTitle"] = title
+        hashMap["pDescription"] = description
+        hashMap["pImage"] = "noImage"
+        val ref = FirebaseDatabase.getInstance().getReference("Posts")
+        ref.child(editPostId)
+            .updateChildren(hashMap)
+            .addOnSuccessListener {
+                pd!!.dismiss()
+                Toast.makeText(this@AddPostActivity, "Updated...", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                pd!!.dismiss()
+                Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateWithNowImage(title: String, description: String, editPostId: String) {
+        val timeStamp = System.currentTimeMillis().toString()
+        val filePathAndName = "Posts/post_$timeStamp"
+
+        //get image from imageView
+        val bitmap = (imageIv!!.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        //image compress
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+        val ref = FirebaseStorage.getInstance().reference.child(filePathAndName)
+        ref.putBytes(data)
+            .addOnSuccessListener { taskSnapshot ->
+                //image uploaded get it's url
+                val uriTask = taskSnapshot.storage.downloadUrl
+                while (!uriTask.isSuccessful);
+                val downloadUri = uriTask.result.toString()
+                if (uriTask.isSuccessful) {
+                    //url is received, upload to firebase database
+                    val hashMap = HashMap<String, Any?>()
+
+                    //put post info
+                    hashMap["uid"] = uid
+                    hashMap["uName"] = name
+                    hashMap["uEmail"] = email
+                    hashMap["uDp"] = dp
+                    hashMap["pTitle"] = title
+                    hashMap["pDescription"] = description
+                    hashMap["pImage"] = downloadUri
+                    val ref = FirebaseDatabase.getInstance().getReference("Posts")
+                    ref.child(editPostId)
+                        .updateChildren(hashMap)
+                        .addOnSuccessListener {
+                            pd!!.dismiss()
+                            Toast.makeText(this@AddPostActivity, "Updated...", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        .addOnFailureListener { e ->
+                            pd!!.dismiss()
+                            Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                pd!!.dismiss()
+                Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateWasWithImage(title: String, description: String, editPostId: String) {
+        //post is with image, delete previous image first
+        val mPictureRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImage!!)
+        mPictureRef.delete()
+            .addOnSuccessListener {
+                //image deleted, upload new image
+                //for post-image name, post-id, publish-time
+                val timeStamp = System.currentTimeMillis().toString()
+                val filePathAndName = "Posts/post_$timeStamp"
+
+                //get image from imageView
+                val bitmap = (imageIv!!.drawable as BitmapDrawable).bitmap
+                val baos = ByteArrayOutputStream()
+                //image compress
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+                val data = baos.toByteArray()
+                val ref = FirebaseStorage.getInstance().reference.child(filePathAndName)
+                ref.putBytes(data)
+                    .addOnSuccessListener { taskSnapshot ->
+                        //image uploaded get it's url
+                        val uriTask = taskSnapshot.storage.downloadUrl
+                        while (!uriTask.isSuccessful);
+                        val downloadUri = uriTask.result.toString()
+                        if (uriTask.isSuccessful) {
+                            //url is received, upload to firebase database
+                            val hashMap = HashMap<String, Any?>()
+
+                            //put post info
+                            hashMap["uid"] = uid
+                            hashMap["uName"] = name
+                            hashMap["uEmail"] = email
+                            hashMap["uDp"] = dp
+                            hashMap["pTitle"] = title
+                            hashMap["pDescription"] = description
+                            hashMap["pImage"] = downloadUri
+                            val ref = FirebaseDatabase.getInstance().getReference("Posts")
+                            ref.child(editPostId)
+                                .updateChildren(hashMap)
+                                .addOnSuccessListener {
+                                    pd!!.dismiss()
+                                    Toast.makeText(
+                                        this@AddPostActivity,
+                                        "Updated...",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                .addOnFailureListener { e ->
+                                    pd!!.dismiss()
+                                    Toast.makeText(
+                                        this@AddPostActivity,
+                                        "" + e.message,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        pd!!.dismiss()
+                        Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+            }
+            .addOnFailureListener { }
+    }
+
+
+    private fun loadPostData(editPostId: String) {
+        val reference = FirebaseDatabase.getInstance().getReference("Posts")
+        //get detail of post using id of post
+        val fquery = reference.orderByChild("pId").equalTo(editPostId)
+        fquery.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.children) {
+                    //get data
+                    editTitle = "" + ds.child("pTitle").value
+                    editDescription = "" + ds.child("pDescription").value
+                    editImage = "" + ds.child("pImage").value
+
+                    //set data to views
+                    titleEt!!.setText(editTitle)
+                    descriptionEt!!.setText(editDescription)
+
+                    //set image
+                    if (editImage != "noImage") {
+                        try {
+                            Picasso.get().load(editImage).into(imageIv)
+                        } catch (e: Exception) {
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    private fun uploadData(title: String, description: String) {
         pd!!.setMessage("Publishing post...")
         pd!!.show()
 
         //for post-image name, post-id, post-publish-time
         val timeStamp = System.currentTimeMillis().toString()
         val filePathAndName = "Posts/post_$timeStamp"
-        if (uri != "noImage") {
+        if (imageIv!!.drawable != null) {
+            //get image from imageView
+            val bitmap = (imageIv!!.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            //image compress
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+            val data = baos.toByteArray()
+
             //post with image
             val ref = FirebaseStorage.getInstance().reference.child(filePathAndName)
-            ref.putFile(Uri.parse(uri))
-                    .addOnSuccessListener { taskSnapshot ->
-                        //image is uploaded to firebase storage, now get it's url
-                        val uriTask = taskSnapshot.storage.downloadUrl
-                        while (!uriTask.isSuccessful);
-                        val downloadUri = uriTask.result.toString()
-                        if (uriTask.isSuccessful) {
-                            //url is received upload post to firebase
-                            val hashMap = HashMap<Any, String?>()
-                            //put post info
-                            hashMap["uid"] = uid
-                            hashMap["uName"] = name
-                            hashMap["uEmail"] = email
-                            hashMap["uDp"] = dp
-                            hashMap["pId"] = timeStamp
-                            hashMap["pTitle"] = title
-                            hashMap["pDescription"] = description
-                            hashMap["pImage"] = downloadUri
-                            hashMap["pTime"] = timeStamp
+            ref.putBytes(data)
+                .addOnSuccessListener { taskSnapshot ->
+                    //image is uploaded to firebase storage, now get it's url
+                    val uriTask = taskSnapshot.storage.downloadUrl
+                    while (!uriTask.isSuccessful);
+                    val downloadUri = uriTask.result.toString()
+                    if (uriTask.isSuccessful) {
+                        //url is received upload post to firebase
+                        val hashMap = HashMap<Any, String?>()
+                        //put post info
+                        hashMap["uid"] = uid
+                        hashMap["uName"] = name
+                        hashMap["uEmail"] = email
+                        hashMap["uDp"] = dp
+                        hashMap["pId"] = timeStamp
+                        hashMap["pTitle"] = title
+                        hashMap["pDescription"] = description
+                        hashMap["pImage"] = downloadUri
+                        hashMap["pTime"] = timeStamp
+                        hashMap["pLikes"] = "0"
 
-                            //path to store post data
-                            val ref = FirebaseDatabase.getInstance().getReference("Posts")
+                        //path to store post data
+                        val ref = FirebaseDatabase.getInstance().getReference("Posts")
 
-                            //put data in this ref
-                            ref.child(timeStamp).setValue(hashMap)
-                                    .addOnSuccessListener {
-                                        pd!!.dismiss()
-                                        Toast.makeText(this@AddPostActivity, "Posts published", Toast.LENGTH_SHORT).show()
-                                        //reset views
-                                        titleEt!!.setText("")
-                                        descriptionEt!!.setText("")
-                                        imageIv!!.setImageURI(null)
-                                        image_uri = null
-                                    }.addOnFailureListener { e -> //failed adding posts
-                                        pd!!.dismiss()
-                                        Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
-                                    }
-                        }
-                    }.addOnFailureListener { e -> //failed upload image
-                        pd!!.dismiss()
-                        Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
+                        //put data in this ref
+                        ref.child(timeStamp).setValue(hashMap)
+                            .addOnSuccessListener {
+                                pd!!.dismiss()
+                                Toast.makeText(
+                                    this@AddPostActivity,
+                                    "Posts published",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                //reset views
+                                titleEt!!.setText("")
+                                descriptionEt!!.setText("")
+                                imageIv!!.setImageURI(null)
+                                image_uri = null
+                            }.addOnFailureListener { e -> //failed adding posts
+                                pd!!.dismiss()
+                                Toast.makeText(
+                                    this@AddPostActivity,
+                                    "" + e.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     }
+                }.addOnFailureListener { e -> //failed upload image
+                    pd!!.dismiss()
+                    Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
+                }
         } else {
             //post without image
             val hashMap = HashMap<Any, String?>()
@@ -176,25 +405,27 @@ class AddPostActivity : AppCompatActivity() {
             hashMap["pDescription"] = description
             hashMap["pImage"] = "noImage"
             hashMap["pTime"] = timeStamp
+            hashMap["pLikes"] = "0"
 
             //path to store post data
             val ref = FirebaseDatabase.getInstance().getReference("Posts")
 
             //put data in this ref
             ref.child(timeStamp).setValue(hashMap)
-                    .addOnSuccessListener {
-                        pd!!.dismiss()
-                        Toast.makeText(this@AddPostActivity, "Posts published", Toast.LENGTH_SHORT).show()
-                        titleEt!!.setText("")
-                        descriptionEt!!.setText("")
-                        imageIv!!.setImageURI(null)
-                        image_uri = null
-                    }.addOnFailureListener { e -> //failed adding posts
-                        pd!!.dismiss()
-                        Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
-                    }
+                .addOnSuccessListener {
+                    pd!!.dismiss()
+                    Toast.makeText(this@AddPostActivity, "Posts published", Toast.LENGTH_SHORT)
+                        .show()
+                    titleEt!!.setText("")
+                    descriptionEt!!.setText("")
+                    imageIv!!.setImageURI(null)
+                    image_uri = null
+                }.addOnFailureListener { e -> //failed adding posts
+                    pd!!.dismiss()
+                    Toast.makeText(this@AddPostActivity, "" + e.message, Toast.LENGTH_SHORT).show()
+                }
         }
-        onBackPressed()
+        finish()
     }
 
     private fun ShowImagePickDialog() {
@@ -250,8 +481,10 @@ class AddPostActivity : AppCompatActivity() {
         //check if storage permission is enabled or not
         //return true if enabled
         //return false if not enabled
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestStoragePermission() {
@@ -263,10 +496,14 @@ class AddPostActivity : AppCompatActivity() {
         //check if camera permission is enabled or not
         //return true if enabled
         //return false if not enabled
-        val result = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        val result1 = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        val result = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+        val result1 = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
         return result && result1
     }
 
@@ -295,13 +532,14 @@ class AddPostActivity : AppCompatActivity() {
         val user = firebaseAuth!!.currentUser
         if (user != null) {
             //user is signed in stay here
-            email = user.email
+            email = user.email.toString()
             uid = user.uid
         } else {
             //user not signed in, go to main activity
             startActivity(Intent(this, LoginOrRegisterActivity::class.java))
             finish()
         }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -327,7 +565,11 @@ class AddPostActivity : AppCompatActivity() {
     }
 
     //handle permission result
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             CAMERA_REQUEST_CODE -> if (grantResults.size > 0) {
@@ -338,7 +580,11 @@ class AddPostActivity : AppCompatActivity() {
                     pickFromCamera()
                 } else {
                     //camera or gallery or both permisson were denied
-                    Toast.makeText(this, "Camera & Storage both permissions are necessary", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Camera & Storage both permissions are necessary",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
             }
