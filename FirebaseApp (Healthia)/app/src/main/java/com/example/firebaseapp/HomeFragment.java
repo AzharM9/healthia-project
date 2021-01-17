@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.firebaseapp.adapters.PostsAdapter;
 import com.example.firebaseapp.models.ModelPost;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     List<ModelPost> postList;
     PostsAdapter postsAdapter;
 
-    FloatingActionButton fab;
+    ExtendedFloatingActionButton fab;
 
     //user info
     String email, uid;

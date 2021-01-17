@@ -12,7 +12,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -33,7 +32,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -72,7 +71,7 @@ public class ProfileFragment extends Fragment {
     //views from xml
     ImageView avatarTv, coverIv;
     TextView nameTv, emailTv, phoneTv;
-    FloatingActionButton fab;
+    ExtendedFloatingActionButton fab;
 
     //progress dialog
     ProgressDialog pd;
@@ -177,12 +176,14 @@ public class ProfileFragment extends Fragment {
                     emailTv.setText(email);
                     phoneTv.setText(phone);
 
-                    try {
-                        //if image is received then set
-                        Picasso.get().load(image).into(avatarTv);
-                    } catch (Exception e) {
-                        //if there is any exception while getting image the set default
-                        Picasso.get().load(R.drawable.ic_default_img_white).into(avatarTv);
+                    if (!image.equals("")){
+                        try {
+                            //if image is received then set
+                            Picasso.get().load(image).into(avatarTv);
+                        } catch (Exception e) {
+                            //if there is any exception while getting image the set default
+                            Picasso.get().load(R.drawable.ic_default_img_white).into(avatarTv);
+                        }
                     }
                     try {
                         //if image is received then set

@@ -177,13 +177,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyHolder>{
                 Toast.makeText(context, "Comment", Toast.LENGTH_SHORT).show();
             }
         });
-        holder.shareBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //will implement later
-                Toast.makeText(context, "Share", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void setLikes(MyHolder holder, String postKey) {
@@ -347,7 +340,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyHolder>{
         ImageView uPictureIv, pImageIv;
         TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv;
         ImageButton moreBtn;
-        Button likeBtn, commentBtn, shareBtn;
+        Button likeBtn, commentBtn;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -363,7 +356,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyHolder>{
             moreBtn = itemView.findViewById(R.id.moreBtn);
             likeBtn = itemView.findViewById(R.id.likeBtn);
             commentBtn = itemView.findViewById(R.id.commentBtn);
-            shareBtn = itemView.findViewById(R.id.shareBtn);
 
 
         }

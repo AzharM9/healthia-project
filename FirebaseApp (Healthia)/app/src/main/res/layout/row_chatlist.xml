@@ -14,11 +14,6 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:src="@drawable/ic_default_img"/>
-        <!--Image View online/offline status-->
-        <ImageView
-            android:id="@+id/onlineStatusIv"
-            android:layout_width="25dp"
-            android:layout_height="25dp"/>
         <!--Text View: Username-->
         <TextView
             android:id="@+id/nameTv"
