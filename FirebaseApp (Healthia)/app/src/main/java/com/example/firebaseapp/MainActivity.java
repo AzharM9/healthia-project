@@ -42,10 +42,16 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-/*In this part 09
-* ->Publish post to firebase.
-*   post will contain user name, email, uid, uid, dp, time of publish, title description, image etc
-*   User can publish post with and without image
-*   Create AddPostActivity
-*   Add another option in actionbar to go to AddPostActivity
-*   Image can be imported from gallery or taken from camera*/
+/*In this part [19]
+*   -> Show user show user specific posts
+*   Signed in user's post will be displayed in ProfileFragment
+*   Other user's post will be displayed in ThereProfileActivity
+*
+*   Changes in user's list
+*   1) Click any user to display having two options
+*       1) chat: go to chat acitivity to chat activity with that person
+*       2)Profile: see profile of that person
+*   Changes in postsList
+*   1) Click top of any post to show profile of the user of post
+*  changes in Chat Activity
+*   !) Hide Addpost icon from toolbar*/

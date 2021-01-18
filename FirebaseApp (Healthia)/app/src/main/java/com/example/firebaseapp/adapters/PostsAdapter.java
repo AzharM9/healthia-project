@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firebaseapp.AddPostActivity;
 import com.example.firebaseapp.R;
+import com.example.firebaseapp.ThereProfileActivity;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -177,6 +179,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyHolder>{
                 Toast.makeText(context, "Comment", Toast.LENGTH_SHORT).show();
             }
         });
+
+        holder.profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*click to go to ThereProfileActivity with uid, this uid is of clicked user
+                * which will be used to show user specific data/post*/
+                Intent intent = new Intent(context, ThereProfileActivity.class);
+                intent.putExtra("uid", uid);
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     private void setLikes(MyHolder holder, String postKey) {
@@ -341,6 +355,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyHolder>{
         TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv;
         ImageButton moreBtn;
         Button likeBtn, commentBtn;
+        LinearLayout profileLayout;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -356,6 +371,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.MyHolder>{
             moreBtn = itemView.findViewById(R.id.moreBtn);
             likeBtn = itemView.findViewById(R.id.likeBtn);
             commentBtn = itemView.findViewById(R.id.commentBtn);
+            profileLayout = itemView.findViewById(R.id.profileLayout);
 
 
         }
