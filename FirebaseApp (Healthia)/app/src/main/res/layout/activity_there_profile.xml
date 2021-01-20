@@ -73,13 +73,44 @@
                         android:layout_marginLeft="5dp"
                         android:textColor="@color/white"
                         tools:text="Phone" />
+
                 </LinearLayout>
 
-            </LinearLayout>
 
+            </LinearLayout>
+            <LinearLayout
+                android:layout_below="@id/linearLayout"
+                android:id="@+id/linear_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/mProfileSendReqBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SEND FRIEND REQUEST"
+                    android:textColor="@color/white"
+                    android:background="@color/purple_500"
+                    />
+
+                <Button
+                    android:id="@+id/mProfileDeclineBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DECLINE FRIEND REQUEST"
+                    android:textColor="@color/white"
+                    android:background="@color/purple_500"
+                    />
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_posts"
-                android:layout_below="@id/linearLayout"
+                android:layout_below="@id/linear_button"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

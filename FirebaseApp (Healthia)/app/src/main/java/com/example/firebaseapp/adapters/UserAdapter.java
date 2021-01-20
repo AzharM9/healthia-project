@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.firebaseapp.ChatActivity;
 import com.example.firebaseapp.R;
@@ -21,6 +19,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
 
@@ -51,19 +50,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
         String userName = userList.get(position).getName();
         String userEmail = userList.get(position).getEmail();
 
-        //set daata
+        //set data
         holder.mNameTv.setText(userName);
         holder.mEmailTv.setText(userEmail);
 
-        try {
-            Picasso.get()
-                    .load(userImage)
-                    .placeholder(R.drawable.ic_default_img)
-                    .into(holder.mAvatarTv);
-
+        if(userImage.equals("")){
+            holder.mAvatarIv.setImageResource(R.drawable.ic_default_img);
         }
-        catch (Exception e){
-
+        else{
+            try {
+                Picasso.get().load(userImage).placeholder(R.drawable.ic_default_img).into(holder.mAvatarIv);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         //handle item click
@@ -102,14 +102,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
     //view holder class
     class MyHolder extends RecyclerView.ViewHolder {
 
-        ImageView mAvatarTv;
+        CircleImageView mAvatarIv;
         TextView mNameTv, mEmailTv;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
 
             //init views
-            mAvatarTv = itemView.findViewById(R.id.avatarIv);
+            mAvatarIv = itemView.findViewById(R.id.avatarIv);
             mNameTv = itemView.findViewById(R.id.nameTv);
             mEmailTv = itemView.findViewById(R.id.emailTv);
         }

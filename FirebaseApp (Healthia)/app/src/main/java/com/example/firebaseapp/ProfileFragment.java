@@ -194,12 +194,12 @@ public class ProfileFragment extends Fragment {
                             //if image is received then set
                             Picasso.get().load(image).into(avatarTv);
                         } catch (Exception e) {
-                            //if there is any exception while getting image the set default
+                            //if there is any exception while getting image then set default
                             Picasso.get().load(R.drawable.ic_default_img_white).into(avatarTv);
                         }
                     }
                     try {
-                        //if image is received then set
+                        //if cover is received then set
                         Picasso.get().load(cover).into(coverIv);
                     } catch (Exception e) {
                         //if there is any exception while getting image the set default
@@ -264,7 +264,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }
