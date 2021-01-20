@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.firebaseapp.adapters.UserAdapter;
+import com.example.firebaseapp.adapters.AdapterUser;
 import com.example.firebaseapp.models.ModelUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +40,7 @@ import java.util.List;
 public class UsersFragment extends Fragment {
 
     RecyclerView recyclerView;
-    UserAdapter userAdapter;
+    AdapterUser adapterUser;
     List<ModelUser> userList;
 
     //firebase auth
@@ -133,13 +133,13 @@ public class UsersFragment extends Fragment {
                     }
 
                     //adapter
-                    userAdapter = new UserAdapter(getActivity(), userList);
+                    adapterUser = new AdapterUser(getActivity(), userList);
 
                     //refresh adapter
-                    userAdapter.notifyDataSetChanged();
+                    adapterUser.notifyDataSetChanged();
 
                     //set adapter to recycler view
-                    recyclerView.setAdapter(userAdapter);
+                    recyclerView.setAdapter(adapterUser);
                 }
             }
 
@@ -171,10 +171,10 @@ public class UsersFragment extends Fragment {
                     }
 
                     //adapter
-                    userAdapter = new UserAdapter(getActivity(), userList);
+                    adapterUser = new AdapterUser(getActivity(), userList);
 
                     //set adapter to recycler view
-                    recyclerView.setAdapter(userAdapter);
+                    recyclerView.setAdapter(adapterUser);
                 }
             }
 

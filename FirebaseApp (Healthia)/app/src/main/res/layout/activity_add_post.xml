@@ -23,12 +23,23 @@
         />
 
 <!--        ImageView: Input post image-->
-        <ImageView
-            android:id="@+id/pImageIv"
+        <FrameLayout
+            android:id="@+id/pImageLayout"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:background="@drawable/ic_add_photo"
-            android:minHeight="500dp" />
+            android:layout_height="200dp">
+            <ImageView
+                android:id="@+id/pImageIv"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorGrey"
+                android:minHeight="200dp"/>
+            <ImageView
+                android:id="@+id/pDummyIv"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_add_photo"/>
+        </FrameLayout>
 
 <!--        EditText: Input post decription-->
         <EditText

@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.firebaseapp.adapters.PostsAdapter;
+import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView recyclerView;
     List<ModelPost> postList;
-    PostsAdapter postsAdapter;
+    AdapterPosts adapterPosts;
 
     ExtendedFloatingActionButton fab;
 
@@ -142,10 +142,10 @@ public class HomeFragment extends Fragment {
                     postList.add(modelPost);
 
                     //adapter
-                    postsAdapter = new PostsAdapter(getActivity(), postList);
+                    adapterPosts = new AdapterPosts(getActivity(), postList);
 
                     //set adapter to recyclerView
-                    recyclerView.setAdapter(postsAdapter);
+                    recyclerView.setAdapter(adapterPosts);
                 }
             }
 
@@ -175,10 +175,10 @@ public class HomeFragment extends Fragment {
                         postList.add(modelPost);
 
                         //adapter
-                        postsAdapter = new PostsAdapter(getActivity(), postList);
+                        adapterPosts = new AdapterPosts(getActivity(), postList);
 
                         //set adapter to recyclerView
-                        recyclerView.setAdapter(postsAdapter);
+                        recyclerView.setAdapter(adapterPosts);
                     }
                 }
             }

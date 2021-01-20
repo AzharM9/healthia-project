@@ -197,9 +197,11 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             public void onClick(View view) {
                 /*click to go to ThereProfileActivity with uid, this uid is of clicked user
                 * which will be used to show user specific data/post*/
-                Intent intent = new Intent(context, ThereProfileActivity.class);
-                intent.putExtra("uid", uid);
-                context.startActivity(intent);
+                if (!uid.equals(myUid)) {
+                    Intent intent = new Intent(context, ThereProfileActivity.class);
+                    intent.putExtra("uid", uid);
+                    context.startActivity(intent);
+                }
             }
         });
 

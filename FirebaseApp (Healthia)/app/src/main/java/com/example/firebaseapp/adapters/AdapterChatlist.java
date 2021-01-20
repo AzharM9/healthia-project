@@ -63,6 +63,15 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             Picasso.get().load(R.drawable.ic_default_img).into(holder.profileIv);
         }
 
+        //set online status of other users in chatlist
+        if (userList.get(position).getOnlineStatus().equals("online")){
+            //online
+            holder.onlineStatusIv.setImageResource(R.drawable.circle_online);
+        }
+        else{
+            holder.onlineStatusIv.setImageResource(R.drawable.circle_offline);
+        }
+
         //handle click of user in chatlist
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +98,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
 
     class MyHolder extends RecyclerView.ViewHolder{
         // views of row_chatlist.xml
-        ImageView profileIv;
+        ImageView profileIv, onlineStatusIv;
         TextView nameTv, lastMessageTv;
 
 
@@ -100,6 +109,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             profileIv = itemView.findViewById(R.id.profileIv);
             nameTv = itemView.findViewById(R.id.nameTv);
             lastMessageTv = itemView.findViewById(R.id.lastMessageTv);
+            onlineStatusIv = itemView.findViewById(R.id.onlineStatusIv);
 
         }
 

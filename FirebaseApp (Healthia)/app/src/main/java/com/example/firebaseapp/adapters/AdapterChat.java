@@ -91,7 +91,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder>{
                 builder.setTitle("Delete");
                 builder.setMessage("Are you sure to delete this message?");
                 //delete button
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteMessage(i);

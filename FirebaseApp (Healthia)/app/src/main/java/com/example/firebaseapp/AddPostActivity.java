@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -69,6 +71,7 @@ public class AddPostActivity extends AppCompatActivity {
     EditText titleEt, descriptionEt;
     ImageView imageIv;
     Button uploadBtn;
+    FrameLayout imageLayout;
 
     //user info
     String name, email, uid, dp;
@@ -107,6 +110,7 @@ public class AddPostActivity extends AppCompatActivity {
         descriptionEt = findViewById(R.id.pDescriptionEt);
         imageIv = findViewById(R.id.pImageIv);
         uploadBtn = findViewById(R.id.pUploadBtn);
+        imageLayout = findViewById(R.id.pImageLayout);
 
         //get data throough intent from previous activity's adapter for edit
         Intent intent = getIntent();
@@ -118,6 +122,7 @@ public class AddPostActivity extends AppCompatActivity {
             actionBar.setTitle("Update Post");
             uploadBtn.setText("Update");
             loadPostData(editPostId);
+
         } else {
             //add
             actionBar.setTitle("Add New Post");
@@ -149,12 +154,17 @@ public class AddPostActivity extends AppCompatActivity {
 
 
         //get image from camera gallery on click
-        imageIv.setOnClickListener(new View.OnClickListener() {
+        imageLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ShowImagePickDialog();
             }
         });
+        if (imageIv.getDrawable() != null){
+            findViewById(R.id.pDummyIv).setVisibility(View.GONE);
+        }else {
+            findViewById(R.id.pDummyIv).setVisibility(View.VISIBLE);
+        }
 
         //upload button click listener
         uploadBtn.setOnClickListener(new View.OnClickListener() {
@@ -401,6 +411,7 @@ public class AddPostActivity extends AppCompatActivity {
 
                     //set image
                     if (!editImage.equals("noImage")) {
+                        findViewById(R.id.pDummyIv).setVisibility(View.GONE);
                         try {
                             Picasso.get().load(editImage).into(imageIv);
                         } catch (Exception e) {
@@ -738,6 +749,7 @@ public class AddPostActivity extends AppCompatActivity {
 
                 imageIv.setImageURI(image_uri);
             }
+            findViewById(R.id.pDummyIv).setVisibility(View.GONE);
         }
 
         super.onActivityResult(requestCode, resultCode, data);

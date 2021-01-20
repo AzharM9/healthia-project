@@ -31,7 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.firebaseapp.adapters.PostsAdapter;
+import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,7 +50,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +93,7 @@ public class ProfileFragment extends Fragment {
     String storagePermissions[];
 
     List<ModelPost> postList;
-    PostsAdapter postsAdapter;
+    AdapterPosts adapterPosts;
     String uid;
 
     //uri of picked image
@@ -256,9 +255,9 @@ public class ProfileFragment extends Fragment {
                     postList.add(myPosts);
 
                     //adapter
-                    postsAdapter = new PostsAdapter(getActivity(), postList);
+                    adapterPosts = new AdapterPosts(getActivity(), postList);
                     //set this adapter to recyclerview
-                    postRecyclerView.setAdapter(postsAdapter);
+                    postRecyclerView.setAdapter(adapterPosts);
                 }
             }
 
@@ -410,6 +409,39 @@ public class ProfileFragment extends Fragment {
                                 for (DataSnapshot ds: dataSnapshot.getChildren()){
                                     String child = ds.getKey();
                                     dataSnapshot.getRef().child(child).child("uName").setValue(value);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        //update name in current users comments on post
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot ds: snapshot.getChildren()){
+                                    String child = ds.getKey();
+                                    if(snapshot.child(child).hasChild("Comments")) {
+                                        String child1 = ""+snapshot.child(child).getKey();
+                                        Query child2 = FirebaseDatabase.getInstance().getReference("Posts")
+                                                .child(child1).child("Comments").orderByChild("uid").equalTo("uid");
+                                        child2.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot ds: snapshot.getChildren()){
+                                                    String child = ds.getKey();
+                                                    snapshot.getRef().child(child).child("uName").setValue(value);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
                                 }
                             }
 
@@ -607,6 +639,40 @@ public class ProfileFragment extends Fragment {
 
                                     }
                                 });
+                                // update user image in current users comments on posts
+                                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                            String child = ds.getKey();
+                                            if(snapshot.child(child).hasChild("Comments")) {
+                                                String child1 = ""+snapshot.child(child).getKey();
+                                                Query child2 = FirebaseDatabase.getInstance().getReference("Posts")
+                                                        .child(child1).child("Comments").orderByChild("uid").equalTo("uid");
+                                                child2.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                                            String child = ds.getKey();
+                                                            snapshot.getRef().child(child).child("uDp").setValue(downloadUri.toString());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
                             }
 
                         } else {

@@ -85,8 +85,8 @@ public class PostDetailActivity extends AppCompatActivity {
         //init views
         uPictureIv = findViewById(R.id.uPictureIv);
         pImageIv = findViewById(R.id.pImageIv);
-        uNameTv = findViewById(R.id.nameTv);
-        pTimeTv = findViewById(R.id.timeTv);
+        uNameTv = findViewById(R.id.uNameTv);
+        pTimeTv = findViewById(R.id.pTimeTv);
         pTitleTv = findViewById(R.id.pTitleTv);
         pDescriptionTv = findViewById(R.id.pDescriptionTv);
         pLikesTv = findViewById(R.id.pLikesTv);
@@ -94,6 +94,10 @@ public class PostDetailActivity extends AppCompatActivity {
         moreBtn = findViewById(R.id.moreBtn);
         likeBtn = findViewById(R.id.likeBtn);
         profileLayout = findViewById(R.id.profileLayout);
+
+        commentEt = findViewById(R.id.commentEt);
+        sendBtn = findViewById(R.id.sendBtn);
+        cAvatarIv = findViewById(R.id.cAvatarIv);
 
         loadPostInfo();
 
@@ -104,7 +108,7 @@ public class PostDetailActivity extends AppCompatActivity {
         setLikes();
 
         //set subtitle of action bar
-        actionBar.setSubtitle("SignedIn as :"+myEmail);
+        actionBar.setSubtitle("SignedIn as: "+myEmail);
 
         //send comment button click
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +125,6 @@ public class PostDetailActivity extends AppCompatActivity {
                 likePost();
             }
         });
-        //more button click handle
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,10 +138,12 @@ public class PostDetailActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, moreBtn, Gravity.END);
 
         //show delete option  in only post(s) of currently signed-in user
-        if(hisUid.equals(myUid)){
-            //add items in menu
+        //add items in menu
+        if (hisUid.equals(myUid)) {
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
             popupMenu.getMenu().add(Menu.NONE, 1, 0, "Edit");
+        } else {
+            popupMenu.getMenu().add(Menu.NONE, 2, 0, "Visit Profile");
         }
 
         //item click listener
@@ -177,6 +182,12 @@ public class PostDetailActivity extends AppCompatActivity {
                     intent.putExtra("editPostId", postId);
                     startActivity(intent);
 
+                } else if(id == 2) {
+                    /*click to go to ThereProfileActivity with uid, this uid is of clicked user
+                     * which will be used to show user specific data/post*/
+                    Intent intent = new Intent(PostDetailActivity.this, ThereProfileActivity.class);
+                    intent.putExtra("uid", hisUid);
+                    startActivity(intent);
                 }
                 return false;
             }
@@ -417,12 +428,13 @@ public class PostDetailActivity extends AppCompatActivity {
                     myName = ""+ds.child("name").getValue();
                     myDp = ""+ds.child("image").getValue();
 
-                    //set data
-                    try {
-                        //if image is received then set
-                        Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                    if (!myDp.equals("")) {
+                        try {
+                            //if image is received then set
+                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+                        } catch (Exception e) {
+                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                        }
                     }
                 }
             }
@@ -445,11 +457,11 @@ public class PostDetailActivity extends AppCompatActivity {
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     //get data
                     String pTitle = ""+ds.child("pTitle").getValue();
-                    String pDescr = ""+ds.child("pDescr").getValue();
+                    String pDescr = ""+ds.child("pDescription").getValue();
                     pLikes = ""+ds.child("pLikes").getValue();
                     String pTimeStamp = ""+ds.child("pTime").getValue();
                     pImage = ""+ds.child("pImage").getValue();
-                    hisDp = ""+ds.child("pTitle").getValue();
+                    hisDp = ""+ds.child("uDp").getValue();
                     hisUid = ""+ds.child("uid").getValue();
                     String uEmail = ""+ds.child("uEmail").getValue();
                     hisName = ""+ds.child("uName").getValue();
@@ -488,10 +500,12 @@ public class PostDetailActivity extends AppCompatActivity {
                     }
 
                     //set user image in comment part
-                    try {
-                        Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                    if (!hisDp.equals("")) {
+                        try {
+                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+                        } catch (Exception e) {
+                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                        }
                     }
                 }
             }

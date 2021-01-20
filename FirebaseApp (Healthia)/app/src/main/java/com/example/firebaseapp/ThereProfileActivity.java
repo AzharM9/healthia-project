@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.firebaseapp.adapters.PostsAdapter;
+import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -55,7 +55,7 @@ public class ThereProfileActivity extends AppCompatActivity {
     RecyclerView postRecyclerView;
 
     List<ModelPost> postList;
-    PostsAdapter postsAdapter;
+    AdapterPosts adapterPosts;
     String otherUser_uid;
 
     private String mCurrentState;
@@ -364,9 +364,9 @@ public class ThereProfileActivity extends AppCompatActivity {
                     postList.add(myPosts);
 
                     //adapter
-                    postsAdapter = new PostsAdapter(ThereProfileActivity.this, postList);
+                    adapterPosts = new AdapterPosts(ThereProfileActivity.this, postList);
                     //set this adapter to recyclerview
-                    postRecyclerView.setAdapter(postsAdapter);
+                    postRecyclerView.setAdapter(adapterPosts);
                 }
             }
 
