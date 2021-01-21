@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -25,6 +27,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.firebaseapp.adapters.AdapterComments;
+import com.example.firebaseapp.models.ModelComment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,8 +43,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
@@ -61,6 +67,10 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageButton moreBtn;
     Button likeBtn;
     LinearLayout profileLayout;
+    RecyclerView recyclerView;
+
+    List<ModelComment> commentList;
+    AdapterComments adapterComments;
 
     //add comments views
     EditText commentEt;
@@ -94,6 +104,7 @@ public class PostDetailActivity extends AppCompatActivity {
         moreBtn = findViewById(R.id.moreBtn);
         likeBtn = findViewById(R.id.likeBtn);
         profileLayout = findViewById(R.id.profileLayout);
+        recyclerView = findViewById(R.id.recyclerView);
 
         commentEt = findViewById(R.id.commentEt);
         sendBtn = findViewById(R.id.sendBtn);
@@ -109,6 +120,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
         //set subtitle of action bar
         actionBar.setSubtitle("SignedIn as: "+myEmail);
+
+        loadComments();
 
         //send comment button click
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +142,41 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showMoreOptions();
+            }
+        });
+    }
+
+    private void loadComments() {
+        //layout(linear) for recycler view
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        //set layout to recycler view
+        recyclerView.setLayoutManager(layoutManager);
+
+        //init comment list
+        commentList = new ArrayList<>();
+
+        //Path of the post, to get it's comments
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    ModelComment modelComment = ds.getValue(ModelComment.class);
+
+                    commentList.add(modelComment);
+
+                    //setup adapter
+                    adapterComments = new AdapterComments(getApplicationContext(), commentList, myUid, postId);
+
+                    //set adapter
+                    recyclerView.setAdapter(adapterComments);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
