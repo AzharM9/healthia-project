@@ -16,9 +16,11 @@
             android:src="@drawable/ic_default_img"/>
         <!--Image View online/offline status-->
         <ImageView
-            android:id="@+id/onlineStatusIv"
+            android:id="@+id/seenMessageIv"
             android:layout_width="25dp"
-            android:layout_height="25dp"/>
+            android:layout_height="25dp"
+            android:visibility="gone"
+            android:src="@drawable/circle_online"/>
         <TextView
             android:id="@+id/nameTv"
             android:layout_width="match_parent"

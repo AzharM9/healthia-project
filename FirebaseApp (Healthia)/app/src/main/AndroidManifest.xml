@@ -14,22 +14,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseApp">
-        <activity android:name=".PostDetailActivity"></activity>
-        <activity android:name=".ThereProfileActivity" />
+        <activity android:name=".activitys.PostDetailActivity"></activity>
+        <activity android:name=".activitys.ThereProfileActivity" />
         <activity
-            android:name=".ChatActivity"
+            android:name=".activitys.ChatActivity"
             android:theme="@style/AppThemeNo" />
-        <activity android:name=".AddPostActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".DashboardActivity">
+        <activity android:name=".activitys.AddPostActivity" />
+        <activity android:name=".activitys.LoginActivity" />
+        <activity android:name=".activitys.DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activitys.RegisterActivity" />
+        <activity android:name=".activitys.MainActivity" />
 
         <service
             android:name=".notifications.FirebaseService"

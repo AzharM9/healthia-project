@@ -1,4 +1,4 @@
-package com.example.firebaseapp;
+package com.example.firebaseapp.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -12,8 +12,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +33,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.MainActivity;
+import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -92,6 +97,8 @@ public class ProfileFragment extends Fragment {
     String cameraPermissions[];
     String storagePermissions[];
 
+    ActionBar actionBar;
+
     List<ModelPost> postList;
     AdapterPosts adapterPosts;
     String uid;
@@ -138,6 +145,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        ((DashboardActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
         //init firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -743,7 +752,6 @@ public class ProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.action_add_post).setVisible(false);
         menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -757,8 +765,16 @@ public class ProfileFragment extends Fragment {
             firebaseAuth.signOut();
             checkUserStatus();
         }
-        if (id == R.id.action_add_post){
-            startActivity(new Intent(getActivity(), AddPostActivity.class));
+        if (id == R.id.action_chatlist){
+            actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
+            actionBar.setTitle("Chats");
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            ChatListFragment fragment6 = new ChatListFragment();
+            FragmentTransaction ft6 = getActivity().getSupportFragmentManager().beginTransaction();
+            ft6.replace(R.id.content, fragment6, "");
+            ft6.addToBackStack(null);
+            ft6.commit();
         }
         return super.onOptionsItemSelected(item);
     }

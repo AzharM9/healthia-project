@@ -1,4 +1,4 @@
-package com.example.firebaseapp;
+package com.example.firebaseapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.firebaseapp.activitys.MainActivity;
+import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterUser;
 import com.example.firebaseapp.models.ModelUser;
 import com.google.firebase.auth.FirebaseAuth;
@@ -213,8 +215,8 @@ public class UsersFragment extends Fragment {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
 
-        //hide addPost icon from this fragment
-        menu.findItem(R.id.action_add_post).setVisible(false);
+        //hide message
+        menu.findItem(R.id.action_chatlist).setVisible(false);
 
         //SearchView
         MenuItem item = menu.findItem(R.id.action_search);

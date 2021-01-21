@@ -1,4 +1,4 @@
-package com.example.firebaseapp;
+package com.example.firebaseapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,9 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.MainActivity;
+import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterChatlist;
 import com.example.firebaseapp.models.ModelChat;
 import com.example.firebaseapp.models.ModelChatlist;
@@ -36,6 +40,8 @@ public class ChatListFragment extends Fragment {
     DatabaseReference refence;
     FirebaseUser currentUser;
     AdapterChatlist adapterChatlist;
+
+    ActionBar actionBar;
 
 
     public ChatListFragment() {
@@ -73,6 +79,7 @@ public class ChatListFragment extends Fragment {
 
             }
         });
+        checkUserStatus();
 
         return view;
     }
@@ -116,12 +123,14 @@ public class ChatListFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String theLastMessage = "default";
+                boolean theSeenMessage = true;
+                String sender = currentUser.getUid();
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     ModelChat chat = ds.getValue(ModelChat.class);
                     if (chat == null){
                         continue;
                     }
-                    String sender = chat.getSender();
+                    sender = chat.getSender();
                     String receiver = chat.getReceiver();
                     if (sender == null || receiver == null) {
                         continue;
@@ -129,9 +138,11 @@ public class ChatListFragment extends Fragment {
                     if (chat.getReceiver().equals(currentUser.getUid()) && chat.getSender().equals(uid) ||
                             chat.getReceiver().equals(uid) && chat.getSender().equals(currentUser.getUid())){
                         theLastMessage = chat.getMessage();
+                        theSeenMessage = chat.isSeen();
                     }
                 }
                 adapterChatlist.setLastMessageMap(uid, theLastMessage);
+                adapterChatlist.setSeenMessageMap(uid, theSeenMessage, sender);
                 adapterChatlist.notifyDataSetChanged();
             }
 
@@ -155,5 +166,13 @@ public class ChatListFragment extends Fragment {
             getActivity().finish();
         }
 
+    }
+
+    @Override
+    public void onStop() {
+        actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        super.onStop();
     }
 }

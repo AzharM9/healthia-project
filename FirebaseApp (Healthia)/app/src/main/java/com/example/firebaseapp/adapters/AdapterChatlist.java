@@ -11,9 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.firebaseapp.ChatActivity;
+import com.example.firebaseapp.activitys.ChatActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.models.ModelUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -24,12 +26,16 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
     Context context;
     List<ModelUser> userList;
     private HashMap<String, String> lastMessageMap;
+    private HashMap<String, Boolean> seenMessageMap;
+    private HashMap<String, String> senderMap;
 
     //constructor
     public AdapterChatlist(Context context, List<ModelUser> userList) {
         this.context = context;
         this.userList = userList;
         lastMessageMap = new HashMap<>();
+        seenMessageMap = new HashMap<>();
+        senderMap = new HashMap<>();
     }
 
     @NonNull
@@ -47,6 +53,8 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
         String lastMessage = lastMessageMap.get(hisUid);
+        Boolean seenMessage = seenMessageMap.get(hisUid);
+        String sender = senderMap.get(hisUid);
 
         //set data
         holder.nameTv.setText(userName);
@@ -62,15 +70,23 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
         }catch (Exception e){
             Picasso.get().load(R.drawable.ic_default_img).into(holder.profileIv);
         }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        //set online status of other users in chatlist
+        if(seenMessage != null && seenMessage.equals(false) && sender != null && !sender.equals(user.getUid())){
+            holder.seenMessageIv.setVisibility(View.VISIBLE);
+        } else{
+            holder.seenMessageIv.setVisibility(View.GONE);
+        }
+
+
+        /*//set online status of other users in chatlist
         if (userList.get(position).getOnlineStatus().equals("online")){
             //online
             holder.onlineStatusIv.setImageResource(R.drawable.circle_online);
         }
         else{
             holder.onlineStatusIv.setImageResource(R.drawable.circle_offline);
-        }
+        }*/
 
         //handle click of user in chatlist
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +105,10 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
     public void setLastMessageMap(String userId, String lastMessage) {
         lastMessageMap.put(userId, lastMessage);
     }
+    public void setSeenMessageMap(String userId, Boolean isSeen, String senderId) {
+        seenMessageMap.put(userId, isSeen);
+        senderMap.put(userId, senderId);
+    }
 
     @Override
     public int getItemCount() {
@@ -98,7 +118,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
 
     class MyHolder extends RecyclerView.ViewHolder{
         // views of row_chatlist.xml
-        ImageView profileIv, onlineStatusIv;
+        ImageView profileIv, seenMessageIv;
         TextView nameTv, lastMessageTv;
 
 
@@ -109,7 +129,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             profileIv = itemView.findViewById(R.id.profileIv);
             nameTv = itemView.findViewById(R.id.nameTv);
             lastMessageTv = itemView.findViewById(R.id.lastMessageTv);
-            onlineStatusIv = itemView.findViewById(R.id.onlineStatusIv);
+            seenMessageIv = itemView.findViewById(R.id.seenMessageIv);
 
         }
 

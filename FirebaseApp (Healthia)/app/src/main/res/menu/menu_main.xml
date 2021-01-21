@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_abput_us"
+        android:title="About Us"/>
+    <item android:id="@+id/action_feedback"
+        android:title="Feedback"/>
     <item android:id="@+id/action_logout"
         android:title="Logout"/>
 
@@ -11,8 +15,8 @@
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
-    <item android:id="@+id/action_add_post"
-        android:title="Add Post"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_add_white"/>
+    <item android:id="@+id/action_chatlist"
+        android:title="Chat List"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_chat_list"/>
 </menu>

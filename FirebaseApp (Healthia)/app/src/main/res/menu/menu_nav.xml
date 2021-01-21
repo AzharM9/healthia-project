@@ -10,12 +10,12 @@
         android:icon="@drawable/ic_users_black"/>
 
     <item android:id="@+id/nav_panic_button"
-        android:title="Panic Button"
-        android:icon="@drawable/ic_panic_button"/>
+        android:title="Healthia"
+        android:icon="@drawable/ic_smile"/>
 
-    <item android:id="@+id/nav_chat"
-        android:title="Chats"
-        android:icon="@drawable/ic_chat_black"/>
+    <item android:id="@+id/nav_notification"
+        android:title="Notifications"
+        android:icon="@drawable/ic_notifications"/>
 
     <item android:id="@+id/nav_profile"
         android:title="Profile"

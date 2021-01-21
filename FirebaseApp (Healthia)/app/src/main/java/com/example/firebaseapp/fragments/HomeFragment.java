@@ -1,11 +1,13 @@
-package com.example.firebaseapp;
+package com.example.firebaseapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +21,10 @@ import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.firebaseapp.activitys.AddPostActivity;
+import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.MainActivity;
+import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -42,6 +48,7 @@ public class HomeFragment extends Fragment {
 
     //firebase auth
     FirebaseAuth firebaseAuth;
+    ActionBar actionBar;
 
     RecyclerView recyclerView;
     List<ModelPost> postList;
@@ -88,6 +95,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         //inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        ((DashboardActivity) getActivity()).getSupportActionBar().setTitle("Home");
 
         setHasOptionsMenu(true); //to show menu option in fragment
 
@@ -213,9 +222,6 @@ public class HomeFragment extends Fragment {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
 
-        //hide action_post in action bar
-        menu.findItem(R.id.action_add_post).setVisible(false);
-
         //searchView to search posts by posts title/description
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
@@ -257,6 +263,17 @@ public class HomeFragment extends Fragment {
         if (id == R.id.action_logout){
             firebaseAuth.signOut();
             checkUserStatus();
+        }
+        if (id == R.id.action_chatlist){
+            actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
+            actionBar.setTitle("Chats");
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            ChatListFragment fragment6 = new ChatListFragment();
+            FragmentTransaction ft6 = getActivity().getSupportFragmentManager().beginTransaction();
+            ft6.replace(R.id.content, fragment6, "");
+            ft6.addToBackStack(null);
+            ft6.commit();
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,12 +1,24 @@
-package com.example.firebaseapp;
+package com.example.firebaseapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.MainActivity;
+import com.example.firebaseapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +26,10 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class PanicButtonFragment extends Fragment {
+
+    //firebase
+    FirebaseAuth firebaseAuth;
+    String uid;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -48,11 +64,8 @@ public class PanicButtonFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true); //to show menu option in fragment
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -60,5 +73,43 @@ public class PanicButtonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_panic_button, container, false);
+    }
+
+    private void checkUserStatus(){
+        //get current user
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+            //user is signed in stay here
+            //set email of logged in user
+//            mProfileTv.setText(user.getEmail());
+            uid = user.getUid();
+        } else{
+            //user not signed in, go to main activity
+            startActivity(new Intent(getActivity(), MainActivity.class));
+            getActivity().finish();
+        }
+
+    }
+
+    //inflate option menu
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //inflating menu
+        inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_chatlist).setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    //handle menu item clicks
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //get item id
+        int id = item.getItemId();
+        if (id == R.id.action_logout){
+            firebaseAuth.signOut();
+            checkUserStatus();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

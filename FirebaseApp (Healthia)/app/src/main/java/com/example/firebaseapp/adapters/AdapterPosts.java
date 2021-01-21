@@ -23,10 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.firebaseapp.AddPostActivity;
-import com.example.firebaseapp.PostDetailActivity;
+import com.example.firebaseapp.activitys.AddPostActivity;
+import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.R;
-import com.example.firebaseapp.ThereProfileActivity;
+import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.example.firebaseapp.models.ModelPost;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -190,6 +191,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
                                 postsRef.child(postIde).child("pLikes").setValue(""+(pLikes+1));
                                 likesRef.child(postIde).child(myUid).setValue("Liked");
                                 mProcessLike = false;
+
+                                addToHisNotifications(""+uid, ""+pId, "Liked your post");
                             }
                         }
                     }
@@ -225,6 +228,33 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             }
         });
 
+    }
+
+    private void addToHisNotifications(String hisUid, String pId, String notification) {
+        String timestamp = ""+System.currentTimeMillis();
+
+        HashMap<Object, String > hashMap = new HashMap<>();
+        hashMap.put("pId", pId);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("pUid", hisUid);
+        hashMap.put("notification", notification);
+        hashMap.put("sUid", myUid);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(hisUid).child("Notifications").child(timestamp).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //added successfully
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed
+                    }
+                });
     }
 
     private void setLikes(MyHolder holder, String postKey) {

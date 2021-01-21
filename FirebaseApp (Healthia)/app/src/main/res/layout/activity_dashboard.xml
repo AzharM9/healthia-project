@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".DashboardActivity">
+    tools:context=".activitys.DashboardActivity">
 
 <!--    Framelayout show fragment-->
     <FrameLayout
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="?android:attr/windowBackground"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_nav">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>

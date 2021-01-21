@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.firebaseapp.ChatActivity;
+import com.example.firebaseapp.activitys.ChatActivity;
 import com.example.firebaseapp.R;
-import com.example.firebaseapp.ThereProfileActivity;
+import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.example.firebaseapp.models.ModelUser;
 import com.squareup.picasso.Picasso;
 

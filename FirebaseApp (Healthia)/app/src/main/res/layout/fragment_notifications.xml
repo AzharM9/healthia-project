@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ChatListFragment">
+    tools:context=".fragments.NotificationsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/notificationRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/row_chatlist"
+        tools:listitem="@layout/row_notification"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
 
 </FrameLayout>
