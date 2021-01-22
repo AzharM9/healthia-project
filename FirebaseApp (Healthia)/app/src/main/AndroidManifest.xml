@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseApp">
+        <activity android:name=".activitys.FriendlistActivity"/>
         <activity android:name=".activitys.PostDetailActivity"></activity>
         <activity android:name=".activitys.ThereProfileActivity" />
         <activity

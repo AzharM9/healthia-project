@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.FriendlistActivity;
 import com.example.firebaseapp.activitys.MainActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
@@ -81,6 +83,7 @@ public class ProfileFragment extends Fragment {
     //views from xml
     ImageView avatarTv, coverIv;
     TextView nameTv, emailTv, phoneTv;
+    Button mFriendList;
     ExtendedFloatingActionButton fab;
     RecyclerView postRecyclerView;
 
@@ -165,6 +168,7 @@ public class ProfileFragment extends Fragment {
         nameTv = view.findViewById(R.id.nameTv);
         emailTv = view.findViewById(R.id.emailTv);
         phoneTv = view.findViewById(R.id.phoneTv);
+        mFriendList = view.findViewById(R.id.friendList);
         fab = view.findViewById(R.id.fab);
         postRecyclerView = view.findViewById(R.id.recyclerview_posts);
 
@@ -218,6 +222,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        mFriendList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(getContext(), FriendlistActivity.class));
             }
         });
 

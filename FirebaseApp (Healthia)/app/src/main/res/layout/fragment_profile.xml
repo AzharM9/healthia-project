@@ -76,6 +76,14 @@
                         android:layout_marginLeft="5dp"
                         android:textColor="@color/white"
                         tools:text="Phone" />
+
+                    <Button
+                        android:id="@+id/friendList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friend List"
+                        android:layout_marginStart="50dp"
+                        android:layout_marginLeft="70dp" />
                 </LinearLayout>
 
             </LinearLayout>
