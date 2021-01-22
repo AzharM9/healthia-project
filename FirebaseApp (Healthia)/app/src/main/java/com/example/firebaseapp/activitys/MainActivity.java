@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //start RegisterActivity
                 startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-
+                finish();
             }
         });
 
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
            public void onClick(View view) {
                //start Login Activity
                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+               finish();
             }
        });
     }
