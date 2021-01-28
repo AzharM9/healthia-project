@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendlistActivity">
+    tools:context=".activitys.FriendlistActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friends_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/users_single_layout"/>
 </RelativeLayout>

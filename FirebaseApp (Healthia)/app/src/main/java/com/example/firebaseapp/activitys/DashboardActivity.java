@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.firebaseapp.R;
-import com.example.firebaseapp.fragments.ChatListFragment;
 import com.example.firebaseapp.fragments.HomeFragment;
 import com.example.firebaseapp.fragments.NotificationsFragment;
 import com.example.firebaseapp.fragments.PanicButtonFragment;

@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
     tools:context=".fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postsRecyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/item_row_posts"
-        />
+   <androidx.viewpager.widget.ViewPager
+       android:id="@+id/pager"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <com.google.android.material.tabs.TabLayout
+           android:id="@+id/tab_layout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:background="@color/design_default_color_primary"
+           app:tabTextColor="@color/colorGrey"
+           app:tabSelectedTextColor="@color/colorWhite"
+           app:tabIndicatorColor="@color/purple_200"
+           app:tabIndicatorHeight="3dp"/>
+   </androidx.viewpager.widget.ViewPager>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab"
-        app:icon="@drawable/ic_post_white"
-        android:text="Post Status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"/>
-
-</RelativeLayout>
+</LinearLayout>

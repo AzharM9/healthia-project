@@ -215,8 +215,11 @@ public class UsersFragment extends Fragment {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
 
-        //hide message
+        //hide message, about us, feedback, logout
         menu.findItem(R.id.action_chatlist).setVisible(false);
+        menu.findItem(R.id.action_about_us).setVisible(false);
+        menu.findItem(R.id.action_feedback).setVisible(false);
+        menu.findItem(R.id.action_logout).setVisible(false);
 
         //SearchView
         MenuItem item = menu.findItem(R.id.action_search);
@@ -256,17 +259,5 @@ public class UsersFragment extends Fragment {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    //handle menu item clicks
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //get item id
-        int id = item.getItemId();
-        if (id == R.id.action_logout){
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

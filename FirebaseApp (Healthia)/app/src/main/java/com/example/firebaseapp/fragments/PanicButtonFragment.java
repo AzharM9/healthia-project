@@ -94,25 +94,4 @@ public class PanicButtonFragment extends Fragment {
 
     }
 
-    //inflate option menu
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //inflating menu
-        inflater.inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.action_search).setVisible(false);
-        menu.findItem(R.id.action_chatlist).setVisible(false);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    //handle menu item clicks
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //get item id
-        int id = item.getItemId();
-        if (id == R.id.action_logout){
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
