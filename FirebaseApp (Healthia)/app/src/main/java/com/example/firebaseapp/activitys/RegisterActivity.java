@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -38,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
+    private DatabaseReference mUserDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering user...");
 
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         //in onCreate() method, initialize the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
 
@@ -111,11 +114,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                             // Sign in success, dismiss dialog start register Activity
                             progressDialog.dismiss();
+
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             //Get user email and uid from auth
                             String email = user.getEmail();
                             String uid = user.getUid();
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
                             //when user is registered store user info in firebase realtime database too
                             //using hashMap
@@ -124,6 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("uid", uid);
                             hashMap.put("name", "");
                             hashMap.put("onlineStatus", "online");
+                            hashMap.put("device_token", deviceToken);
                             hashMap.put("phone", ""); //will add later (e.g edit profile)
                             hashMap.put("image", ""); //will add later (e.g edit profile)
                             hashMap.put("cover", ""); //will add later (e.g edit profile)

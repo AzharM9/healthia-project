@@ -44,7 +44,7 @@ public class ThereProfileActivity extends AppCompatActivity {
     private FirebaseUser mCurrent_user;
 
     private DatabaseReference mRootRef;
-    private DatabaseReference mUsersDatabase;
+    private DatabaseReference mNotificationDatabase;
     private DatabaseReference mFriendReqDatabase;
     private DatabaseReference mFriendDatabase;
 
@@ -193,6 +193,7 @@ public class ThereProfileActivity extends AppCompatActivity {
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mCurrent_user = FirebaseAuth.getInstance().getCurrentUser();
+        mNotificationDatabase = FirebaseDatabase.getInstance().getReference().child("Notifications");
         mFriendReqDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
 
@@ -207,9 +208,17 @@ public class ThereProfileActivity extends AppCompatActivity {
                 //---------------------NOT FRIEND STATE-------------------------------------
                 if (mCurrentState.equals("not_friends")) {
 
+                    DatabaseReference newNotificationRef = mRootRef.child("Notifications").child(otherUser_uid).push();
+                    String newNotificationId = newNotificationRef.getKey();
+
+                    HashMap<String, String> notificationData = new HashMap<>();
+                    notificationData.put("from", mCurrent_user.getUid());
+                    notificationData.put("type", "request");
+
                     Map requestMap = new HashMap();
                     requestMap.put("Friend_req/" + mCurrent_user.getUid() + "/" + otherUser_uid + "/request_type", "sent");
                     requestMap.put("Friend_req/" + otherUser_uid + "/" + mCurrent_user.getUid() + "/request_type", "received");
+                    requestMap.put("Notifications/" + otherUser_uid + "/" + newNotificationId, notificationData);
 
                     mRootRef.updateChildren(requestMap, new DatabaseReference.CompletionListener() {
                         @Override
@@ -320,7 +329,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                             if(error != null){
-                                Toast.makeText(ThereProfileActivity.this, "There is some error in canceling request", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ThereProfileActivity.this, "There is some error in declining request", Toast.LENGTH_SHORT).show();
                             }
 
                             mCurrentState = "not_friends";

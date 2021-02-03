@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
+    private DatabaseReference mUserDatabase;
 
     //progress dialog
     ProgressDialog pd;
@@ -54,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //In the onCreate() method, initialize the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
         //init
         mEmailEt = findViewById(R.id.emailEt);
@@ -102,6 +105,12 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //dismiss progress dialog
                             pd.dismiss();
+
+                            //add token to user
+                            String current_user_id = mAuth.getCurrentUser().getUid();
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                            mUserDatabase.child(current_user_id).child("device_token").setValue(deviceToken);
+
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
 

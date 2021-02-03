@@ -15,8 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseApp">
         <activity android:name=".activitys.FriendlistActivity"/>
-        <activity android:name=".activitys.PostDetailActivity"></activity>
-        <activity android:name=".activitys.ThereProfileActivity" />
+        <activity android:name=".activitys.PostDetailActivity"/>
+        <activity android:name=".activitys.ThereProfileActivity">
+            <intent-filter>
+                <action android:name="TARGET_NOTIFICATION_FRIEND_REQ"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activitys.ChatActivity"
             android:theme="@style/AppThemeNo" />
