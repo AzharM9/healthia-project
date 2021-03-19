@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.firebaseapp.MapsActivity;
 import com.example.firebaseapp.activitys.AddPostActivity;
 import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.activitys.MainActivity;
@@ -50,7 +51,7 @@ public class FeedsFragment extends Fragment {
     List<ModelPost> postList;
     AdapterPosts adapterPosts;
 
-    ExtendedFloatingActionButton fab;
+    ExtendedFloatingActionButton fab, maps;
 
     //user info
     String email, uid;
@@ -85,6 +86,7 @@ public class FeedsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         // init
+        maps = view.findViewById(R.id.maps);
         fab = view.findViewById(R.id.fab);
 
         //show newest posts first, for this load from from last
@@ -96,6 +98,13 @@ public class FeedsFragment extends Fragment {
 
         //init post list
         postList = new ArrayList<>();
+
+        maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), MapsActivity.class));
+            }
+        });
 
         //handle fab click post
         fab.setOnClickListener(new View.OnClickListener() {

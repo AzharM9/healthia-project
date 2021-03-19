@@ -15,6 +15,16 @@
         />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/maps"
+        app:icon="@drawable/ic_post_white"
+        android:text="EDMT Nearby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/fab"
+        android:layout_margin="10dp"/>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         app:icon="@drawable/ic_post_white"
         android:text="Post Status"
