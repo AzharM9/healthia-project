@@ -3,4 +3,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    
+    <string-array name="forum_type">
+        <item name="1">All</item>
+        <item name="2">Health</item>
+        <item name="3">Other</item>
+    </string-array>
+
+    <string-array name="new_forum">
+        <item name="1">Health</item>
+        <item name="2">Other</item>
+    </string-array>
 </resources>
