@@ -113,16 +113,16 @@ public class AdapterReply extends RecyclerView.Adapter<AdapterReply.MyHolder> {
     }
 
     private void deleteComment(String cId) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
-        ref.child("Comments").child(cId).removeValue(); //it will delete the comment
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(postId);
+        ref.child("Replies").child(cId).removeValue(); //it will delete the comment
 
         //new update the comments count
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String comments = ""+snapshot.child("pComments").getValue();
+                String comments = ""+snapshot.child("fReplies").getValue();
                 int newCommentVal = Integer.parseInt(comments) - 1;
-                ref.child("pComments").setValue(""+newCommentVal);
+                ref.child("fReplies").setValue(""+newCommentVal);
             }
 
             @Override
