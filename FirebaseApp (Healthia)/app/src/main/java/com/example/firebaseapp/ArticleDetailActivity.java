@@ -47,11 +47,11 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ForumDetailActivity extends AppCompatActivity {
+public class ArticleDetailActivity extends AppCompatActivity {
 
     //to get detail of user and post
     String hisUid, myUid, myEmail, myName, myDp,
-            fId, pLikes, hisDp, hisName, pImage;
+            aId, pLikes, hisDp, hisName, pImage;
 
     boolean mProcessComment = false;
     boolean mProcessLike = false;
@@ -60,8 +60,8 @@ public class ForumDetailActivity extends AppCompatActivity {
     ProgressDialog pd;
 
     //views
-    ImageView uPictureIv, fImageIv;
-    TextView uNameTv, fTimeTv, fTitleTv, fDescriptionTv, pLikesTv, fCommentsTv, fCategoryTv;
+    ImageView uPictureIv, aImageIv;
+    TextView uNameTv, aTimeTv, aTitleTv, aDescriptionTv, pLikesTv, aCommentsTv, aCategoryTv;
     ImageButton moreBtn;
 //    Button likeBtn;
     LinearLayout profileLayout;
@@ -78,28 +78,28 @@ public class ForumDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forum_detail);
+        setContentView(R.layout.activity_article_detail);
 
         //Action bar and its properties
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Forum Detail");
+        actionBar.setTitle("Article Detail");
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //get id of the post using intent
         Intent intent = getIntent();
-        fId = intent.getStringExtra("postId");
+        aId = intent.getStringExtra("postId");
 
         //init views
         uPictureIv = findViewById(R.id.uPictureIv);
-        fImageIv = findViewById(R.id.fImageIv);
+        aImageIv = findViewById(R.id.aImageIv);
         uNameTv = findViewById(R.id.uNameTv);
-        fTimeTv = findViewById(R.id.fTimeTv);
-        fTitleTv = findViewById(R.id.fTitleTv);
-        fCategoryTv = findViewById(R.id.fCategoryTv);
-        fDescriptionTv = findViewById(R.id.fDescriptionTv);
+        aTimeTv = findViewById(R.id.aTimeTv);
+        aTitleTv = findViewById(R.id.aTitleTv);
+        aCategoryTv = findViewById(R.id.aCategoryTv);
+        aDescriptionTv = findViewById(R.id.fDescriptionTv);
 //        pLikesTv = findViewById(R.id.pLikesTv);
-        fCommentsTv = findViewById(R.id.fCommentsTv);
+        aCommentsTv = findViewById(R.id.fCommentsTv);
         moreBtn = findViewById(R.id.moreBtn);
 //        likeBtn = findViewById(R.id.likeBtn);
         profileLayout = findViewById(R.id.profileLayout);
@@ -120,13 +120,13 @@ public class ForumDetailActivity extends AppCompatActivity {
         //set subtitle of action bar
         //actionBar.setSubtitle("SignedIn as: "+myEmail);
 
-        loadComments();
+//        loadComments();
 
         //send comment button click
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postReply();
+//                postReply();
             }
         });
 
@@ -149,7 +149,7 @@ public class ForumDetailActivity extends AppCompatActivity {
         String timestamp = ""+System.currentTimeMillis();
 
         HashMap<Object, String > hashMap = new HashMap<>();
-        hashMap.put("fId", pId);
+        hashMap.put("aId", pId);
         hashMap.put("timestamp", timestamp);
         hashMap.put("fUid", hisUid);
         hashMap.put("notification", notification);
@@ -182,7 +182,7 @@ public class ForumDetailActivity extends AppCompatActivity {
         replyList = new ArrayList<>();
 
         //Path of the post, to get it's comments
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(fId).child("Replies");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(aId).child("Replies");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -193,7 +193,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     replyList.add(modelReply);
 
                     //setup adapter
-                    adapterReply = new AdapterReply(getApplicationContext(), replyList, myUid, fId);
+                    adapterReply = new AdapterReply(getApplicationContext(), replyList, myUid, aId);
 
                     //set adapter
                     recyclerView.setAdapter(adapterReply);
@@ -228,9 +228,9 @@ public class ForumDetailActivity extends AppCompatActivity {
                 if (id == 0){
                     //delete is clicked
                     //show delete message confirm dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ForumDetailActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ArticleDetailActivity.this);
                     builder.setTitle("Delete");
-                    builder.setMessage("Are you sure to delete this forum?");
+                    builder.setMessage("Are you sure to delete this article?");
                     //delete button
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -251,15 +251,15 @@ public class ForumDetailActivity extends AppCompatActivity {
                 else if(id == 1){
                     //Edit is clicked
                     //start AddPostActivity with key "editPost" and the id of the post clicked
-                    Intent intent = new Intent(ForumDetailActivity.this, AddForumActivity.class);
+                    Intent intent = new Intent(ArticleDetailActivity.this, AddArticleActivity.class);
                     intent.putExtra("key", "editPost");
-                    intent.putExtra("editPostId", fId);
+                    intent.putExtra("editPostId", aId);
                     startActivity(intent);
 
                 } else if(id == 2) {
                     /*click to go to ThereProfileActivity with uid, this uid is of clicked user
                      * which will be used to show user specific data/post*/
-                    Intent intent = new Intent(ForumDetailActivity.this, ThereProfileActivity.class);
+                    Intent intent = new Intent(ArticleDetailActivity.this, ThereProfileActivity.class);
                     intent.putExtra("uid", hisUid);
                     startActivity(intent);
                 }
@@ -301,7 +301,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
 
                         //image deleted, now delete database
-                        Query fquery = FirebaseDatabase.getInstance().getReference("Forums").orderByChild("fId").equalTo(fId);
+                        Query fquery = FirebaseDatabase.getInstance().getReference("Articles").orderByChild("aId").equalTo(aId);
                         fquery.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -309,7 +309,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                                     ds.getRef().removeValue();
                                 }
                                 //deleted
-                                Toast.makeText(ForumDetailActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(com.example.firebaseapp.ArticleDetailActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
                                 pd.dismiss();
                             }
 
@@ -325,7 +325,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         //failed, can't go further
                         pd.dismiss();
-                        Toast.makeText(ForumDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(com.example.firebaseapp.ArticleDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -334,7 +334,7 @@ public class ForumDetailActivity extends AppCompatActivity {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Deleting...");
 
-        Query fquery = FirebaseDatabase.getInstance().getReference("Forums").orderByChild("fId").equalTo(fId);
+        Query fquery = FirebaseDatabase.getInstance().getReference("Articles").orderByChild("aId").equalTo(aId);
         fquery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -342,7 +342,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     ds.getRef().removeValue();
                 }
                 //deleted
-                Toast.makeText(ForumDetailActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ArticleDetailActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
                 pd.dismiss();
             }
 
@@ -437,7 +437,7 @@ public class ForumDetailActivity extends AppCompatActivity {
         String timeStamp = String.valueOf(System.currentTimeMillis());
 
         //each post will have a child "Comments" that will contain comment of that post
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(fId).child("Replies");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(aId).child("Replies");
 
         HashMap<String, Object> hashMap = new HashMap<>();
         //put into in hashMap
@@ -456,11 +456,11 @@ public class ForumDetailActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         //added
                         pd.dismiss();
-                        Toast.makeText(ForumDetailActivity.this, "Reply added...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ArticleDetailActivity.this, "Reply added...", Toast.LENGTH_SHORT).show();
                         commentEt.setText("");
-                        updateReplyCount();
+//                        updateReplyCount();
 
-                        addToHisNotifications(""+hisUid, ""+ fId, "Replied on your forum");
+                        addToHisNotifications(""+hisUid, ""+ aId, "Replied on your forum");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -468,7 +468,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         //failed not added
                         pd.dismiss();
-                        Toast.makeText(ForumDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ArticleDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -476,7 +476,7 @@ public class ForumDetailActivity extends AppCompatActivity {
     private void updateReplyCount() {
         //whenever user adds comment increase the comment count as we did for like count
         mProcessComment = true;
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(fId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(aId);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -526,25 +526,25 @@ public class ForumDetailActivity extends AppCompatActivity {
 
     private void loadPostInfo() {
         //get post using id of the post
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums");
-        Query query = ref.orderByChild("fId").equalTo(fId);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Articles");
+        Query query = ref.orderByChild("aId").equalTo(aId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //keep checking the posts until get the required post
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     //get data
-                    String pTitle = ""+ds.child("fTitle").getValue();
-                    String fCategory = ""+ds.child("fCategory").getValue();
-                    String pDescr = ""+ds.child("fDescription").getValue();
-//                    pLikes = ""+ds.child("fLikes").getValue();
-                    String pTimeStamp = ""+ds.child("fTime").getValue();
-                    pImage = ""+ds.child("fImage").getValue();
+                    String pTitle = ""+ds.child("aTitle").getValue();
+                    String aCategory = ""+ds.child("aCategory").getValue();
+                    String pDescr = ""+ds.child("aDescription").getValue();
+                    pLikes = ""+ds.child("aLikes").getValue();
+                    String pTimeStamp = ""+ds.child("aTime").getValue();
+                    pImage = ""+ds.child("aImage").getValue();
                     hisDp = ""+ds.child("uDp").getValue();
                     hisUid = ""+ds.child("uid").getValue();
                     String uEmail = ""+ds.child("uEmail").getValue();
                     hisName = ""+ds.child("uName").getValue();
-                    String commentCount = ""+ds.child("fReplies").getValue();
+//                    String commentCount = ""+ds.child("fReplies").getValue();
 
 
                     //convert timestamp to dd/mm/yyyy hh:mm am/pm
@@ -553,11 +553,11 @@ public class ForumDetailActivity extends AppCompatActivity {
                     String pTime = DateFormat.format("dd/MMM/yyyy hh:mm aa", calendar).toString();
 
                     //set data
-                    fTitleTv.setText(pTitle);
-                    fCategoryTv.setText(fCategory + " Category");
-                    fDescriptionTv.setText(pDescr);
+                    aTitleTv.setText(pTitle);
+                    aCategoryTv.setText(aCategory+ " Category");
+                    aDescriptionTv.setText(pDescr);
 //                    pLikesTv.setText(pLikes + "Likes");
-                    fTimeTv.setText(pTime);
+                    aTimeTv.setText(pTime);
 //                    fCommentsTv.setText(commentCount+ " Comments");
 
                     uNameTv.setText(hisName);
@@ -566,13 +566,13 @@ public class ForumDetailActivity extends AppCompatActivity {
                     //if there is no image i.e. pImage.equals("noImage") then hide ImageView
                     if (pImage.equals("noImage")){
                         //hide imageView
-                        fImageIv.setVisibility(View.GONE);
+                        aImageIv.setVisibility(View.GONE);
                     }
                     else{
                         //show imageView
-                        fImageIv.setVisibility(View.VISIBLE);
+                        aImageIv.setVisibility(View.VISIBLE);
                         try{
-                            Picasso.get().load(pImage).into(fImageIv);
+                            Picasso.get().load(pImage).into(aImageIv);
                         }
                         catch (Exception e){
 

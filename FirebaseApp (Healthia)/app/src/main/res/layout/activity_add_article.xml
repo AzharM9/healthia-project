@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddArticleActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Article Category"
+                android:textSize="16sp"
+                android:layout_margin="16sp"
+                android:id="@+id/tvForum" />
+
+            <Spinner
+                android:id="@+id/sp_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16sp"
+                android:layout_toRightOf="@id/tvForum"
+                android:maxLines="1"
+                android:text="Sample"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+
+<!--        EditText: Input post title-->
+    <EditText
+        android:id="@+id/pTitleEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittextstyle"
+        android:padding="10dp"
+        android:hint="Enter title"
+        android:singleLine="true"
+        />
+
+<!--        ImageView: Input post image-->
+        <FrameLayout
+            android:id="@+id/pImageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+            <ImageView
+                android:id="@+id/aImageIv"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorGrey"
+                android:minHeight="200dp"/>
+            <ImageView
+                android:id="@+id/pDummyIv"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_add_photo"/>
+        </FrameLayout>
+
+<!--        EditText: Input post decription-->
+        <EditText
+            android:id="@+id/pDescriptionEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittextstyle"
+            android:padding="10dp"
+            android:hint="Enter description"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minHeight="120dp"
+            android:gravity="start"/>
+
+<!--        Button: publish post to firebase-->
+        <Button
+            android:id="@+id/pUploadBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="Upload"
+            android:layout_gravity="end"/>
+    </LinearLayout>
+</ScrollView>

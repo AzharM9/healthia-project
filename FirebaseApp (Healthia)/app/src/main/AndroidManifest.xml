@@ -10,6 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseApp">
+        <activity android:name=".ArticleDetailActivity"/>
+        <activity android:name=".AddArticleActivity"/>
         <activity android:name=".ForumDetailActivity"/>
         <activity android:name=".AddForumActivity"/>
         <activity android:name=".ViewPlace"/>
