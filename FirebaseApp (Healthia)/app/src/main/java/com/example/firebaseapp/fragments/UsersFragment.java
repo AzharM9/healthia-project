@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +43,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class UsersFragment extends Fragment {
+
+    private Activity mActivity;
 
     RecyclerView recyclerView;
     AdapterUser adapterUser;
@@ -95,6 +100,9 @@ public class UsersFragment extends Fragment {
         //set it's properties
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecor);
 
         //init user list
         userList = new ArrayList<>();
@@ -259,5 +267,19 @@ public class UsersFragment extends Fragment {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
     }
 }

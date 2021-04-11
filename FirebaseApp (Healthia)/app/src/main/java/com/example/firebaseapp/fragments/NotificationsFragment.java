@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class NotificationsFragment extends Fragment {
+
+    private Activity mActivity;
 
     RecyclerView notificationRv;
 
@@ -88,4 +92,19 @@ public class NotificationsFragment extends Fragment {
                 });
 
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
+    }
+
 }

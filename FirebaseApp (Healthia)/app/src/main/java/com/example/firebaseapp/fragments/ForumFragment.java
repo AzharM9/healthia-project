@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,6 +47,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class ForumFragment extends Fragment {
+
+    private Activity mActivity;
 
     //firebase auth
     FirebaseAuth firebaseAuth;
@@ -110,7 +114,7 @@ public class ForumFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String forumType = parent.getItemAtPosition(i).toString();
-                Toast.makeText(parent.getContext(), forumType, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(parent.getContext(), forumType, Toast.LENGTH_SHORT).show();
                 switch (forumType){
                     case "All":
                         loadPosts();
@@ -336,15 +340,17 @@ public class ForumFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-//    //handle selected spinner
-//    @Override
-//    public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
-//        String forumType = parent.getItemAtPosition(i).toString();
-//        Toast.makeText(parent.getContext(), forumType, Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
+    }
 }

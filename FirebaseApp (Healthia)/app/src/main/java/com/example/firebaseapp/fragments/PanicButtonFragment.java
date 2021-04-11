@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,6 +28,8 @@ import com.google.firebase.auth.FirebaseUser;
  * create an instance of this fragment.
  */
 public class PanicButtonFragment extends Fragment {
+
+    private Activity mActivity;
 
     //firebase
     FirebaseAuth firebaseAuth;
@@ -94,4 +98,17 @@ public class PanicButtonFragment extends Fragment {
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
+    }
 }

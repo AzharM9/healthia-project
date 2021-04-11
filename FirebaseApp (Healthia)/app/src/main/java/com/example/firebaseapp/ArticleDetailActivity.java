@@ -18,7 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.MainActivity;
+import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -509,9 +512,17 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     if (!myDp.equals("")) {
                         try {
                             //if image is received then set
-                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+//                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+                            Glide.with(ArticleDetailActivity.this).load(myDp)
+                                    .placeholder(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(40,40))
+                                    .into(cAvatarIv);
                         } catch (Exception e) {
-                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+//                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                            Glide.with(ArticleDetailActivity.this)
+                                    .load(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(40,40))
+                                    .into(cAvatarIv);
                         }
                     }
                 }
@@ -554,7 +565,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
                     //set data
                     aTitleTv.setText(pTitle);
-                    aCategoryTv.setText(aCategory+ " Category");
+                    aCategoryTv.setText(aCategory);
                     aDescriptionTv.setText(pDescr);
 //                    pLikesTv.setText(pLikes + "Likes");
                     aTimeTv.setText(pTime);
@@ -572,7 +583,11 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         //show imageView
                         aImageIv.setVisibility(View.VISIBLE);
                         try{
-                            Picasso.get().load(pImage).into(aImageIv);
+//                            Picasso.get().load(pImage).into(aImageIv);
+                            Glide.with(ArticleDetailActivity.this)
+                                    .load(pImage)
+                                    .placeholder(R.drawable.ic_image_black_24)
+                                    .into(aImageIv);
                         }
                         catch (Exception e){
 
@@ -582,9 +597,17 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     //set user image in comment part
                     if (!hisDp.equals("")) {
                         try {
-                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+//                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(ArticleDetailActivity.this).load(hisDp)
+                                    .placeholder(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(50,50))
+                                    .into(uPictureIv);
                         } catch (Exception e) {
                             Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(ArticleDetailActivity.this)
+                                    .load(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(50,50))
+                                    .into(uPictureIv);
                         }
                     }
                 }

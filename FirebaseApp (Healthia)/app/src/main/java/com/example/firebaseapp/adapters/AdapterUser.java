@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.ChatActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
@@ -59,7 +61,11 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
         }
         else{
             try {
-                Picasso.get().load(userImage).placeholder(R.drawable.ic_default_img).into(holder.mAvatarIv);
+//                Picasso.get().load(userImage).placeholder(R.drawable.ic_default_img).into(holder.mAvatarIv);
+                Glide.with(context).load(userImage)
+                        .placeholder(R.drawable.ic_default_img)
+                        .apply(new RequestOptions().override(60,60))
+                        .into(holder.mAvatarIv);
             }
             catch (Exception e){
                 e.printStackTrace();

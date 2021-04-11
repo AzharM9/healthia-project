@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.AddPostActivity;
 import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.R;
@@ -84,7 +86,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         String uName = postList.get(position).getuName();
         String uDp = postList.get(position).getuDp();
         String pId = postList.get(position).getpId();
-        String pTitle = postList.get(position).getpTitle();
         String pDescription = postList.get(position).getpDescription();
         String pImage = postList.get(position).getpImage();
         String pTimeStamp = postList.get(position).getpTime();
@@ -100,7 +101,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         //set data
         holder.uNameTv.setText(uName);
         holder.pTimeTv.setText(pTime);
-        holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
         holder.pLikesTv.setText(pLikes +" Likes"); //e.g 100 Likes
         holder.pCommentsTv.setText(pComments +" Comments"); //e.g 100 Likes
@@ -109,7 +109,12 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
 
         //set user dp
         try{
-            Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img).into(holder.uPictureIv);
+//            Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img).into(holder.uPictureIv);
+            Glide.with(context)
+                    .load(uDp)
+                    .placeholder(R.drawable.ic_default_img)
+                    .apply(new RequestOptions().override(50,50))
+                    .into(holder.uPictureIv);
         }
         catch (Exception e){
 
@@ -125,7 +130,12 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             //show imageView
             holder.pImageIv.setVisibility(View.VISIBLE);
             try{
-                Picasso.get().load(pImage).into(holder.pImageIv);
+//                Picasso.get().load(pImage).into(holder.pImageIv);
+                Glide.with(context)
+                        .load(pImage)
+                        .placeholder(R.drawable.ic_image_black_24)
+                        .apply(new RequestOptions().centerCrop())
+                        .into(holder.pImageIv);
             }
             catch (Exception e){
 
@@ -146,7 +156,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             }
         });
 
-        holder.pTitleTv.setOnClickListener(new View.OnClickListener() {
+        holder.pDescriptionTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //star PostDetailActivity
@@ -442,7 +452,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
 
         //views from item row post
         ImageView uPictureIv, pImageIv;
-        TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv, pCommentsTv;
+        TextView uNameTv, pTimeTv, pDescriptionTv, pLikesTv, pCommentsTv;
         ImageButton moreBtn;
         Button likeBtn, commentBtn;
         LinearLayout profileLayout;
@@ -455,7 +465,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             pImageIv = itemView.findViewById(R.id.pImageIv);
             uNameTv = itemView.findViewById(R.id.uNameTv);
             pTimeTv = itemView.findViewById(R.id.pTimeTv);
-            pTitleTv = itemView.findViewById(R.id.pTitleTv);
             pDescriptionTv = itemView.findViewById(R.id.pDescriptionTv);
             pLikesTv = itemView.findViewById(R.id.pLikesTv);
             pCommentsTv = itemView.findViewById(R.id.pCommentsTv);

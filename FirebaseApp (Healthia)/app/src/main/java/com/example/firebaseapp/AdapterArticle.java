@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -107,7 +109,11 @@ public class AdapterArticle extends RecyclerView.Adapter<AdapterArticle.MyHolder
 
         //set user dp
         try{
-            Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img).into(holder.uPictureIv);
+//            Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img).into(holder.uPictureIv);
+            Glide.with(context)
+                    .load(uDp).placeholder(R.drawable.ic_default_img)
+                    .apply(new RequestOptions().override(50,50))
+                    .into(holder.uPictureIv);
         }
         catch (Exception e){
 
@@ -123,7 +129,11 @@ public class AdapterArticle extends RecyclerView.Adapter<AdapterArticle.MyHolder
             //show imageView
             holder.aImageIv.setVisibility(View.VISIBLE);
             try{
-                Picasso.get().load(aImage).placeholder(R.drawable.ic_image_black_24).into(holder.aImageIv);
+//                Picasso.get().load(aImage).placeholder(R.drawable.ic_image_black_24).into(holder.aImageIv);
+                Glide.with(context).load(aImage)
+                        .placeholder(R.drawable.ic_image_black_24)
+                        .apply(new RequestOptions().centerCrop())
+                        .into(holder.aImageIv);
             }
             catch (Exception e){
 

@@ -29,6 +29,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,7 +70,7 @@ public class AddPostActivity extends AppCompatActivity {
     String[] storagePermissions;
 
     //views
-    EditText titleEt, descriptionEt;
+    EditText descriptionEt;
     ImageView imageIv;
     Button uploadBtn;
     FrameLayout imageLayout;
@@ -106,7 +108,7 @@ public class AddPostActivity extends AppCompatActivity {
         checkUserStatus();
 
         //init views
-        titleEt = findViewById(R.id.pTitleEt);
+//        titleEt = findViewById(R.id.pTitleEt);
         descriptionEt = findViewById(R.id.pDescriptionEt);
         imageIv = findViewById(R.id.pImageIv);
         uploadBtn = findViewById(R.id.pUploadBtn);
@@ -171,22 +173,17 @@ public class AddPostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //get data (title, description) from EditText
-                String title = titleEt.getText().toString().trim();
                 String description = descriptionEt.getText().toString().trim();
 
-                if (TextUtils.isEmpty(title)) {
-                    Toast.makeText(AddPostActivity.this, "Enter title...", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(description)) {
-                    Toast.makeText(AddPostActivity.this, "Enter description...", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(description) && imageIv.getDrawable() == null) {
+                    Toast.makeText(AddPostActivity.this, "Either field must be filled", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (isUpdateKey.equals("editPost")) {
-                    beginUpdate(title, description, editPostId);
+                    beginUpdate(description, editPostId);
                 } else {
-                    uploadData(title, description);
+                    uploadData(description);
                 }
 
             }
@@ -194,25 +191,25 @@ public class AddPostActivity extends AppCompatActivity {
 
     }
 
-    private void beginUpdate(String title, String description, String editPostId) {
+    private void beginUpdate(String description, String editPostId) {
         pd.setMessage("Update Post...");
         pd.show();
 
         if (!editImage.equals("noImage")) {
             //was with image
-            updateWasWithImage(title, description, editPostId);
+            updateWasWithImage(description, editPostId);
         } else if (imageIv.getDrawable() != null) {
             //was without image, but now has image in imageview
-            updateWithNowImage(title, description, editPostId);
+            updateWithNowImage(description, editPostId);
         }
         else {
             //without image and still no image in imageView
-            updateWithoutImage(title, description, editPostId);
+            updateWithoutImage(description, editPostId);
         }
         finish();
     }
 
-    private void updateWithoutImage(String title, String description, String editPostId) {
+    private void updateWithoutImage(String description, String editPostId) {
 
         HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -221,7 +218,6 @@ public class AddPostActivity extends AppCompatActivity {
         hashMap.put("uName", name);
         hashMap.put("uEmail", email);
         hashMap.put("uDp", dp);
-        hashMap.put("pTitle", title);
         hashMap.put("pDescription", description);
         hashMap.put("pImage", "noImage");
 
@@ -245,7 +241,7 @@ public class AddPostActivity extends AppCompatActivity {
 
     }
 
-    private void updateWithNowImage(String title, String description, String editPostId) {
+    private void updateWithNowImage(String description, String editPostId) {
 
         String timeStamp = String.valueOf(System.currentTimeMillis());
         String filePathAndName = "Posts/" + "post_" + timeStamp;
@@ -277,7 +273,6 @@ public class AddPostActivity extends AppCompatActivity {
                             hashMap.put("uName", name);
                             hashMap.put("uEmail", email);
                             hashMap.put("uDp", dp);
-                            hashMap.put("pTitle", title);
                             hashMap.put("pDescription", description);
                             hashMap.put("pImage", downloadUri);
 
@@ -312,7 +307,7 @@ public class AddPostActivity extends AppCompatActivity {
 
     }
 
-    private void updateWasWithImage(String title, String description, String editPostId) {
+    private void updateWasWithImage(String description, String editPostId) {
         //post is with image, delete previous image first
         StorageReference mPictureRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImage);
         mPictureRef.delete()
@@ -351,7 +346,6 @@ public class AddPostActivity extends AppCompatActivity {
                                             hashMap.put("uName", name);
                                             hashMap.put("uEmail", email);
                                             hashMap.put("uDp", dp);
-                                            hashMap.put("pTitle", title);
                                             hashMap.put("pDescription", description);
                                             hashMap.put("pImage", downloadUri);
 
@@ -401,19 +395,20 @@ public class AddPostActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //get data
-                    editTitle = "" + ds.child("pTitle").getValue();
                     editDescription = "" + ds.child("pDescription").getValue();
                     editImage = "" + ds.child("pImage").getValue();
 
                     //set data to views
-                    titleEt.setText(editTitle);
                     descriptionEt.setText(editDescription);
 
                     //set image
                     if (!editImage.equals("noImage")) {
                         findViewById(R.id.pDummyIv).setVisibility(View.GONE);
                         try {
-                            Picasso.get().load(editImage).into(imageIv);
+//                            Picasso.get().load(editImage).into(imageIv);
+                            Glide.with(AddPostActivity.this).load(editImage)
+                                    .apply(new RequestOptions().centerCrop())
+                                    .into(imageIv);
                         } catch (Exception e) {
 
                         }
@@ -428,7 +423,7 @@ public class AddPostActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadData(String title, String description) {
+    private void uploadData(String description) {
         pd.setMessage("Publishing post...");
         pd.show();
 
@@ -465,7 +460,6 @@ public class AddPostActivity extends AppCompatActivity {
                                 hashMap.put("uEmail", email);
                                 hashMap.put("uDp", dp);
                                 hashMap.put("pId", timeStamp);
-                                hashMap.put("pTitle", title);
                                 hashMap.put("pDescription", description);
                                 hashMap.put("pImage", downloadUri);
                                 hashMap.put("pTime", timeStamp);
@@ -483,7 +477,6 @@ public class AddPostActivity extends AppCompatActivity {
                                                 pd.dismiss();
                                                 Toast.makeText(AddPostActivity.this, "Posts published", Toast.LENGTH_SHORT).show();
                                                 //reset views
-                                                titleEt.setText("");
                                                 descriptionEt.setText("");
                                                 imageIv.setImageURI(null);
                                                 image_uri = null;
@@ -518,7 +511,6 @@ public class AddPostActivity extends AppCompatActivity {
             hashMap.put("uEmail", email);
             hashMap.put("uDp", dp);
             hashMap.put("pId", timeStamp);
-            hashMap.put("pTitle", title);
             hashMap.put("pDescription", description);
             hashMap.put("pImage", "noImage");
             hashMap.put("pTime", timeStamp);
@@ -535,7 +527,6 @@ public class AddPostActivity extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
                             pd.dismiss();
                             Toast.makeText(AddPostActivity.this, "Posts published", Toast.LENGTH_SHORT).show();
-                            titleEt.setText("");
                             descriptionEt.setText("");
                             imageIv.setImageURI(null);
                             image_uri = null;

@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -447,7 +449,8 @@ public class AddArticleActivity extends AppCompatActivity {
                     if (!editImage.equals("noImage")) {
                         findViewById(R.id.pDummyIv).setVisibility(View.GONE);
                         try {
-                            Picasso.get().load(editImage).into(imageIv);
+//                            Picasso.get().load(editImage).into(imageIv);
+                            Glide.with(AddArticleActivity.this).load(editImage).into(imageIv);
                         } catch (Exception e) {
 
                         }

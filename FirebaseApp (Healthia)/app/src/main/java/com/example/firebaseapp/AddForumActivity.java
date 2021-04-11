@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.firebaseapp.activitys.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -447,7 +448,8 @@ public class AddForumActivity extends AppCompatActivity {
                     if (!editImage.equals("noImage")) {
                         findViewById(R.id.pDummyIv).setVisibility(View.GONE);
                         try {
-                            Picasso.get().load(editImage).into(imageIv);
+//                            Picasso.get().load(editImage).into(imageIv);
+                            Glide.with(AddForumActivity.this).load(editImage).into(imageIv);
                         } catch (Exception e) {
 
                         }

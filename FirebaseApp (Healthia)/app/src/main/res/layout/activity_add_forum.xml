@@ -9,6 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -83,7 +85,8 @@
             android:id="@+id/pUploadBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_margin="10dp"
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:text="Upload"
             android:layout_gravity="end"/>
     </LinearLayout>

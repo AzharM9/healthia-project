@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,8 @@ import com.google.android.material.tabs.TabLayout;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    private Activity mActivity;
 
     SectionsPagerAdapter sectionsPagerAdapter;
     ViewPager viewPager;
@@ -82,5 +86,19 @@ public class HomeFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
     }
 }

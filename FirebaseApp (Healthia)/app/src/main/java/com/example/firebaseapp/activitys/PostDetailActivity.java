@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterComments;
 import com.example.firebaseapp.models.ModelComment;
@@ -51,6 +53,7 @@ import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
 
+
     //to get detail of user and post
     String hisUid, myUid, myEmail, myName, myDp,
     postId, pLikes, hisDp, hisName, pImage;
@@ -63,7 +66,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     //views
     ImageView uPictureIv, pImageIv;
-    TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv, pCommentsTv;
+    TextView uNameTv, pTimeTv, pDescriptionTv, pLikesTv, pCommentsTv;
     ImageButton moreBtn;
     Button likeBtn;
     LinearLayout profileLayout;
@@ -97,7 +100,6 @@ public class PostDetailActivity extends AppCompatActivity {
         pImageIv = findViewById(R.id.pImageIv);
         uNameTv = findViewById(R.id.uNameTv);
         pTimeTv = findViewById(R.id.pTimeTv);
-        pTitleTv = findViewById(R.id.pTitleTv);
         pDescriptionTv = findViewById(R.id.pDescriptionTv);
         pLikesTv = findViewById(R.id.pLikesTv);
         pCommentsTv = findViewById(R.id.pCommentsTv);
@@ -215,7 +217,6 @@ public class PostDetailActivity extends AppCompatActivity {
         //show delete option  in only post(s) of currently signed-in user
         //add items in menu
         if (hisUid.equals(myUid)) {
-            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
             popupMenu.getMenu().add(Menu.NONE, 1, 0, "Edit");
         } else {
             popupMenu.getMenu().add(Menu.NONE, 2, 0, "Visit Profile");
@@ -226,30 +227,7 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 int id = menuItem.getItemId();
-                if (id == 0){
-                    //delete is clicked
-                    //show delete message confirm dialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDetailActivity.this);
-                    builder.setTitle("Delete");
-                    builder.setMessage("Are you sure to delete this post?");
-                    //delete button
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            beginDelete();
-                        }
-                    });
-                    //cancel delete button
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    // create and show dialog
-                    builder.create().show();
-                }
-                else if(id == 1){
+                if(id == 1){
                     //Edit is clicked
                     //start AddPostActivity with key "editPost" and the id of the post clicked
                     Intent intent = new Intent(PostDetailActivity.this, AddPostActivity.class);
@@ -510,9 +488,18 @@ public class PostDetailActivity extends AppCompatActivity {
                     if (!myDp.equals("")) {
                         try {
                             //if image is received then set
-                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+//                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+                            Glide.with(PostDetailActivity.this)
+                                    .load(myDp)
+                                    .placeholder(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(40,40))
+                                    .into(cAvatarIv);
                         } catch (Exception e) {
-                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+//                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                            Glide.with(PostDetailActivity.this)
+                                    .load(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(40,40))
+                                    .into(cAvatarIv);
                         }
                     }
                 }
@@ -535,7 +522,6 @@ public class PostDetailActivity extends AppCompatActivity {
                 //keep checking the posts until get the required post
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     //get data
-                    String pTitle = ""+ds.child("pTitle").getValue();
                     String pDescr = ""+ds.child("pDescription").getValue();
                     pLikes = ""+ds.child("pLikes").getValue();
                     String pTimeStamp = ""+ds.child("pTime").getValue();
@@ -553,7 +539,6 @@ public class PostDetailActivity extends AppCompatActivity {
                     String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
                     //set data
-                    pTitleTv.setText(pTitle);
                     pDescriptionTv.setText(pDescr);
                     pLikesTv.setText(pLikes + "Likes");
                     pTimeTv.setText(pTime);
@@ -571,7 +556,12 @@ public class PostDetailActivity extends AppCompatActivity {
                         //show imageView
                         pImageIv.setVisibility(View.VISIBLE);
                         try{
-                            Picasso.get().load(pImage).into(pImageIv);
+//                            Picasso.get().load(pImage).into(pImageIv);
+                            Glide.with(PostDetailActivity.this)
+                                    .load(pImage)
+                                    .placeholder(R.drawable.ic_image_black_24)
+                                    .apply(new RequestOptions().centerCrop())
+                                    .into(pImageIv);
                         }
                         catch (Exception e){
 
@@ -581,9 +571,18 @@ public class PostDetailActivity extends AppCompatActivity {
                     //set user image in comment part
                     if (!hisDp.equals("")) {
                         try {
-                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+//                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(PostDetailActivity.this)
+                                    .load(hisDp)
+                                    .placeholder(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(50,50))
+                                    .into(uPictureIv);
                         } catch (Exception e) {
-                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+//                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(getApplicationContext())
+                                    .load(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(50,50))
+                                    .into(uPictureIv);
                         }
                     }
                 }

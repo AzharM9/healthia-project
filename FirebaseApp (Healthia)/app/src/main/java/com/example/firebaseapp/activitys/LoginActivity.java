@@ -18,6 +18,7 @@ import com.example.firebaseapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
 
     //views
-    EditText mEmailEt, mPasswordEt;
+    TextInputEditText mEmailEt, mPasswordEt;
     TextView notHaveAccountTv;
     Button mLoginBtn;
 
@@ -69,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //input data
-                String email = mEmailEt.getText().toString();
+                String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     //invalid email pattern set error

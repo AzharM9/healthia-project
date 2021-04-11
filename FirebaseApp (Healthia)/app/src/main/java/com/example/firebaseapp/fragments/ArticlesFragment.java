@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -29,6 +31,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -46,9 +49,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ArticlesFragment extends Fragment {
 
+    private Activity mActivity;
+
     //firebase auth
     FirebaseAuth firebaseAuth;
+    FirebaseUser user;
     ActionBar actionBar;
+
+    DatabaseReference userDbRef;
 
     Spinner spinner;
     AutoCompleteTextView dropdown_text;
@@ -59,7 +67,7 @@ public class ArticlesFragment extends Fragment {
     ExtendedFloatingActionButton fab, maps;
 
     //user info
-    String email, uid;
+    String email, uid, role;
 
 
     public ArticlesFragment() {
@@ -85,6 +93,7 @@ public class ArticlesFragment extends Fragment {
 
         //init firebase
         firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
 
         //recycler view and its properties
         spinner = view.findViewById(R.id.sp_type);
@@ -110,7 +119,7 @@ public class ArticlesFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
                 String forumType = parent.getItemAtPosition(i).toString();
-                Toast.makeText(parent.getContext(), forumType, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(parent.getContext(), forumType, Toast.LENGTH_SHORT).show();
                 switch (forumType){
                     case "All":
                         loadPosts();
@@ -136,6 +145,29 @@ public class ArticlesFragment extends Fragment {
 
         //init post list
         articleList = new ArrayList<>();
+
+        userDbRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query query = userDbRef.orderByChild("email").equalTo(user.getEmail());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    email = "" + ds.child("email").getValue();
+                    role = "" + ds.child("role").getValue();
+
+                    if (role.equals("Doctor")){
+                        fab.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         maps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,6 +295,7 @@ public class ArticlesFragment extends Fragment {
             //user is signed in stay here
             email = user.getEmail();
             uid = user.getUid();
+
         }else{
             //user not signed in, go to main activity
             startActivity(new Intent(getActivity(), MainActivity.class));
@@ -336,15 +369,19 @@ public class ArticlesFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-//    //handle selected spinner
-//    @Override
-//    public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
-//        String forumType = parent.getItemAtPosition(i).toString();
-//        Toast.makeText(parent.getContext(), forumType, Toast.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
+    }
+
+
 }

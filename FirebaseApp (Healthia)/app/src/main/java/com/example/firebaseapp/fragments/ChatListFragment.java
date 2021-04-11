@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +33,8 @@ import java.util.List;
 
 
 public class ChatListFragment extends Fragment {
+
+    private Activity mActivity;
 
     //firebase Auth
     FirebaseAuth firebaseAuth;
@@ -174,5 +178,19 @@ public class ChatListFragment extends Fragment {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         super.onStop();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
     }
 }

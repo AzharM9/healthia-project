@@ -1,5 +1,7 @@
 package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -42,6 +44,8 @@ import java.util.List;
 
 
 public class FeedsFragment extends Fragment {
+
+    private Activity mActivity;
 
     //firebase auth
     FirebaseAuth firebaseAuth;
@@ -165,8 +169,7 @@ public class FeedsFragment extends Fragment {
                 for (DataSnapshot ds: dataSnapshot.getChildren()){
                     ModelPost modelPost = ds.getValue(ModelPost.class);
 
-                    if (modelPost.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                            modelPost.getpDescription().toLowerCase().contains(searchQuery.toLowerCase())){
+                    if (modelPost.getpDescription().toLowerCase().contains(searchQuery.toLowerCase())){
                         postList.add(modelPost);
 
                         //adapter
@@ -265,4 +268,19 @@ public class FeedsFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
+    }
+
 }

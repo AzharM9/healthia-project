@@ -1,9 +1,11 @@
 package com.example.firebaseapp.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -34,6 +37,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.activitys.FriendlistActivity;
 import com.example.firebaseapp.activitys.MainActivity;
@@ -70,6 +75,8 @@ import static android.app.Activity.RESULT_OK;
  */
 public class ProfileFragment extends Fragment {
 
+    private Activity mActivity;
+
     //firebase
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -81,7 +88,8 @@ public class ProfileFragment extends Fragment {
     String storagePath = "Users_Profile_Cover_Imgs/";
 
     //views from xml
-    ImageView avatarTv, coverIv;
+    CircleImageView avatarIv;
+    ImageView coverIv;
     TextView nameTv, emailTv, phoneTv;
     Button mFriendList;
     ExtendedFloatingActionButton fab;
@@ -163,7 +171,7 @@ public class ProfileFragment extends Fragment {
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         //init views
-        avatarTv = view.findViewById(R.id.avatarIv);
+        avatarIv = view.findViewById(R.id.avatarIv);
         coverIv = view.findViewById(R.id.coverIv);
         nameTv = view.findViewById(R.id.nameTv);
         emailTv = view.findViewById(R.id.emailTv);
@@ -189,6 +197,10 @@ public class ProfileFragment extends Fragment {
                 //check until required data get
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+                    if (mActivity == null) {
+                        return;
+                    }
+
                     //get    data
                     String name = "" + ds.child("name").getValue();
                     String email = "" + ds.child("email").getValue();
@@ -204,15 +216,29 @@ public class ProfileFragment extends Fragment {
                     if (!image.equals("")){
                         try {
                             //if image is received then set
-                            Picasso.get().load(image).into(avatarTv);
+//                            Picasso.get().load(image).into(avatarTv);
+                            Glide.with(mActivity)
+                                    .load(image)
+                                    .placeholder(R.drawable.ic_default_img_white)
+                                    .apply(new RequestOptions().override(120,120))
+                                    .into(avatarIv);
                         } catch (Exception e) {
                             //if there is any exception while getting image then set default
-                            Picasso.get().load(R.drawable.ic_default_img_white).into(avatarTv);
+//                            Picasso.get().load(R.drawable.ic_default_img_white).into(avatarIv);
+                            Glide.with(mActivity)
+                                    .load(R.drawable.ic_default_img_white)
+                                    .apply(new RequestOptions().override(120,120))
+                                    .into(avatarIv);
                         }
                     }
                     try {
                         //if cover is received then set
-                        Picasso.get().load(cover).into(coverIv);
+//                        Picasso.get().load(cover).into(coverIv);
+                        Glide.with(mActivity)
+                                .load(cover)
+                                .apply(new RequestOptions().centerCrop())
+                                .into(coverIv);
+
                     } catch (Exception e) {
                         //if there is any exception while getting image the set default
                     }
@@ -789,5 +815,19 @@ public class ProfileFragment extends Fragment {
             ft6.commit();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
     }
 }

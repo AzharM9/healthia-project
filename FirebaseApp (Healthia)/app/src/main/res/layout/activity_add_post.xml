@@ -9,39 +9,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
-<!--        EditText: Input post title-->
-    <EditText
-        android:id="@+id/pTitleEt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittextstyle"
-        android:padding="10dp"
-        android:hint="Enter title"
-        android:singleLine="true"
-        />
-
-<!--        ImageView: Input post image-->
-        <FrameLayout
-            android:id="@+id/pImageLayout"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-            <ImageView
-                android:id="@+id/pImageIv"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/colorGrey"
-                android:minHeight="200dp"/>
-            <ImageView
-                android:id="@+id/pDummyIv"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_add_photo"/>
-        </FrameLayout>
-
-<!--        EditText: Input post decription-->
+        <!--        EditText: Input post decription-->
         <EditText
             android:id="@+id/pDescriptionEt"
             android:layout_width="match_parent"
@@ -53,12 +25,35 @@
             android:minHeight="120dp"
             android:gravity="start"/>
 
+        <!--        ImageView: Input post image-->
+        <FrameLayout
+        android:id="@+id/pImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <ImageView
+            android:id="@+id/pImageIv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:background="@color/colorGrey"
+            android:minHeight="400dp"/>
+            <ImageView
+            android:id="@+id/pDummyIv"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add_photo"/>
+        </FrameLayout>
+
+
 <!--        Button: publish post to firebase-->
         <Button
             android:id="@+id/pUploadBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_margin="10dp"
+            style="@style/Widget.MaterialComponents.Button.Icon"
             android:text="Upload"
             android:layout_gravity="end"/>
     </LinearLayout>

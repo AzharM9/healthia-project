@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.MainActivity;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -509,9 +511,17 @@ public class ForumDetailActivity extends AppCompatActivity {
                     if (!myDp.equals("")) {
                         try {
                             //if image is received then set
-                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+//                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
+                            Glide.with(ForumDetailActivity.this).load(myDp)
+                                    .placeholder(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(40,40))
+                                    .into(cAvatarIv);
                         } catch (Exception e) {
-                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+//                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                            Glide.with(ForumDetailActivity.this)
+                                    .load(R.drawable.ic_default_img)
+                                    .apply(new RequestOptions().override(40,40))
+                                    .into(cAvatarIv);
                         }
                     }
                 }
@@ -554,7 +564,7 @@ public class ForumDetailActivity extends AppCompatActivity {
 
                     //set data
                     fTitleTv.setText(pTitle);
-                    fCategoryTv.setText(fCategory + " Category");
+                    fCategoryTv.setText(fCategory);
                     fDescriptionTv.setText(pDescr);
 //                    pLikesTv.setText(pLikes + "Likes");
                     fTimeTv.setText(pTime);

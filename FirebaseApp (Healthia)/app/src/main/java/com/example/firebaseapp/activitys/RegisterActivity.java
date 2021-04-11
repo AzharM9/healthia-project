@@ -9,8 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +22,8 @@ import com.example.firebaseapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,9 +36,12 @@ import java.util.HashMap;
 public class RegisterActivity extends AppCompatActivity {
 
     //views
-    EditText mEmailEt, mPasswordEt;
+    TextInputEditText mNameEt, mEmailEt, mPasswordEt, mPhoneEt;
+    EditText mRegisterEt;
     Button mRegisterBtn;
     TextView mHaveAccountTv;
+    String role;
+    Spinner mUserType;
 
     //progressbar to display while registering user
     ProgressDialog progressDialog;
@@ -55,8 +64,12 @@ public class RegisterActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
         //init
+        mNameEt = findViewById(R.id.nameEt);
         mEmailEt = findViewById(R.id.emailEt);
         mPasswordEt = findViewById(R.id.passwordEt);
+        mPhoneEt = findViewById(R.id.phoneEt);
+        mUserType = findViewById(R.id.userTypeEt);
+        mRegisterEt = findViewById(R.id.registerEt);
         mRegisterBtn = findViewById(R.id.register_btn);
         mHaveAccountTv = findViewById(R.id.have_accountTv);
 
@@ -67,28 +80,69 @@ public class RegisterActivity extends AppCompatActivity {
         //in onCreate() method, initialize the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter
+                .createFromResource(RegisterActivity.this,
+                        R.array.user_type,R.layout.support_simple_spinner_dropdown_item);
+        mUserType.setAdapter(adapter);
+
+        mUserType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String userRole = adapterView.getItemAtPosition(i).toString();
+                switch (userRole){
+                    case "Patient":
+                        mRegisterEt.setVisibility(View.GONE);
+                        mRegisterEt.setText("0000000000000000");
+                        role = userRole;
+                        break;
+                    case "Doctor":
+                        mRegisterEt.setVisibility(View.VISIBLE);
+                        mRegisterEt.setText("");
+                        role = userRole;
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+//                mUserType.setError("Please select either patient/doctor");
+            }
+        });
         //handle register btn click
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //input email password
+                String name = mNameEt.getText().toString().trim();
                 String email = mEmailEt.getText().toString().trim();
                 String password = mPasswordEt.getText().toString().trim();
+                String phone = mPhoneEt.getText().toString().trim();
+                String registerNum = mRegisterEt.getText().toString().trim();
 
                 //validate
-                if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                if (name.length() < 3 || name.length()> 50){
+                    mNameEt.setError("Name length at least 3 characters");
+                }
+                else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     //set error and focus to email edit text
                     mEmailEt.setError("Invalid Email");
                     mEmailEt.setFocusable(true);
 
                 }
-                else if (password.length()<6){
+                else if (password.length() < 6){
                     //set error and focus to password edit text
                     mPasswordEt.setError("Password length at least 6 characters");
                     mPasswordEt.setFocusable(true);
                 }
+                else if (!Patterns.PHONE.matcher(phone).matches()||phone.length() < 11 || phone.length() > 12){
+                    mPhoneEt.setError("Phone number length at least 11 digits and not including characters");
+                }
+                else if (!Patterns.PHONE.matcher(registerNum).matches()
+                        || registerNum.length() < 16 || registerNum.length() > 16){
+                    mRegisterEt.setError("must 16 digits");
+                }
                 else{
-                    registerUser(email, password); //register the user
+                    registerUser(name , email, password, phone, role, registerNum); //register the user
                 }
             }
         });
@@ -102,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String email, String password) {
+    private void registerUser(String name, String email, String password, String phone, String userRole, String registerNum) {
         //email and password pattern is valid, show progress dialog start registering them
         progressDialog.show();
 
@@ -127,10 +181,12 @@ public class RegisterActivity extends AppCompatActivity {
                             HashMap<Object, String> hashMap = new HashMap<>();
                             hashMap.put("email", email);
                             hashMap.put("uid", uid);
-                            hashMap.put("name", "");
+                            hashMap.put("name", name);
                             hashMap.put("onlineStatus", "online");
                             hashMap.put("device_token", deviceToken);
-                            hashMap.put("phone", ""); //will add later (e.g edit profile)
+                            hashMap.put("phone", phone); //will add later (e.g edit profile)
+                            hashMap.put("role", userRole); // user role (Patient/Doctor)
+                            hashMap.put("regisNum", registerNum); //Doctor's STR number
                             hashMap.put("image", ""); //will add later (e.g edit profile)
                             hashMap.put("cover", ""); //will add later (e.g edit profile)
 

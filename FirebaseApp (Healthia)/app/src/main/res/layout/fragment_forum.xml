@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f1eded"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ForumFragment">
 
@@ -17,6 +18,7 @@
             android:layout_height="20sp"
             android:text="Forum Category"
             android:textSize="16sp"
+            android:textColor="@color/black"
             android:layout_margin="16sp"
             android:id="@+id/tvForum" />
 

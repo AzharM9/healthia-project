@@ -3,13 +3,13 @@ package com.example.firebaseapp.models;
 public class ModelUser {
 
     //use same name as in firebase databasse
-    String name, email, search, phone, image, cover, uid, onlineStatus, typingTo;
+    String name, email, search, phone, image, cover, uid, onlineStatus, typingTo, role;
 
     public ModelUser() {
 
     }
 
-    public ModelUser(String name, String email, String search, String phone, String image, String cover, String uid, String onlineStatus, String typingTo) {
+    public ModelUser(String name, String email, String search, String phone, String image, String cover, String uid, String onlineStatus, String typingTo, String role) {
         this.name = name;
         this.email = email;
         this.search = search;
@@ -19,6 +19,11 @@ public class ModelUser {
         this.uid = uid;
         this.onlineStatus = onlineStatus;
         this.typingTo = typingTo;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public String getName() {
