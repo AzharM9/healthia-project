@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,7 +49,8 @@ import com.example.firebaseapp.models.ModelPost;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -60,7 +62,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,9 +91,10 @@ public class ProfileFragment extends Fragment {
     //views from xml
     CircleImageView avatarIv;
     ImageView coverIv;
-    TextView nameTv, emailTv, phoneTv;
+    TextView nameTv, emailTv, phoneTv, ageTv, weightTv, heightTv;
     Button mFriendList;
-    ExtendedFloatingActionButton fab;
+    MaterialButton fab;
+    SwitchMaterial switchBtn;
     RecyclerView postRecyclerView;
 
     //progress dialog
@@ -176,6 +178,10 @@ public class ProfileFragment extends Fragment {
         nameTv = view.findViewById(R.id.nameTv);
         emailTv = view.findViewById(R.id.emailTv);
         phoneTv = view.findViewById(R.id.phoneTv);
+        ageTv = view.findViewById(R.id.ageTv);
+        weightTv = view.findViewById(R.id.weightTv);
+        heightTv = view.findViewById(R.id.heightTv);
+        switchBtn = view.findViewById(R.id.switchBtn);
         mFriendList = view.findViewById(R.id.friendList);
         fab = view.findViewById(R.id.fab);
         postRecyclerView = view.findViewById(R.id.recyclerview_posts);
@@ -207,11 +213,18 @@ public class ProfileFragment extends Fragment {
                     String phone = "" + ds.child("phone").getValue();
                     String image = "" + ds.child("image").getValue();
                     String cover = "" + ds.child("cover").getValue();
+                    String age = "" + ds.child("age").getValue();
+                    String weight = "" + ds.child("weight").getValue();
+                    String height = "" + ds.child("height").getValue();
+                    String hideData = "" + ds.child("hideData").getValue();
 
                     //set data
                     nameTv.setText(name);
                     emailTv.setText(email);
                     phoneTv.setText(phone);
+                    ageTv.setText(age+" years");
+                    weightTv.setText(weight+" kg");
+                    heightTv.setText(height+" cm");
 
                     if (!image.equals("")){
                         try {
@@ -220,7 +233,7 @@ public class ProfileFragment extends Fragment {
                             Glide.with(mActivity)
                                     .load(image)
                                     .placeholder(R.drawable.ic_default_img_white)
-                                    .apply(new RequestOptions().override(120,120))
+                                    .apply(new RequestOptions().override(180,180))
                                     .into(avatarIv);
                         } catch (Exception e) {
                             //if there is any exception while getting image then set default
@@ -242,12 +255,31 @@ public class ProfileFragment extends Fragment {
                     } catch (Exception e) {
                         //if there is any exception while getting image the set default
                     }
+
+                    if (hideData.equals("true")){
+                        switchBtn.setChecked(true);
+                    } else {
+                        switchBtn.setChecked(false);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    //set data to private
+                    showOrHideData(isChecked);
+                } else {
+                    //set data to public
+                    showOrHideData(isChecked);
+                }
             }
         });
 
@@ -273,6 +305,16 @@ public class ProfileFragment extends Fragment {
         loadMyPosts();
 
         return view;
+    }
+
+    private void showOrHideData(boolean isChecked) {
+        if (isChecked){
+            firebaseDatabase.getReference("Users").child(user.getUid()).child("hideData")
+                    .setValue("true");
+        } else {
+            firebaseDatabase.getReference("Users").child(user.getUid()).child("hideData")
+                    .setValue("false");
+        }
     }
 
     private void loadMyPosts() {
@@ -355,10 +397,14 @@ public class ProfileFragment extends Fragment {
          * 1. Edit Profile picture
          * 2. Edit cover photo
          * 3. Edit Name
-         * 4. Edit Phone*/
+         * 4. Edit Phone
+         * 5. Edit Age
+         * 6. Edit Weight
+         * 7. Edit Height*/
 
         //options to show in dialog
-        String options[] = {"Edit Profile Picture", "Edit Cover Photo", "Edit Name", "Edit Phone"};
+        String options[] = {"Edit Profile Picture", "Edit Cover Photo", "Edit Name", "Edit Phone",
+                "Edit Age", "Edit Weight", "Edit Height"};
         //alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //set title
@@ -382,12 +428,27 @@ public class ProfileFragment extends Fragment {
                     //Edit Name clicked
                     pd.setMessage("Update Name");
                     //calling method pass key "name" as parameter to update it's value in database
-                    showNamePhoneUpdateDialog("name");
+                    showDataUpdateDialog("name");
 
                 } else if (which == 3) {
                     //Edit Phone clicked
                     pd.setMessage("Update Phone");
-                    showNamePhoneUpdateDialog("phone");
+                    showDataUpdateDialog("phone");
+
+                }else if (which == 4) {
+                    //Edit Phone clicked
+                    pd.setMessage("Update Age");
+                    showDataUpdateDialog("age");
+
+                }else if (which == 5) {
+                    //Edit Phone clicked
+                    pd.setMessage("Update Weight");
+                    showDataUpdateDialog("weight");
+
+                }else if (which == 6) {
+                    //Edit Phone clicked
+                    pd.setMessage("Update Height");
+                    showDataUpdateDialog("height");
 
                 }
             }
@@ -397,7 +458,7 @@ public class ProfileFragment extends Fragment {
         //after reaching this line check firebase storage rules
     }
 
-    private void showNamePhoneUpdateDialog(String key) {
+    private void showDataUpdateDialog(String key) {
         /*parameter "key" will contain value:
          *   either "name" which is key in user's database which is used to update user's name
          *   or      "phone" which is key in user's database which is used to update user's phone*/

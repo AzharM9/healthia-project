@@ -19,21 +19,20 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatarIv"
             tools:src="@drawable/ic_default_img"
-            android:layout_width="60dp"
-            android:layout_height="60dp"/>
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="18dp">
+            android:layout_marginLeft="15dp">
 
             <TextView
                 android:id="@+id/nameTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_marginTop="24dp"
                 android:text="Person Name"
                 android:textSize="18sp"
                 android:textColor="@color/colorBlack"/>
@@ -44,7 +43,28 @@
                 android:text="Person Email"
                 android:textColor="@color/colorBlack"
                 android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/mSendReqBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="Send friend request"
+                    />
+
+                <Button
+                    android:id="@+id/mDeclineBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Decline"
+                    android:visibility="gone"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -93,7 +93,7 @@ public class AdapterForum extends RecyclerView.Adapter<AdapterForum.MyHolder>{
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(fTimeStamp));
 
-        String fTime = DateFormat.format("dd/MMM/yyyy hh:mm aa", calendar).toString();
+        String fTime = DateFormat.format("MMM d, yyyy hh:mm aa", calendar).toString();
 
         //set data
         holder.uNameTv.setText(uName);

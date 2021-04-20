@@ -34,23 +34,23 @@ public class FirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        //get current user from shared preferences
-        SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
-        String savedCurrentUser = sp.getString("Current_USERID", "None");
-
-        String sent = remoteMessage.getData().get("sent");
-        String user = remoteMessage.getData().get("user");
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser != null && sent.equals(fUser.getUid())){
-            if (!savedCurrentUser.equals(user)){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    sendOandAboveNotification(remoteMessage);
-                }
-                else {
-                    sendNormalNotification(remoteMessage);
-                }
-            }
-        }
+//        //get current user from shared preferences
+//        SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
+//        String savedCurrentUser = sp.getString("Current_USERID", "None");
+//
+//        String sent = remoteMessage.getData().get("sent");
+//        String user = remoteMessage.getData().get("user");
+//        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (fUser != null && sent.equals(fUser.getUid())){
+//            if (!savedCurrentUser.equals(user)){
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//                    sendOandAboveNotification(remoteMessage);
+//                }
+//                else {
+//                    sendNormalNotification(remoteMessage);
+//                }
+//            }
+//        }
 
 //        sendFriendRequestNotif(remoteMessage);
     }

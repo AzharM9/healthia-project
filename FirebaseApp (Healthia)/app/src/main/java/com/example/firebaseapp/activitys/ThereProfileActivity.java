@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,9 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -49,9 +54,10 @@ public class ThereProfileActivity extends AppCompatActivity {
     private DatabaseReference mFriendDatabase;
 
     //views from xml
-    ImageView avatarTv, coverIv;
-    TextView nameTv, emailTv, phoneTv;
+    ImageView avatarIv, coverIv;
+    TextView nameTv, emailTv, phoneTv, ageTv, weightTv, heightTv;
     Button mProfileSendReqBtn, mDeclineBtn;
+    ConstraintLayout personal_info_layout;
 
     RecyclerView postRecyclerView;
 
@@ -72,11 +78,15 @@ public class ThereProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //init views
-        avatarTv = findViewById(R.id.avatarIv);
+        avatarIv = findViewById(R.id.avatarIv);
         coverIv = findViewById(R.id.coverIv);
         nameTv = findViewById(R.id.nameTv);
         emailTv = findViewById(R.id.emailTv);
         phoneTv = findViewById(R.id.phoneTv);
+        ageTv = findViewById(R.id.ageTv);
+        weightTv = findViewById(R.id.weightTv);
+        heightTv = findViewById(R.id.heightTv);
+        personal_info_layout = findViewById(R.id.personalInfo);
         mProfileSendReqBtn = findViewById(R.id.mProfileSendReqBtn);
         mDeclineBtn = findViewById(R.id.mProfileDeclineBtn);
         postRecyclerView = findViewById(R.id.recyclerview_posts);
@@ -104,6 +114,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                     String phone = "" + ds.child("phone").getValue();
                     String image = "" + ds.child("image").getValue();
                     String cover = "" + ds.child("cover").getValue();
+                    String hideData = "" + ds.child("hideData").getValue();
 
                     //set data
                     nameTv.setText(name);
@@ -113,17 +124,44 @@ public class ThereProfileActivity extends AppCompatActivity {
                     if (!image.equals("")) {
                         try {
                             //if image is received then set
-                            Picasso.get().load(image).into(avatarTv);
+//                            Picasso.get().load(image).into(avatarIv);
+                            Glide.with(ThereProfileActivity.this)
+                                    .load(image)
+                                    .placeholder(R.drawable.ic_default_img_white)
+                                    .apply(new RequestOptions().override(180,180))
+                                    .into(avatarIv);
                         } catch (Exception e) {
                             //if there is any exception while getting image the set default
-                            Picasso.get().load(R.drawable.ic_default_img_white).into(avatarTv);
+//                            Picasso.get().load(R.drawable.ic_default_img_white).into(avatarIv);
+                            Glide.with(ThereProfileActivity.this)
+                                    .load(R.drawable.ic_default_img_white)
+                                    .apply(new RequestOptions().override(120,120))
+                                    .into(avatarIv);
                         }
                     }
                     try {
                         //if image is received then set
-                        Picasso.get().load(cover).into(coverIv);
+//                        Picasso.get().load(cover).into(coverIv);
+                        Glide.with(ThereProfileActivity.this)
+                                .load(cover)
+                                .apply(new RequestOptions().centerCrop())
+                                .into(coverIv);
                     } catch (Exception e) {
                         //if there is any exception while getting image the set default
+                    }
+
+                    if (hideData.equals("false")){
+                        String age = "" + ds.child("age").getValue();
+                        String weight = "" + ds.child("weight").getValue();
+                        String height = "" + ds.child("height").getValue();
+
+                        ageTv.setText(age+" years");
+                        weightTv.setText(weight+" kg");
+                        heightTv.setText(height+" cm");
+                        personal_info_layout.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        personal_info_layout.setVisibility(View.GONE);
                     }
 
                     //----------------------FRIEND LIST / REQUEST FEATURE------------------------
@@ -163,7 +201,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                                                             mCurrentState = "friends";
                                                             mProfileSendReqBtn.setText("Unfriend this Person");
 
-                                                            mDeclineBtn.setVisibility(View.GONE);
+                                                            mDeclineBtn.setVisibility(View.INVISIBLE);
                                                             mDeclineBtn.setEnabled(false);
                                                         }
                                                     }
@@ -282,7 +320,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                             }
                             else{
                                 String dbError = error.getMessage();
-                                Toast.makeText(ThereProfileActivity.this, dbError, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ThereProfileActivity.this, dbError, Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -385,7 +423,7 @@ public class ThereProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ThereProfileActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ThereProfileActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -183,6 +183,9 @@ public class UsersFragment extends Fragment {
                     //adapter
                     adapterUser = new AdapterUser(getActivity(), userList);
 
+                    //refresh adapter
+                    adapterUser.notifyDataSetChanged();
+
                     //set adapter to recycler view
                     recyclerView.setAdapter(adapterUser);
                 }

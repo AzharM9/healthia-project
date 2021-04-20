@@ -18,7 +18,9 @@
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/maps"
         app:icon="@drawable/ic_post_white"
+        app:iconTint="@color/white"
         android:text="EDMT Nearby"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -28,7 +30,9 @@
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         app:icon="@drawable/ic_post_white"
+        app:iconTint="@color/white"
         android:text="Post Status"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

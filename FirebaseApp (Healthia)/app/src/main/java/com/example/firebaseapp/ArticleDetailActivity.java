@@ -561,7 +561,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     //convert timestamp to dd/mm/yyyy hh:mm am/pm
                     Calendar calendar = Calendar.getInstance(Locale.getDefault());
                     calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
-                    String pTime = DateFormat.format("dd/MMM/yyyy hh:mm aa", calendar).toString();
+                    String pTime = DateFormat.format("MMM d, yyyy hh:mm aa", calendar).toString();
 
                     //set data
                     aTitleTv.setText(pTitle);

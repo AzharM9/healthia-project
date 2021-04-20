@@ -1,119 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#F1EDED"
-    tools:context=".activitys.ThereProfileActivity">
+    android:background="#F1EDED">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-            <!--            cover photo-->
-            <ImageView
-                android:id="@+id/coverIv"
-                android:src="@drawable/healthia_long_logo"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:scaleType="fitCenter"
-                android:background="@color/design_default_color_primary_dark">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            </ImageView>
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="100dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/avatarIv"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@color/design_default_color_primary"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_default_img_white" />
-
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="#77000000">
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/mProfileDeclineBtn"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="Decline Friend Request"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/mProfileSendReqBtn"
+                        android:visibility="invisible"/>
+
+                    <Button
+                        android:id="@+id/mProfileSendReqBtn"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Send Friend Request"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/fab"
+                        />
+
+                    <Button
+                        android:id="@+id/fab"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Edit Profile"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/personalInfo"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/coverIv"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@color/colorGrey"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/nameTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:textColor="@color/white"
-                        android:textSize="25sp"
-                        tools:text="Name" />
+                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:text="Your Name"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="26sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/avatarIv" />
 
-                    <TextView
-                        android:id="@+id/emailTv"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/personalInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/white"
-                        tools:text="Email" />
+                        app:layout_constraintTop_toBottomOf="@+id/nameTv"
+                        app:layout_constraintEnd_toEndOf="@+id/nameTv"
+                        app:layout_constraintStart_toStartOf="@+id/nameTv"
+                        >
 
-                    <TextView
-                        android:id="@+id/phoneTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/white"
-                        tools:text="Phone" />
+                        <TextView
+                            android:id="@+id/phoneTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:text="Your Phone Number"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/emailTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:text="Your Email"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="@+id/phoneTv"
+                            app:layout_constraintStart_toStartOf="@+id/phoneTv"
+                            app:layout_constraintTop_toBottomOf="@+id/phoneTv" />
+
+                        <ImageView
+                            android:id="@+id/ageImg"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="64dp"
+                            android:layout_marginLeft="64dp"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/outline_calendar_today_24"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/emailTv" />
+
+                        <TextView
+                            android:id="@+id/ageTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="48dp"
+                            android:layout_marginLeft="48dp"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:text="Your Age"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/weightImg" />
+
+                        <ImageView
+                            android:id="@+id/weightImg"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="48dp"
+                            android:layout_marginLeft="48dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="48dp"
+                            android:layout_marginRight="48dp"
+                            android:background="@drawable/outline_monitor_weight_24"
+                            app:layout_constraintEnd_toStartOf="@id/heightImg"
+                            app:layout_constraintStart_toEndOf="@+id/ageImg"
+                            app:layout_constraintTop_toBottomOf="@+id/emailTv" />
+
+                        <TextView
+                            android:id="@+id/weightTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:maxLines="1"
+                            android:text="Your Weight"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toStartOf="@+id/heightTv"
+                            app:layout_constraintStart_toEndOf="@+id/ageTv"
+                            app:layout_constraintTop_toBottomOf="@+id/weightImg" />
+
+                        <ImageView
+                            android:id="@+id/heightImg"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="64dp"
+                            android:layout_marginRight="64dp"
+                            android:background="@drawable/outline_height_24"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/emailTv" />
+
+                        <TextView
+                            android:id="@+id/heightTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="48dp"
+                            android:layout_marginRight="48dp"
+                            android:maxLines="1"
+                            android:text="Your Height"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/weightImg" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_below="@id/linearLayout"
-                android:id="@+id/linear_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                >
 
-                <Button
-                    android:id="@+id/mProfileSendReqBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="SEND FRIEND REQUEST"
-                    android:textColor="@color/white"
-                    android:background="@color/purple_500"
-                    />
 
-                <Button
-                    android:visibility="gone"
-                    android:id="@+id/mProfileDeclineBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="DECLINE FRIEND REQUEST"
-                    android:textColor="@color/white"
-                    android:background="@color/purple_500"
-                    />
-            </LinearLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatarPlaceHolder"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:src="@color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/coverIv"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/coverIv" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatarIv"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:src="@drawable/ic_default_img"
+                        app:layout_constraintBottom_toBottomOf="@+id/coverIv"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/coverIv" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_posts"
-                android:layout_below="@id/linear_button"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                tools:listitem="@layout/item_row_posts"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView"
+                />
 
-        </RelativeLayout>
-    </ScrollView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

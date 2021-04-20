@@ -189,6 +189,9 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("regisNum", registerNum); //Doctor's STR number
                             hashMap.put("image", ""); //will add later (e.g edit profile)
                             hashMap.put("cover", ""); //will add later (e.g edit profile)
+                            hashMap.put("age", "-");
+                            hashMap.put("weight", "-");
+                            hashMap.put("height", "-");
 
                             //firebase database instance
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
