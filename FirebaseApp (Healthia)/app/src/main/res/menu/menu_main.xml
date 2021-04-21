@@ -19,4 +19,9 @@
         android:title="Chat List"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_chat_list"/>
+
+    <item android:id="@+id/action_nearby_clinic"
+        android:title="Nearby Clinic"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/outline_location_on_24" />
 </menu>

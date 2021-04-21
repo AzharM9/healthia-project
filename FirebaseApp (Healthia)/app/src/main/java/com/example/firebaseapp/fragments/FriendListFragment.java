@@ -1,13 +1,34 @@
-package com.example.firebaseapp.activitys;
+package com.example.firebaseapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.firebaseapp.activitys.ChatActivity;
+import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.AddNewFriendsActivity;
 import com.example.firebaseapp.R;
+import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.example.firebaseapp.models.Friends;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,17 +37,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link FriendListFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class FriendListFragment extends Fragment {
 
-public class FriendlistActivity extends AppCompatActivity {
+    private Activity mActivity;
 
     private RecyclerView mFriendsList;
 
@@ -41,14 +60,46 @@ public class FriendlistActivity extends AppCompatActivity {
     ActionBar actionBar;
 
 
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    public FriendListFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment UsersFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static FriendListFragment newInstance(String param1, String param2) {
+        FriendListFragment fragment = new FriendListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friendlist);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_friendlist, container, false);
 
-        context = FriendlistActivity.this;
+        context = getActivity();
 
-        mFriendsList = findViewById(R.id.friends_recyclerView);
+        mFriendsList = view.findViewById(R.id.friends_recyclerView);
         mAuth = FirebaseAuth.getInstance();
 
         mCurrent_user_id = mAuth.getCurrentUser().getUid();
@@ -56,27 +107,14 @@ public class FriendlistActivity extends AppCompatActivity {
         mFriendsDatabase = FirebaseDatabase.getInstance().getReference().child("Friends").child(mCurrent_user_id);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        //set actionbar title
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("Friend list");
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        mFriendsList.setHasFixedSize(true);
-        mFriendsList.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseRecyclerAdapter<Friends, FriendsViewHolder> friendsRecyclerViewAdapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(
+        FirebaseRecyclerAdapter<Friends, FriendListFragment.FriendsViewHolder> friendsRecyclerViewAdapter = new FirebaseRecyclerAdapter<Friends, FriendListFragment.FriendsViewHolder>(
                 Friends.class,
                 R.layout.users_single_layout,
-                FriendsViewHolder.class,
+                FriendListFragment.FriendsViewHolder.class,
                 mFriendsDatabase
         ) {
             @Override
-            protected void populateViewHolder(FriendsViewHolder friendsViewHolder, Friends friends, int i) {
+            protected void populateViewHolder(FriendListFragment.FriendsViewHolder friendsViewHolder, Friends friends, int i) {
                 friendsViewHolder.setDate("Friend since "+friends.getDate());
 
                 String list_user_id = getRef(i).getKey();
@@ -110,7 +148,7 @@ public class FriendlistActivity extends AppCompatActivity {
                                         }
                                         if(which == 1){
                                             //chat clicked
-                                            Intent intent = new Intent(context,ChatActivity.class);
+                                            Intent intent = new Intent(context, ChatActivity.class);
                                             intent.putExtra("hisUid", list_user_id);
                                             context.startActivity(intent);
                                         }
@@ -131,6 +169,22 @@ public class FriendlistActivity extends AppCompatActivity {
         };
 
         mFriendsList.setAdapter(friendsRecyclerViewAdapter);
+
+        //set actionbar title
+        actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle("Friend list");
+
+        mFriendsList.setHasFixedSize(true);
+        mFriendsList.setLayoutManager(new LinearLayoutManager(context));
+
+        return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder{
@@ -157,7 +211,8 @@ public class FriendlistActivity extends AppCompatActivity {
             if (image.equals("")){
 
                 try{
-                    Picasso.get().load(R.drawable.ic_default_img).placeholder(R.drawable.ic_default_img).into(userImageView);
+//                    Picasso.get().load(R.drawable.ic_default_img).placeholder(R.drawable.ic_default_img).into(userImageView);
+                    Glide.with(mView).load(R.drawable.ic_default_img).placeholder(R.drawable.ic_default_img).into(userImageView);
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -166,7 +221,8 @@ public class FriendlistActivity extends AppCompatActivity {
             }
             else{
                 try{
-                    Picasso.get().load(image).placeholder(R.drawable.ic_default_img).into(userImageView);
+//                    Picasso.get().load(image).placeholder(R.drawable.ic_default_img).into(userImageView);
+                    Glide.with(mView).load(image).placeholder(R.drawable.ic_default_img).into(userImageView);
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -177,8 +233,38 @@ public class FriendlistActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_friendlist, menu);
+
+        menu.findItem(R.id.action_addfriends);
+        super.onCreateOptionsMenu(menu, inflater);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
+
+        int id = item.getItemId();
+        if (id == R.id.action_addfriends){
+            Intent intent = new Intent(getActivity(), AddNewFriendsActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        mActivity = getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mActivity = null;
+    }
+
 }

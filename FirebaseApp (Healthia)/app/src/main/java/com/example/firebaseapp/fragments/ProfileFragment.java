@@ -41,7 +41,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.DashboardActivity;
-import com.example.firebaseapp.activitys.FriendlistActivity;
+import com.example.firebaseapp.activitys.AddNewFriendsActivity;
 import com.example.firebaseapp.activitys.MainActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
@@ -287,7 +287,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(getContext(), FriendlistActivity.class));
+                startActivity(new Intent(getContext(), AddNewFriendsActivity.class));
             }
         });
 
@@ -852,6 +852,7 @@ public class ProfileFragment extends Fragment {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_nearby_clinic).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

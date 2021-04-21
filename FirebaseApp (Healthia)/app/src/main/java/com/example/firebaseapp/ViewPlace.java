@@ -51,6 +51,9 @@ public class ViewPlace extends AppCompatActivity {
         place_address.setText("");
         opening_hours.setText("");
 
+        getSupportActionBar().setTitle("Detail Clinic");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         btnViewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,5 +121,11 @@ public class ViewPlace extends AppCompatActivity {
         url.append("&photoreference="+photo_reference);
         url.append("&key="+getResources().getString(R.string.browser_key));
         return url.toString();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

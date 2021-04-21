@@ -11,11 +11,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.firebaseapp.R;
+import com.example.firebaseapp.fragments.ChatListFragment;
 import com.example.firebaseapp.fragments.HomeFragment;
 import com.example.firebaseapp.fragments.NotificationsFragment;
-import com.example.firebaseapp.fragments.PanicButtonFragment;
 import com.example.firebaseapp.fragments.ProfileFragment;
-import com.example.firebaseapp.fragments.UsersFragment;
+import com.example.firebaseapp.fragments.FriendListFragment;
 import com.example.firebaseapp.notifications.Token;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +42,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         //Actionbar and its title
         actionBar = getSupportActionBar();
-        actionBar.setTitle("Profile");
 
         //init
         firebaseAuth = FirebaseAuth.getInstance();
@@ -92,16 +91,16 @@ public class DashboardActivity extends AppCompatActivity {
                         case R.id.nav_users:
                             //users fragment transaction
                             actionBar.setTitle("Users");//change actionbar title
-                            UsersFragment fragment2 = new UsersFragment();
+                            FriendListFragment fragment2 = new FriendListFragment();
                             FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
                             ft2.replace(R.id.content, fragment2, "");
                             ft2.commit();
                             return true;
 
-                        case R.id.nav_panic_button:
+                        case R.id.nav_chat:
                             //users fragment transaction
-                            actionBar.setTitle("Panic Button");//change actionbar title
-                            PanicButtonFragment fragment3 = new PanicButtonFragment();
+                            actionBar.setTitle("Chat List");//change actionbar title
+                            ChatListFragment fragment3 = new ChatListFragment();
                             FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                             ft3.replace(R.id.content, fragment3, "");
                             ft3.commit();
@@ -158,7 +157,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-        return super.onSupportNavigateUp();
+        return true;
     }
 
     @Override

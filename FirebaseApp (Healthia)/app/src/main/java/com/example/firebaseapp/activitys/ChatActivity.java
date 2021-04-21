@@ -94,6 +94,8 @@ public class ChatActivity extends AppCompatActivity {
         messageEt = findViewById(R.id.messageEt);
         sendBtn = findViewById(R.id.sendBtn);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //layout (linearlayout) for recyclerview
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
@@ -384,6 +386,7 @@ public class ChatActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         //hide search view
         menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_nearby_clinic).setVisible(false);
         menu.findItem(R.id.action_chatlist).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -401,5 +404,11 @@ public class ChatActivity extends AppCompatActivity {
             checkUserStatus();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

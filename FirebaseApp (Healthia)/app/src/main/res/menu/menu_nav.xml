@@ -6,12 +6,12 @@
         android:icon="@drawable/ic_home_black"/>
 
     <item android:id="@+id/nav_users"
-        android:title="Users"
+        android:title="Friends"
         android:icon="@drawable/ic_users_black"/>
 
-    <item android:id="@+id/nav_panic_button"
-        android:title="Healthia"
-        android:icon="@drawable/ic_smile"/>
+    <item android:id="@+id/nav_chat"
+        android:title="Chat"
+        android:icon="@drawable/ic_chat_list"/>
 
     <item android:id="@+id/nav_notification"
         android:title="Notifications"

@@ -454,6 +454,7 @@ public class ThereProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_nearby_clinic).setVisible(false);
         menu.findItem(R.id.action_about_us).setVisible(false);
         menu.findItem(R.id.action_feedback).setVisible(false);
         menu.findItem(R.id.action_logout).setVisible(false);
