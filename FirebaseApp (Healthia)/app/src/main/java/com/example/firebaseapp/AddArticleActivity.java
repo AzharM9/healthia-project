@@ -679,12 +679,23 @@ public class AddArticleActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkUserStatus();
+        checkOnlineStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        //set offline with last seen timestamp
+        checkOnlineStatus(timestamp);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         checkUserStatus();
+        checkOnlineStatus("online");
     }
 
     @Override
@@ -706,6 +717,14 @@ public class AddArticleActivity extends AppCompatActivity {
             finish();
         }
 
+    }
+
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
     }
 
     @Override

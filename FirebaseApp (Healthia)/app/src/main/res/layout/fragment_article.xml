@@ -58,6 +58,7 @@
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         app:icon="@drawable/ic_post_white"
+        app:iconTint="@color/white"
         android:text="Create Article"
         android:textColor="@color/white"
         android:layout_width="wrap_content"

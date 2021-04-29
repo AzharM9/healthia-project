@@ -19,9 +19,14 @@ import com.example.firebaseapp.models.Photos;
 import com.example.firebaseapp.models.PlaceDetail;
 import com.example.firebaseapp.remote.Common;
 import com.example.firebaseapp.remote.IGoogleAPIService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class ViewPlace extends AppCompatActivity {
+import java.util.HashMap;
+
+public class ViewPlaceActivity extends AppCompatActivity {
 
     ImageView photo;
     RatingBar ratingBar;
@@ -127,5 +132,38 @@ public class ViewPlace extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
+    }
+
+
+    @Override
+    protected void onStart() {
+        //set online
+        checkOnlineStatus("online");
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        //set offline with last seen timestamp
+        checkOnlineStatus(timestamp);
+    }
+
+    @Override
+    protected void onResume() {
+        //set online
+        checkOnlineStatus("online");
+        super.onResume();
     }
 }

@@ -2,11 +2,9 @@ package com.example.firebaseapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +19,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.models.MyPlaces;
 import com.example.firebaseapp.models.Results;
 import com.example.firebaseapp.remote.Common;
@@ -40,6 +37,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -200,7 +202,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //when user select marker, set get result of place and assign to static variable
                 Common.currentResult = currentPlace.getResults()[Integer.parseInt(marker.getSnippet())];
                 //start new activity
-                startActivity(new Intent(MapsActivity.this, ViewPlace.class));
+                startActivity(new Intent(MapsActivity.this, ViewPlaceActivity.class));
                 return true;
             }
         });
@@ -290,5 +292,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(FirebaseAuth.getInstance().getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
+    }
+
+
+    @Override
+    protected void onStart() {
+        //set online
+        checkOnlineStatus("online");
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        //set offline with last seen timestamp
+        checkOnlineStatus(timestamp);
+    }
+
+    @Override
+    protected void onResume() {
+        //set online
+        checkOnlineStatus("online");
+        super.onResume();
     }
 }

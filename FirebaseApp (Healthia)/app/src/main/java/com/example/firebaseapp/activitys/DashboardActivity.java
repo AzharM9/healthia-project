@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.HashMap;
+
 public class DashboardActivity extends AppCompatActivity {
 
     //firebase auth
@@ -64,6 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         checkUserStatus();
+        checkOnlineStatus("online");
         super.onResume();
     }
 
@@ -154,6 +157,14 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(mUID);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -164,8 +175,18 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onStart() {
         //check on start of app
         checkUserStatus();
+        checkOnlineStatus("online");
         super.onStart();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        //set offline with last seen timestamp
+        checkOnlineStatus(timestamp);
+    }
 
 }

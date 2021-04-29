@@ -360,26 +360,26 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         checkUserStatus();
         //set online
-        //checkOnlineStatus("online");
+        checkOnlineStatus("online");
         super.onStart();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        /*String timestamp = String.valueOf(System.currentTimeMillis());
+        String timestamp = String.valueOf(System.currentTimeMillis());
 
         //set offline with last seen timestamp
-        checkOnlineStatus(timestamp);*/
+        checkOnlineStatus(timestamp);
         userRefForSeen.removeEventListener(seenListener);
     }
 
-   /* @Override
+    @Override
     protected void onResume() {
         //set online
         checkOnlineStatus("online");
         super.onResume();
-    }*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

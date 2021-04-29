@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -171,6 +172,15 @@ public class AddNewFriendsActivity extends AppCompatActivity {
 
     }
 
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users")
+                .child(firebaseAuth.getCurrentUser().getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -231,8 +241,26 @@ public class AddNewFriendsActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        checkUserStatus();
+        //set online
+        checkOnlineStatus("online");
         super.onStart();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        //set offline with last seen timestamp
+        checkOnlineStatus(timestamp);
+    }
+
+    @Override
+    protected void onResume() {
+        //set online
+        checkOnlineStatus("online");
+        super.onResume();
     }
 
 }

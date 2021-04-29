@@ -840,6 +840,14 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true); //to show menu option in fragment
@@ -862,6 +870,10 @@ public class ProfileFragment extends Fragment {
         //get item id
         int id = item.getItemId();
         if (id == R.id.action_logout){
+            String timestamp = String.valueOf(System.currentTimeMillis());
+
+            //set offline with last seen timestamp
+            checkOnlineStatus(timestamp);
             firebaseAuth.signOut();
             checkUserStatus();
         }

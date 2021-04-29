@@ -46,8 +46,7 @@
                 android:id="@+id/userStatusTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="online"
-                android:visibility="gone"
+                android:text="status"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"/>
         </LinearLayout>

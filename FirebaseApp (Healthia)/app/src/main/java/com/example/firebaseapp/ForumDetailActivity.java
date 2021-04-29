@@ -620,6 +620,39 @@ public class ForumDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(myUid);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        //update value of online status of current user
+        dbRef.updateChildren(hashMap);
+    }
+
+
+    @Override
+    protected void onStart() {
+        checkUserStatus();
+        //set online
+        checkOnlineStatus("online");
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+
+        //set offline with last seen timestamp
+        checkOnlineStatus(timestamp);
+    }
+
+    @Override
+    protected void onResume() {
+        //set online
+        checkOnlineStatus("online");
+        super.onResume();
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

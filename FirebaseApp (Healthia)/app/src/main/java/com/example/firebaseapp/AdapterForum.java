@@ -154,7 +154,7 @@ public class AdapterForum extends RecyclerView.Adapter<AdapterForum.MyHolder>{
             }
         });
 
-        holder.fTitleTv.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //star PostDetailActivity
@@ -163,16 +163,16 @@ public class AdapterForum extends RecyclerView.Adapter<AdapterForum.MyHolder>{
                 context.startActivity(intent);
             }
         });
-
-        holder.fImageIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //star PostDetailActivity
-                Intent intent = new Intent(context, ForumDetailActivity.class);
-                intent.putExtra("postId", fId);
-                context.startActivity(intent);
-            }
-        });
+//
+//        holder.fImageIv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //star PostDetailActivity
+//                Intent intent = new Intent(context, ForumDetailActivity.class);
+//                intent.putExtra("postId", fId);
+//                context.startActivity(intent);
+//            }
+//        });
 
 //        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -223,19 +223,18 @@ public class AdapterForum extends RecyclerView.Adapter<AdapterForum.MyHolder>{
 //            }
 //        });
 
-        holder.profileLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*click to go to ThereProfileActivity with uid, this uid is of clicked user
-                * which will be used to show user specific data/post*/
-                if (!uid.equals(myUid)) {
-                    Intent intent = new Intent(context, ThereProfileActivity.class);
-                    intent.putExtra("uid", uid);
-                    context.startActivity(intent);
-                }
-            }
-        });
-
+//        holder.profileLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                /*click to go to ThereProfileActivity with uid, this uid is of clicked user
+//                * which will be used to show user specific data/post*/
+//                if (!uid.equals(myUid)) {
+//                    Intent intent = new Intent(context, ThereProfileActivity.class);
+//                    intent.putExtra("uid", uid);
+//                    context.startActivity(intent);
+//                }
+//            }
+//        });
 
     }
 
@@ -454,7 +453,7 @@ public class AdapterForum extends RecyclerView.Adapter<AdapterForum.MyHolder>{
         TextView uNameTv, fTimeTv, fTitleTv, pDescriptionTv, pLikesTv, pCommentsTv;
         ImageButton moreBtn;
         Button likeBtn, commentBtn;
-        LinearLayout profileLayout;
+        LinearLayout profileLayout, item;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -472,6 +471,7 @@ public class AdapterForum extends RecyclerView.Adapter<AdapterForum.MyHolder>{
 //            likeBtn = itemView.findViewById(R.id.likeBtn);
 //            commentBtn = itemView.findViewById(R.id.commentBtn);
             profileLayout = itemView.findViewById(R.id.profileLayout);
+            item = itemView.findViewById(R.id.item);
 
         }
 
