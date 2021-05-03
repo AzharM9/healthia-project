@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.models.ModelNotification;
@@ -67,7 +68,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
         //convert timestamp to dd/mm/yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(timestamp));
-        String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
+        String pTime = DateFormat.format("MMM d, yyyy hh:mm aa", calendar).toString();
 
         //get the name, email, image of the user of notification from his uid
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -90,7 +91,8 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
 
                             if (!image.equals("")) {
                                 try {
-                                    Picasso.get().load(image).placeholder(R.drawable.ic_default_img).into(holder.avatarIv);
+//                                    Picasso.get().load(image).placeholder(R.drawable.ic_default_img).into(holder.avatarIv);
+                                    Glide.with(context).load(image).placeholder(R.drawable.ic_default_img).into(holder.avatarIv);
                                 }catch (Exception e) {
                                     holder.avatarIv.setImageResource(R.drawable.ic_default_img);
                                 }

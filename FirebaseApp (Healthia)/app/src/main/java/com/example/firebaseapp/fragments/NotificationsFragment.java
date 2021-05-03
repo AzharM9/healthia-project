@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.firebaseapp.R;
+import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.adapters.AdapterNotification;
 import com.example.firebaseapp.models.ModelNotification;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +45,7 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override

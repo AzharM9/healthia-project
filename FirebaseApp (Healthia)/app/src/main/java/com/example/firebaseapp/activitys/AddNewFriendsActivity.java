@@ -58,8 +58,8 @@ public class AddNewFriendsActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(AddNewFriendsActivity.this, DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(itemDecor);
+//        DividerItemDecoration itemDecor = new DividerItemDecoration(AddNewFriendsActivity.this, DividerItemDecoration.VERTICAL);
+//        recyclerView.addItemDecoration(itemDecor);
 
         //init user list
         userList = new ArrayList<>();

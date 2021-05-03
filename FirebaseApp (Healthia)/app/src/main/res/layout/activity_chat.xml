@@ -11,7 +11,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/design_default_color_primary_dark"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        android:background="@color/purple_500"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <!--Receiver profile picture-->
@@ -19,6 +22,7 @@
             android:id="@+id/profileIv"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:padding="-20dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_default"
             app:civ_circle_background_color="@color/design_default_color_primary_dark"/>
@@ -27,9 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:gravity="center"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="10dp">
 
             <!--Receiver name-->
             <TextView

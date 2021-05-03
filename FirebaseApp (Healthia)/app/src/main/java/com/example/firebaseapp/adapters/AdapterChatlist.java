@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.firebaseapp.activitys.ChatActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.models.ModelUser;
@@ -66,9 +67,11 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             holder.lastMessageTv.setText(lastMessage);
         }
         try{
-            Picasso.get().load(userImage).placeholder(R.drawable.ic_default_img).into(holder.profileIv);
+//            Picasso.get().load(userImage).placeholder(R.drawable.ic_default_img).into(holder.profileIv);
+            Glide.with(context).load(userImage).placeholder(R.drawable.ic_default_img).into(holder.profileIv);
         }catch (Exception e){
-            Picasso.get().load(R.drawable.ic_default_img).into(holder.profileIv);
+//            Picasso.get().load(R.drawable.ic_default_img).into(holder.profileIv);
+            Glide.with(context).load(R.drawable.ic_default_img).into(holder.profileIv);
         }
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 

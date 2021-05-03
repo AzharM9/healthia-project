@@ -101,7 +101,7 @@ public class AdapterUser extends RecyclerView.Adapter<AdapterUser.MyHolder> {
 //                Picasso.get().load(userImage).placeholder(R.drawable.ic_default_img).into(holder.mAvatarIv);
                 Glide.with(context).load(userImage)
                         .placeholder(R.drawable.ic_default_img)
-                        .apply(new RequestOptions().override(70,70))
+//                        .apply(new RequestOptions().override(70,70))
                         .into(holder.mAvatarIv);
             }
             catch (Exception e){

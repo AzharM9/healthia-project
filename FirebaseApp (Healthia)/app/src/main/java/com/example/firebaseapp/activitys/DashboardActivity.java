@@ -93,7 +93,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                         case R.id.nav_users:
                             //users fragment transaction
-                            actionBar.setTitle("Users");//change actionbar title
+                            actionBar.setTitle("Friends");//change actionbar title
                             FriendListFragment fragment2 = new FriendListFragment();
                             FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
                             ft2.replace(R.id.content, fragment2, "");

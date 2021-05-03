@@ -257,18 +257,7 @@ public class FeedsFragment extends Fragment {
         //get item id
         actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
         int id = item.getItemId();
-        if (id == R.id.action_chatlist){
-
-            actionBar.setTitle("Chats");
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            ChatListFragment fragment6 = new ChatListFragment();
-            FragmentTransaction ft6 = getActivity().getSupportFragmentManager().beginTransaction();
-            ft6.replace(R.id.content, fragment6, "");
-            ft6.addToBackStack(null);
-            ft6.commit();
-
-        }else if (id == R.id.action_nearby_clinic){
+        if (id == R.id.action_nearby_clinic){
 
             startActivity(new Intent(getActivity(), MapsActivity.class));
         }

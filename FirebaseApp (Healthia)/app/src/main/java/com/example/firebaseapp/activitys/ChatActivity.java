@@ -19,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.firebaseapp.GetTimeAgo;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterChat;
 import com.example.firebaseapp.models.ModelChat;
@@ -133,19 +136,32 @@ public class ChatActivity extends AppCompatActivity {
                         userStatusTv.setText(onlineStatus);
                     } else {
                         // convert time stamp to proper time date
-                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-                        cal.setTimeInMillis(Long.parseLong(onlineStatus));
-                        String datetime = DateFormat.format("dd/MM/yyyy hh:mm aa",cal).toString();
-                        userStatusTv.setText("Last seen at: "+ datetime);
+//                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+//                        cal.setTimeInMillis(Long.parseLong(onlineStatus));
+//                        String datetime = DateFormat.format("dd/MM/yyyy hh:mm aa",cal).toString();
+//                        userStatusTv.setText("Last seen at: "+ datetime);
+
+                        GetTimeAgo getTimeAgo = new GetTimeAgo();
+                        long lastTime = Long.parseLong(onlineStatus);
+                        String lastSeenTime = getTimeAgo.getTimeAgo(lastTime, getApplicationContext());
+
+                        userStatusTv.setText("last seen "+ lastSeenTime);
                     }
 
                     //set data
                     nameTv.setText(name);
                     if (!hisImage.equals("")) {
                         try {
-                            Picasso.get().load(hisImage).placeholder(R.drawable.ic_default_img_white).into(profileIv);
+//                            Picasso.get().load(hisImage).placeholder(R.drawable.ic_default_img_white).into(profileIv);
+                            Glide.with(getApplicationContext())
+                                    .load(hisImage)
+                                    .placeholder(R.drawable.ic_default_img_white)
+                                    .into(profileIv);
                         }catch (Exception e){
-                            Picasso.get().load(R.drawable.ic_default_img_white).into(profileIv);
+//                            Picasso.get().load(R.drawable.ic_default_img_white).into(profileIv);
+                            Glide.with(getApplicationContext())
+                                    .load(R.drawable.ic_default_img_white)
+                                    .into(profileIv);
                         }
                     }
                 }
