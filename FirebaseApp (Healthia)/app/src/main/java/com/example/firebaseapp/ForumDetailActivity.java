@@ -22,6 +22,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.activitys.MainActivity;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
+import com.example.firebaseapp.notifications.APIService;
+import com.example.firebaseapp.notifications.Client;
+import com.example.firebaseapp.notifications.Data;
+import com.example.firebaseapp.notifications.Response;
+import com.example.firebaseapp.notifications.Sender;
+import com.example.firebaseapp.notifications.Token;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,6 +54,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class ForumDetailActivity extends AppCompatActivity {
 
@@ -76,6 +84,8 @@ public class ForumDetailActivity extends AppCompatActivity {
     EditText commentEt;
     ImageButton sendBtn;
     ImageView cAvatarIv;
+
+    APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +120,9 @@ public class ForumDetailActivity extends AppCompatActivity {
         commentEt = findViewById(R.id.commentEt);
         sendBtn = findViewById(R.id.sendBtn);
         cAvatarIv = findViewById(R.id.rAvatarIv);
+
+        //create api service
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         loadPostInfo();
 
@@ -147,11 +160,11 @@ public class ForumDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void addToHisNotifications(String hisUid, String pId, String notification) {
+    private void addToHisNotifications(String hisUid, String fId, String notification) {
         String timestamp = ""+System.currentTimeMillis();
 
         HashMap<Object, String > hashMap = new HashMap<>();
-        hashMap.put("fId", pId);
+        hashMap.put("fId", fId);
         hashMap.put("timestamp", timestamp);
         hashMap.put("fUid", hisUid);
         hashMap.put("notification", notification);
@@ -163,7 +176,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //added successfully
-
+                        sendPushNotification(hisUid, "New Forum Reply", myName, "replied on your forum");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -172,6 +185,45 @@ public class ForumDetailActivity extends AppCompatActivity {
                         //failed
                     }
                 });
+    }
+
+    private void sendPushNotification(final String hisUid, String title, final String name, final String message) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(
+                            ""+myUid,
+                            name+" "+message,
+                            ""+title,
+                            ""+hisUid,
+                            ""+fId,
+                            R.drawable.ic_default_img);
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void loadComments() {
@@ -463,6 +515,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                         updateReplyCount();
 
                         addToHisNotifications(""+hisUid, ""+ fId, "Replied on your forum");
+//                        sendPushNotification(hisUid, "New Forum Reply", hisName, "replied on your forum");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

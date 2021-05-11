@@ -463,7 +463,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         commentEt.setText("");
 //                        updateReplyCount();
 
-                        addToHisNotifications(""+hisUid, ""+ aId, "Replied on your forum");
+//                        addToHisNotifications(""+hisUid, ""+ aId, "Replied on your forum");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

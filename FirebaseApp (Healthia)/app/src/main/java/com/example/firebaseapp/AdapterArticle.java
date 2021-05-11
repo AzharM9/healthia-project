@@ -164,7 +164,7 @@ public class AdapterArticle extends RecyclerView.Adapter<AdapterArticle.MyHolder
             }
         });
 
-        holder.item.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //star PostDetailActivity

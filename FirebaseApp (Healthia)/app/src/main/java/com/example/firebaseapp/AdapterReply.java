@@ -62,7 +62,7 @@ public class AdapterReply extends RecyclerView.Adapter<AdapterReply.MyHolder> {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(timestamp));
 
-        String pTime = DateFormat.format("dd/MMM/yyyy hh:mm aa", calendar).toString();
+        String pTime = DateFormat.format("MMM d, yyyy hh:mm aa", calendar).toString();
 
         //set the data
         holder.nameTv.setText(name);

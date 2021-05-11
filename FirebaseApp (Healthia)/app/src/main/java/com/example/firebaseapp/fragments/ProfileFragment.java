@@ -859,6 +859,7 @@ public class ProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_chatlist).setVisible(false);
         menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.action_nearby_clinic).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);

@@ -283,6 +283,7 @@ public class ForumFragment extends Fragment {
         inflater.inflate(R.menu.menu_main, menu);
 
         //hide about us, feedback, log out
+        menu.findItem(R.id.action_chatlist).setVisible(false);
         menu.findItem(R.id.action_about_us).setVisible(false);
         menu.findItem(R.id.action_feedback).setVisible(false);
         menu.findItem(R.id.action_logout).setVisible(false);

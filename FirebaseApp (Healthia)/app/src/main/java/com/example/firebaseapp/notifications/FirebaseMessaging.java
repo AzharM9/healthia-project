@@ -17,9 +17,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.example.firebaseapp.ForumDetailActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.activitys.ChatActivity;
 import com.example.firebaseapp.activitys.DashboardActivity;
+import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,28 +31,29 @@ import com.google.firebase.messaging.RemoteMessage;
 public class FirebaseMessaging extends FirebaseMessagingService {
 
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
+    Intent intent;
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-//        //get current user from shared preferences
-//        SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
-//        String savedCurrentUser = sp.getString("Current_USERID", "None");
-//
-//        String sent = remoteMessage.getData().get("sent");
-//        String user = remoteMessage.getData().get("user");
-//        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (fUser != null && sent.equals(fUser.getUid())){
-//            if (!savedCurrentUser.equals(user)){
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-//                    sendOandAboveNotification(remoteMessage);
-//                }
-//                else {
-//                    sendNormalNotification(remoteMessage);
-//                }
-//            }
-//        }
+        //get current user from shared preferences
+        SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
+        String savedCurrentUser = sp.getString("Current_USERID", "None");
+
+        String sent = remoteMessage.getData().get("sent");
+        String user = remoteMessage.getData().get("user");
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fUser != null && sent.equals(fUser.getUid())){
+            if (!savedCurrentUser.equals(user)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    sendOandAboveNotification(remoteMessage);
+                }
+                else {
+                    sendNormalNotification(remoteMessage);
+                }
+            }
+        }
 
 //        sendFriendRequestNotif(remoteMessage);
     }
@@ -60,13 +63,28 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
+        String postId = remoteMessage.getData().get("postId");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int i = Integer.parseInt(user.replaceAll("[\\D]", ""));
-        Intent intent = new Intent(this, ChatActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("hisUid", user);
-        intent.putExtras(bundle);
+
+        if (title.equals("New Message")){
+            intent = new Intent(this, ChatActivity.class);
+        }
+        else if (title.equals("New Post Comment") || title.equals("New Post Like")){
+            intent = new Intent(this, PostDetailActivity.class);
+            intent.putExtra("postId", postId);
+        }
+        else if (title.equals("New Forum Reply")){
+            intent = new Intent(this, ForumDetailActivity.class);
+            intent.putExtra("postId", postId);
+        }
+        else if (title.equals("New Friend Request")){
+            intent = new Intent(this, ThereProfileActivity.class);
+            intent.putExtra("uid", postId);
+        }
+
+        intent.putExtra("hisUid", user);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pIntent = PendingIntent.getActivity(this, i, intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -93,13 +111,28 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
+        String postId = remoteMessage.getData().get("postId");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int i = Integer.parseInt(user.replaceAll("[\\D]", ""));
-        Intent intent = new Intent(this, ChatActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("hisUid", user);
-        intent.putExtras(bundle);
+
+        if (title.equals("New Message")){
+            intent = new Intent(this, ChatActivity.class);
+        }
+        else if (title.equals("New Post Comment") || title.equals("New Post Like")){
+            intent = new Intent(this, PostDetailActivity.class);
+            intent.putExtra("postId", postId);
+        }
+        else if (title.equals("New Forum Reply")){
+            intent = new Intent(this, ForumDetailActivity.class);
+            intent.putExtra("postId", postId);
+        }
+        else if (title.equals("New Friend Request")){
+            intent = new Intent(this, ThereProfileActivity.class);
+            intent.putExtra("uid", postId);
+        }
+
+        intent.putExtra("hisUid", user);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pIntent = PendingIntent.getActivity(this, i, intent, PendingIntent.FLAG_ONE_SHOT);
 

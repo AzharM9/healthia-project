@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,9 +24,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.firebaseapp.ForumDetailActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
+import com.example.firebaseapp.notifications.APIService;
+import com.example.firebaseapp.notifications.Client;
+import com.example.firebaseapp.notifications.Data;
+import com.example.firebaseapp.notifications.Response;
+import com.example.firebaseapp.notifications.Sender;
+import com.example.firebaseapp.notifications.Token;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,6 +66,7 @@ public class ThereProfileActivity extends AppCompatActivity {
     private DatabaseReference mFriendDatabase;
 
     //views from xml
+    CardView cardView;
     ImageView avatarIv, coverIv;
     TextView nameTv, emailTv, phoneTv, ageTv, weightTv, heightTv;
     Button mProfileSendReqBtn, mDeclineBtn;
@@ -63,9 +76,11 @@ public class ThereProfileActivity extends AppCompatActivity {
 
     List<ModelPost> postList;
     AdapterPosts adapterPosts;
-    String otherUser_uid;
+    String otherUser_uid, myName;
 
     private String mCurrentState;
+
+    APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +93,7 @@ public class ThereProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //init views
+        cardView = findViewById(R.id.cardView);
         avatarIv = findViewById(R.id.avatarIv);
         coverIv = findViewById(R.id.coverIv);
         nameTv = findViewById(R.id.nameTv);
@@ -92,6 +108,9 @@ public class ThereProfileActivity extends AppCompatActivity {
         postRecyclerView = findViewById(R.id.recyclerview_posts);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        //create api service
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         //get uid of clicked user to retrieve his posts
         Intent intent = getIntent();
@@ -109,6 +128,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     //get    data
+                    String uid = "" + ds.child("uid").getValue();
                     String name = "" + ds.child("name").getValue();
                     String email = "" + ds.child("email").getValue();
                     String phone = "" + ds.child("phone").getValue();
@@ -125,24 +145,24 @@ public class ThereProfileActivity extends AppCompatActivity {
                         try {
                             //if image is received then set
 //                            Picasso.get().load(image).into(avatarIv);
-                            Glide.with(ThereProfileActivity.this)
+                            Glide.with(getApplicationContext())
                                     .load(image)
                                     .placeholder(R.drawable.ic_default_img_white)
-                                    .apply(new RequestOptions().override(180,180))
+                                    .apply(new RequestOptions().override(180, 180))
                                     .into(avatarIv);
                         } catch (Exception e) {
                             //if there is any exception while getting image the set default
 //                            Picasso.get().load(R.drawable.ic_default_img_white).into(avatarIv);
-                            Glide.with(ThereProfileActivity.this)
+                            Glide.with(getApplicationContext())
                                     .load(R.drawable.ic_default_img_white)
-                                    .apply(new RequestOptions().override(120,120))
+                                    .apply(new RequestOptions().override(120, 120))
                                     .into(avatarIv);
                         }
                     }
                     try {
                         //if image is received then set
 //                        Picasso.get().load(cover).into(coverIv);
-                        Glide.with(ThereProfileActivity.this)
+                        Glide.with(getApplicationContext())
                                 .load(cover)
                                 .apply(new RequestOptions().centerCrop())
                                 .into(coverIv);
@@ -150,17 +170,16 @@ public class ThereProfileActivity extends AppCompatActivity {
                         //if there is any exception while getting image the set default
                     }
 
-                    if (hideData.equals("false")){
+                    if (hideData.equals("false")) {
                         String age = "" + ds.child("age").getValue();
                         String weight = "" + ds.child("weight").getValue();
                         String height = "" + ds.child("height").getValue();
 
-                        ageTv.setText(age+" years");
-                        weightTv.setText(weight+" kg");
-                        heightTv.setText(height+" cm");
+                        ageTv.setText(age + " years");
+                        weightTv.setText(weight + " kg");
+                        heightTv.setText(height + " cm");
                         personal_info_layout.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         personal_info_layout.setVisibility(View.GONE);
                     }
 
@@ -186,18 +205,17 @@ public class ThereProfileActivity extends AppCompatActivity {
                                             mCurrentState = "req_sent";
                                             mProfileSendReqBtn.setText("Cancel Friend Request");
 
-                                            mDeclineBtn.setVisibility(View.GONE);
+                                            mDeclineBtn.setVisibility(View.INVISIBLE);
                                             mDeclineBtn.setEnabled(false);
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         //check if already friend
                                         mFriendDatabase.child(mCurrent_user.getUid())
                                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                         //check if exists as friend
-                                                        if(dataSnapshot.hasChild(otherUser_uid)){
+                                                        if (dataSnapshot.hasChild(otherUser_uid)) {
                                                             mCurrentState = "friends";
                                                             mProfileSendReqBtn.setText("Unfriend this Person");
 
@@ -261,10 +279,12 @@ public class ThereProfileActivity extends AppCompatActivity {
                     mRootRef.updateChildren(requestMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if(error != null){
+                            if (error != null) {
                                 Toast.makeText(ThereProfileActivity.this, "There is some error in sending request", Toast.LENGTH_SHORT).show();
                             }
                             mProfileSendReqBtn.setEnabled(true);
+
+                            addToHisNotifications("" + otherUser_uid, "Sending Friend Request");
 
                             mCurrentState = "req_sent";
                             mProfileSendReqBtn.setText("Cancel Friend Request");
@@ -282,7 +302,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                     mRootRef.updateChildren(requestMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if(error != null){
+                            if (error != null) {
                                 Toast.makeText(ThereProfileActivity.this, "There is some error in canceling request", Toast.LENGTH_SHORT).show();
                             }
                             mProfileSendReqBtn.setEnabled(true);
@@ -309,16 +329,15 @@ public class ThereProfileActivity extends AppCompatActivity {
                     mRootRef.updateChildren(friendsMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if(error == null){
+                            if (error == null) {
 
                                 mProfileSendReqBtn.setEnabled(true);
                                 mCurrentState = "friends";
                                 mProfileSendReqBtn.setText("Unfriend this Person");
 
-                                mDeclineBtn.setVisibility(View.GONE);
+                                mDeclineBtn.setVisibility(View.INVISIBLE);
                                 mDeclineBtn.setEnabled(false);
-                            }
-                            else{
+                            } else {
                                 String dbError = error.getMessage();
 //                                Toast.makeText(ThereProfileActivity.this, dbError, Toast.LENGTH_SHORT).show();
 
@@ -328,7 +347,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                 }
 
                 //----------------UNFRIENDS-------------------------------------------
-                if (mCurrentState.equals("friends")){
+                if (mCurrentState.equals("friends")) {
 
                     Map unfriendMap = new HashMap();
                     unfriendMap.put("Friends/" + mCurrent_user.getUid() + "/" + otherUser_uid + "/date", null);
@@ -342,7 +361,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                             mProfileSendReqBtn.setText("Send Friend Request");
                             mProfileSendReqBtn.setEnabled(true);
 
-                            mDeclineBtn.setVisibility(View.GONE);
+                            mDeclineBtn.setVisibility(View.INVISIBLE);
                             mDeclineBtn.setEnabled(false);
                         }
                     });
@@ -355,7 +374,7 @@ public class ThereProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 mDeclineBtn.setEnabled(false);
-                mDeclineBtn.setVisibility(View.GONE);
+                mDeclineBtn.setVisibility(View.INVISIBLE);
                 //----------------DECLINE FRIEND REQUEST-----------------------------
                 if (mCurrentState.equals("req_received")) {
 
@@ -366,7 +385,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                     mRootRef.updateChildren(requestMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if(error != null){
+                            if (error != null) {
                                 Toast.makeText(ThereProfileActivity.this, "There is some error in declining request", Toast.LENGTH_SHORT).show();
                             }
 
@@ -382,10 +401,29 @@ public class ThereProfileActivity extends AppCompatActivity {
         });
 
         postList = new ArrayList<>();
-
+        loadUserInfo();
         checkUserStatus();
         loadHisPosts();
 
+    }
+
+    private void loadUserInfo() {
+        //get current user info
+        Query myRef = FirebaseDatabase.getInstance().getReference("Users");
+        myRef.orderByChild("uid").equalTo(mCurrent_user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    myName = ""+ds.child("name").getValue();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void loadHisPosts() {
@@ -424,6 +462,74 @@ public class ThereProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 //                Toast.makeText(ThereProfileActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void addToHisNotifications(String hisUid, String notification) {
+        String timestamp = "" + System.currentTimeMillis();
+
+        HashMap<Object, String> hashMap = new HashMap<>();
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("pUid", hisUid);
+        hashMap.put("notification", notification);
+        hashMap.put("sUid", mCurrent_user.getUid());
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(hisUid).child("Notifications").child(timestamp).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //added successfully
+                        sendPushNotification(
+                                "" + hisUid,
+                                "" + myName,
+                                "sending Friend Request");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed
+                    }
+                });
+    }
+
+    private void sendPushNotification(final String hisUid, final String name, final String message) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(
+                            "" + mCurrent_user.getUid(),
+                            name + " " + message,
+                            "New Friend Request",
+                            "" + hisUid,
+                            "" + mCurrent_user.getUid(),
+                            R.drawable.ic_default_img);
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+//                                    Toast.makeText(ChatActivity.this, ""+response.message(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -504,7 +610,7 @@ public class ThereProfileActivity extends AppCompatActivity {
         if (id == R.id.action_chatlist) {
             //start chat activity with that user
             Intent intent = new Intent(ThereProfileActivity.this, ChatActivity.class);
-            intent.putExtra("hisUid",otherUser_uid);
+            intent.putExtra("hisUid", otherUser_uid);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

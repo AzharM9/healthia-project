@@ -1,17 +1,26 @@
 package com.example.firebaseapp.notifications;
 
 public class Data {
-    private String user, body, title, sent;
+    private String user, body, title, sent, postId;
     private Integer icon;
 
     public Data() { }
 
-    public Data(String user, String body, String title, String sent, Integer icon) {
+    public Data(String user, String body, String title, String sent, String postId, Integer icon) {
         this.user = user;
         this.body = body;
         this.title = title;
         this.sent = sent;
+        this.postId = postId;
         this.icon = icon;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getUser() {

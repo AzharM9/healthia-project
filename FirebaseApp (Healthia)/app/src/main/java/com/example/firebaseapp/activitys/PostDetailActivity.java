@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -31,6 +33,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterComments;
 import com.example.firebaseapp.models.ModelComment;
+import com.example.firebaseapp.notifications.APIService;
+import com.example.firebaseapp.notifications.Client;
+import com.example.firebaseapp.notifications.Data;
+import com.example.firebaseapp.notifications.Response;
+import com.example.firebaseapp.notifications.Sender;
+import com.example.firebaseapp.notifications.Token;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +60,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
-
 
     //to get detail of user and post
     String hisUid, myUid, myEmail, myName, myDp,
@@ -79,6 +86,8 @@ public class PostDetailActivity extends AppCompatActivity {
     EditText commentEt;
     ImageButton sendBtn;
     ImageView cAvatarIv;
+
+    APIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +120,9 @@ public class PostDetailActivity extends AppCompatActivity {
         commentEt = findViewById(R.id.commentEt);
         sendBtn = findViewById(R.id.sendBtn);
         cAvatarIv = findViewById(R.id.cAvatarIv);
+
+        //create api service
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         loadPostInfo();
 
@@ -175,6 +187,45 @@ public class PostDetailActivity extends AppCompatActivity {
                 });
     }
 
+    private void sendPushNotification(final String hisUid, String title, final String name, final String message) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(
+                            ""+myUid,
+                            name+" "+message,
+                            ""+title,
+                            ""+hisUid,
+                            ""+postId,
+                            R.drawable.ic_default_img);
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void loadComments() {
         //layout(linear) for recycler view
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -184,6 +235,9 @@ public class PostDetailActivity extends AppCompatActivity {
         //init comment list
         commentList = new ArrayList<>();
 
+        if (postId == null){
+
+        }
         //Path of the post, to get it's comments
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
         ref.addValueEventListener(new ValueEventListener() {
@@ -389,7 +443,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         mProcessLike = false;
 
                         addToHisNotifications(""+hisUid, ""+postId, "Liked your post");
-
+                        sendPushNotification(""+hisUid,"New Post Like", ""+myName, "liked your post");
                     }
                 }
             }
@@ -440,6 +494,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         updateCommentCount();
 
                         addToHisNotifications(""+hisUid, ""+postId, "Commented on your post");
+                        sendPushNotification(hisUid, "New Post Comment", myName, "commented on your post");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -575,13 +630,13 @@ public class PostDetailActivity extends AppCompatActivity {
                             Glide.with(PostDetailActivity.this)
                                     .load(hisDp)
                                     .placeholder(R.drawable.ic_default_img)
-                                    .apply(new RequestOptions().override(50,50))
+                                    .apply(new RequestOptions().override(40,40))
                                     .into(uPictureIv);
                         } catch (Exception e) {
 //                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
                             Glide.with(getApplicationContext())
                                     .load(R.drawable.ic_default_img)
-                                    .apply(new RequestOptions().override(50,50))
+                                    .apply(new RequestOptions().override(40,40))
                                     .into(uPictureIv);
                         }
                     }

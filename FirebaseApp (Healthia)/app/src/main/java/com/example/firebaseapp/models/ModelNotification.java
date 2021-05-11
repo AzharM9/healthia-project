@@ -1,22 +1,40 @@
 package com.example.firebaseapp.models;
 
 public class ModelNotification {
-    String pId, timestamp, pUid, notification, sUid, sName, sEmail, sImage;
+    String pId, fId, timestamp, pUid, fUid, notification, sUid, sName, sEmail, sImage;
 
     //empty constructor is required for firebase
     public ModelNotification() {
 
     }
 
-    public ModelNotification(String pId, String timestamp, String pUid, String notification, String sUid, String sName, String sEmail, String sImage) {
+    public ModelNotification(String pId, String fId, String timestamp, String pUid, String fUid, String notification, String sUid, String sName, String sEmail, String sImage) {
         this.pId = pId;
+        this.fId = fId;
         this.timestamp = timestamp;
         this.pUid = pUid;
+        this.fUid = fUid;
         this.notification = notification;
         this.sUid = sUid;
         this.sName = sName;
         this.sEmail = sEmail;
         this.sImage = sImage;
+    }
+
+    public String getfId() {
+        return fId;
+    }
+
+    public void setfId(String fId) {
+        this.fId = fId;
+    }
+
+    public String getfUid() {
+        return fUid;
+    }
+
+    public void setfUid(String fUid) {
+        this.fUid = fUid;
     }
 
     public String getpId() {
