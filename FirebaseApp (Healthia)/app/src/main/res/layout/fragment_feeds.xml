@@ -7,37 +7,66 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.FeedsFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/createPostLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarIv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_default_img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/createPostTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:text="What's on your mind?"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/avatarIv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/createPostLayout"
         android:id="@+id/postsRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_row_posts"
         />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/maps"
-        app:icon="@drawable/ic_post_white"
-        app:iconTint="@color/white"
-        android:text="EDMT Nearby"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_above="@id/fab"
-        android:layout_margin="10dp"
-        android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab"
-        app:icon="@drawable/ic_post_white"
-        app:iconTint="@color/white"
-        android:text="Post Status"
-        android:textColor="@color/white"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/panic_btn"
+        android:src="@drawable/outline_priority_high_24"
+        app:tint="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
         android:layout_alignParentRight="true"
-        android:layout_margin="10dp"/>
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

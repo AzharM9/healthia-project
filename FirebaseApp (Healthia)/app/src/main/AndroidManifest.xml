@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.firebaseapp">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
@@ -10,11 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseApp">
-        <activity android:name=".ArticleDetailActivity"/>
-        <activity android:name=".AddArticleActivity"/>
-        <activity android:name=".ForumDetailActivity"/>
-        <activity android:name=".AddForumActivity"/>
-        <activity android:name=".ViewPlaceActivity"/>
+        <activity android:name=".RequestAidActivity"/>
+        <activity android:name=".ArticleDetailActivity" />
+        <activity android:name=".AddArticleActivity" />
+        <activity android:name=".ForumDetailActivity" />
+        <activity android:name=".AddForumActivity" />
+        <activity android:name=".ViewPlaceActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -26,7 +32,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/Theme.FirebaseApp"/>
+            android:theme="@style/Theme.FirebaseApp" />
         <activity android:name=".activitys.AddNewFriendsActivity" />
         <activity android:name=".activitys.PostDetailActivity" />
         <activity android:name=".activitys.ThereProfileActivity">
@@ -71,11 +77,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".FetchAddressIntentService"/>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

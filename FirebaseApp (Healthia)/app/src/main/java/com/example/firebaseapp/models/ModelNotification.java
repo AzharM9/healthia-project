@@ -1,16 +1,17 @@
 package com.example.firebaseapp.models;
 
 public class ModelNotification {
-    String pId, fId, timestamp, pUid, fUid, notification, sUid, sName, sEmail, sImage;
+    String pId, fId, wId, timestamp, pUid, fUid, notification, sUid, sName, sEmail, sImage;
 
     //empty constructor is required for firebase
     public ModelNotification() {
 
     }
 
-    public ModelNotification(String pId, String fId, String timestamp, String pUid, String fUid, String notification, String sUid, String sName, String sEmail, String sImage) {
+    public ModelNotification(String pId, String fId, String wId, String timestamp, String pUid, String fUid, String notification, String sUid, String sName, String sEmail, String sImage) {
         this.pId = pId;
         this.fId = fId;
+        this.wId = wId;
         this.timestamp = timestamp;
         this.pUid = pUid;
         this.fUid = fUid;
@@ -19,6 +20,14 @@ public class ModelNotification {
         this.sName = sName;
         this.sEmail = sEmail;
         this.sImage = sImage;
+    }
+
+    public String getwId() {
+        return wId;
+    }
+
+    public void setwId(String wId) {
+        this.wId = wId;
     }
 
     public String getfId() {

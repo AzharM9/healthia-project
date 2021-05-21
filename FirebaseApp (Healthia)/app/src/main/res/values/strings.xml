@@ -4,6 +4,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="add_friends">Add Friends</string>
+    <string name="confirm_aid">Are you want to notify your friend about your poor health condition and requesting health aid?</string>
+    <string name="request_aid_detail_sentence">Your friend currently in a poor health condition and requesting for health aid</string>
 
     <string-array name="forum_type">
         <item name="1">All</item>

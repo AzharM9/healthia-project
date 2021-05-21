@@ -185,21 +185,21 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
                 int pLikes = Integer.parseInt(postList.get(position).getpLikes());
                 mProcessLike = true;
                 //get id of the post clicked
-                final String postIde = postList.get(position).getpId();
+                final String postId = postList.get(position).getpId();
                 likesRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (mProcessLike){
-                            if (dataSnapshot.child(postIde).hasChild(myUid)){
+                            if (dataSnapshot.child(postId).hasChild(myUid)){
                                 //already liked, so remove like
-                                postsRef.child(postIde).child("pLikes").setValue(""+(pLikes-1));
-                                likesRef.child(postIde).child(myUid).removeValue();
+                                postsRef.child(postId).child("pLikes").setValue(""+(pLikes-1));
+                                likesRef.child(postId).child(myUid).removeValue();
                                 mProcessLike = false;
                             }
                             else{
                                 //not liked, like it
-                                postsRef.child(postIde).child("pLikes").setValue(""+(pLikes+1));
-                                likesRef.child(postIde).child(myUid).setValue("Liked");
+                                postsRef.child(postId).child("pLikes").setValue(""+(pLikes+1));
+                                likesRef.child(postId).child(myUid).setValue("Liked");
                                 mProcessLike = false;
 
                                 addToHisNotifications(""+uid, ""+pId, "Liked your post");

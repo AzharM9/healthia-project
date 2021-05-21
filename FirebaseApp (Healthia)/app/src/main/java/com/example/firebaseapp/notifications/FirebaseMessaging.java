@@ -19,6 +19,7 @@ import androidx.core.app.TaskStackBuilder;
 
 import com.example.firebaseapp.ForumDetailActivity;
 import com.example.firebaseapp.R;
+import com.example.firebaseapp.RequestAidActivity;
 import com.example.firebaseapp.activitys.ChatActivity;
 import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.activitys.PostDetailActivity;
@@ -79,6 +80,10 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             intent = new Intent(this, ForumDetailActivity.class);
             intent.putExtra("postId", postId);
         }
+        else if (title.equals("New Urgent Request")){
+            intent = new Intent(this, RequestAidActivity.class);
+            intent.putExtra("wId", postId);
+        }
         else if (title.equals("New Friend Request")){
             intent = new Intent(this, ThereProfileActivity.class);
             intent.putExtra("uid", postId);
@@ -118,6 +123,10 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
         if (title.equals("New Message")){
             intent = new Intent(this, ChatActivity.class);
+        }
+        else if (title.equals("New Urgent Request")){
+            intent = new Intent(this, RequestAidActivity.class);
+            intent.putExtra("wId", postId);
         }
         else if (title.equals("New Post Comment") || title.equals("New Post Like")){
             intent = new Intent(this, PostDetailActivity.class);

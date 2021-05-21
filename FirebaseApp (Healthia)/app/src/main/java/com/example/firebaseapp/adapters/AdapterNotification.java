@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.firebaseapp.ForumDetailActivity;
-import com.example.firebaseapp.NotificationHelper;
 import com.example.firebaseapp.R;
+import com.example.firebaseapp.RequestAidActivity;
 import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.example.firebaseapp.models.ModelNotification;
@@ -41,7 +41,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
     private Context context;
     private List<ModelNotification> notificationList;
     private FirebaseAuth firebaseAuth;
-    NotificationHelper notificationHelper;
+
 
     public AdapterNotification(Context context, List<ModelNotification> notificationList) {
         this.context = context;
@@ -69,6 +69,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
         String senderUid = model.getsUid();
         String pId = model.getpId();
         String fId = model.getfId();
+        String wId = model.getwId();
 
         //convert timestamp to dd/mm/yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -118,16 +119,21 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
             @Override
             public void onClick(View v) {
                 //notif listitem click
-                if (fId == null && pId != null){
+                if (pId != null){
                     //notif open PostDetailActivity
                     Intent intent = new Intent(context, PostDetailActivity.class);
                     intent.putExtra("postId", pId); //will get detail of post using this id,it's id of the post clicked
                     context.startActivity(intent);
                 }
-                else if (pId == null && fId != null){
+                else if (fId != null){
                     //notif open forum detail
                     Intent intent = new Intent(context, ForumDetailActivity.class);
                     intent.putExtra("postId", fId); //will get detail of forum using this id,it's id of the forum clicked
+                    context.startActivity(intent);
+                }
+                else if (wId != null){
+                    Intent intent = new Intent(context, RequestAidActivity.class);
+                    intent.putExtra("wId", wId); //will get detail of forum using this id,it's id of the forum clicked
                     context.startActivity(intent);
                 }
                 else if (senderUid != null){
