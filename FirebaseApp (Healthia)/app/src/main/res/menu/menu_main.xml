@@ -5,7 +5,7 @@
     <item android:id="@+id/action_about_us"
         android:title="About Us"/>
     <item android:id="@+id/action_feedback"
-        android:title="Feedback"/>
+        android:title="Feedback Us"/>
     <item android:id="@+id/action_logout"
         android:title="Logout"/>
 

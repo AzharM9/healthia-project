@@ -22,6 +22,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -30,6 +32,12 @@ import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.activitys.ThereProfileActivity;
 import com.example.firebaseapp.models.ModelPost;
+import com.example.firebaseapp.notifications.APIService;
+import com.example.firebaseapp.notifications.Client;
+import com.example.firebaseapp.notifications.Data;
+import com.example.firebaseapp.notifications.Response;
+import com.example.firebaseapp.notifications.Sender;
+import com.example.firebaseapp.notifications.Token;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,7 +61,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
     Context context;
     List<ModelPost> postList;
 
-    String myUid;
+    String myUid, myName;
+
+    APIService apiService;
 
     private DatabaseReference likesRef; //for likes database node
     private DatabaseReference postsRef; //reference of posts
@@ -258,22 +268,77 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         hashMap.put("pUid", hisUid);
         hashMap.put("notification", notification);
         hashMap.put("sUid", myUid);
+        if (!hisUid.equals(myUid)){
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+            ref.child(hisUid).child("Notifications").child(timestamp).setValue(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //added successfully
+                            ref.orderByChild("uid").equalTo(myUid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot ds: snapshot.getChildren()) {
+                                        myName = ""+ds.child("name").getValue();
+                                        sendPushNotification(""+hisUid, ""+myName, pId);
+                                    }
+                                }
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(hisUid).child("Notifications").child(timestamp).setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //added successfully
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //failed
-                    }
-                });
+                                }
+                            });
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //failed
+                        }
+                    });
+        }
+    }
+
+    private void sendPushNotification(final String hisUid, final String name, String postId) {
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(
+                            ""+myUid,
+                            name+" "+"liked your post",
+                            ""+"New Post Like",
+                            ""+hisUid,
+                            ""+postId,
+                            R.drawable.ic_default_img);
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void setLikes(MyHolder holder, String postKey) {

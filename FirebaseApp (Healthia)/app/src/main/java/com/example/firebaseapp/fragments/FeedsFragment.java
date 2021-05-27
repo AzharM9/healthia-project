@@ -37,6 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,6 +100,8 @@ public class FeedsFragment extends Fragment {
 
     //user info
     String myName, myDp, email, uid;
+    ArrayList<String> list_user_id;
+    String[] locationPermission;
     APIService apiService;
 
     private ResultReceiver resultReceiver;
@@ -128,6 +131,8 @@ public class FeedsFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         loadUserInfo();
 
+        locationPermission = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+
         //recycler view and its properties
         recyclerView = view.findViewById(R.id.postsRecyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -152,23 +157,12 @@ public class FeedsFragment extends Fragment {
 
         //init post list
         postList = new ArrayList<>();
+        list_user_id = new ArrayList<>();
 
         panicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(getActivity(), "Panic Button", Toast.LENGTH_SHORT).show();
-//                addtoTheirNotif();
-                if (ContextCompat.checkSelfPermission(
-                        getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED){
-                    //NOT GRANTED
-                    //REQ Permission (?)
-                    ActivityCompat.requestPermissions(
-                            getActivity(),
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            REQUEST_CODE_LOCATION_PERMISSION);
 
-                }
                 showPanicBtnDialog();
             }
         });
@@ -192,7 +186,8 @@ public class FeedsFragment extends Fragment {
             }
         });
 
-        loadPosts();
+//        loadPosts();
+        loadPosts2();
 
 
         setHasOptionsMenu(true); //to show menu option in fragment
@@ -200,6 +195,63 @@ public class FeedsFragment extends Fragment {
         return view;
     }
 
+    private void loadPosts2(){
+
+        DatabaseReference mFriendsDatabase = FirebaseDatabase.getInstance().getReference("Friends");
+
+        mFriendsDatabase.child(firebaseAuth.getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list_user_id.clear();
+                        for (DataSnapshot ds: snapshot.getChildren()) {
+//                            list_user_id = ds.getKey();
+
+                            list_user_id.add(ds.getKey());
+
+                            //path of all posts
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+
+                            //get all data from this ref
+                            ref.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    postList.clear();
+                                    for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                        ModelPost modelPost = ds.getValue(ModelPost.class);
+
+                                        for (int i=0; i<list_user_id.size() ;i++){
+                                            if(modelPost.getUid().equals(uid) || modelPost.getUid().equals(list_user_id.get(i))){
+                                                postList.add(modelPost);
+                                            }
+                                        }
+
+                                        //adapter
+                                        adapterPosts = new AdapterPosts(getActivity(), postList);
+
+                                        //set adapter to recyclerView
+                                        recyclerView.setAdapter(adapterPosts);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    //in case of error
+//                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
+    }
     private void loadPosts() {
         //path of all posts
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
@@ -274,17 +326,21 @@ public class FeedsFragment extends Fragment {
                     myName = ""+ds.child("name").getValue();
                     myDp = ""+ds.child("image").getValue();
 
+                    if (mActivity == null) {
+                        return;
+                    }
+
                     if (!myDp.equals("")) {
                         try {
                             //if image is received then set
 //                            Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
-                            Glide.with(getContext())
+                            Glide.with(mActivity)
                                     .load(myDp)
                                     .placeholder(R.drawable.ic_default_img)
                                     .into(avatarIv);
                         } catch (Exception e) {
 //                            Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
-                            Glide.with(getContext())
+                            Glide.with(mActivity)
                                     .load(R.drawable.ic_default_img)
                                     .into(avatarIv);
                         }
@@ -321,7 +377,15 @@ public class FeedsFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //check if permission enabled or not
-                getAddress();
+
+                if (ContextCompat.checkSelfPermission(
+                        getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED){
+                    //NOT GRANTED
+                    //REQ Permission
+                    requestPermissions(locationPermission,REQUEST_CODE_LOCATION_PERMISSION);
+
+                }else getAddress();
             }
         });
 
@@ -427,6 +491,29 @@ public class FeedsFragment extends Fragment {
 
                 uploadAddress(address);
                 Toast.makeText(getContext(), "Sending Request Success", Toast.LENGTH_SHORT).show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                LinearLayout linearLayout = new LinearLayout(getActivity());
+//                linearLayout.setOrientation(LinearLayout.VERTICAL);
+//                linearLayout.setPadding(10,10,10,10);
+//
+//                ImageView imageView = new ImageView(getActivity());
+//                imageView.setImageResource(R.drawable.baseline_done_24);
+//                TextView textView = new TextView(getActivity());
+//                textView.setText("Sending Request Success");
+//                textView.setTextSize(14f);
+//                textView.setTextColor(Color.parseColor("#FF000000"));
+//                textView.setMaxLines(3);
+//                textView.setPadding(30,20,30,20);
+//                linearLayout.addView(imageView);
+//                linearLayout.addView(textView);
+//                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.dismiss();
+//                    }
+//                });
+//
+//                builder.create().show();
             }
             else {
                 Toast.makeText(getContext(), "Failed getting result address", Toast.LENGTH_SHORT).show();
@@ -455,7 +542,7 @@ public class FeedsFragment extends Fragment {
                             hashMap.put("sUid", firebaseAuth.getCurrentUser().getUid());
                             hashMap.put("notification", "Requesting health aid");
                             hashMap.put("timestamp", timestamp);
-                            
+
                             mUserDatabase.child(list_user_id).child("Notifications").child(timestamp)
                                     .setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -541,8 +628,8 @@ public class FeedsFragment extends Fragment {
             }
             else {
                 Toast.makeText(getContext(),
-                        "Please allow location permission for app to get your address",
-                        Toast.LENGTH_SHORT).show();
+                            "Plase allow app location access for sharing location to your friends"
+                            , Toast.LENGTH_SHORT).show();
                 }
                 return;
         }
@@ -574,7 +661,8 @@ public class FeedsFragment extends Fragment {
                     searchPosts(s);
                 }
                 else{
-                    loadPosts();
+//                    loadPosts();
+                    loadPosts2();
                 }
                 return false;
             }
@@ -586,7 +674,8 @@ public class FeedsFragment extends Fragment {
                     searchPosts(s);
                 }
                 else{
-                    loadPosts();
+//                    loadPosts();
+                    loadPosts2();
                 }
                 return false;
             }

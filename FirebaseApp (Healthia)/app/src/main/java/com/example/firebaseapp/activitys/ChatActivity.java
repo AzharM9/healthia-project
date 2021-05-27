@@ -3,6 +3,7 @@ package com.example.firebaseapp.activitys;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.firebaseapp.AboutUsFragment;
+import com.example.firebaseapp.FeedbackFragment;
 import com.example.firebaseapp.GetTimeAgo;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterChat;
@@ -170,6 +173,15 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        profileIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ChatActivity.this, ThereProfileActivity.class);
+                intent.putExtra("uid", hisUid);
+                startActivity(intent);
             }
         });
 
@@ -411,14 +423,33 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //get item id
         int id = item.getItemId();
-        if (id == R.id.action_logout){
-            String timestamp = String.valueOf(System.currentTimeMillis());
+        switch (id){
+            case (R.id.action_about_us):
+                AboutUsFragment fragment2 = new AboutUsFragment();
+                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                ft2.replace(R.id.content, fragment2, "");
+                ft2.addToBackStack(null);
+                ft2.commit();
+                break;
 
-            //set offline with last seen timestamp
-            checkOnlineStatus(timestamp);
-            firebaseAuth.signOut();
-            checkUserStatus();
+            case (R.id.action_feedback):
+                FeedbackFragment fragment3 = new FeedbackFragment();
+                FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+                ft3.replace(R.id.content, fragment3, "");
+                ft3.addToBackStack(null);
+                ft3.commit();
+                break;
+
+            case (R.id.action_logout):
+                String timestamp = String.valueOf(System.currentTimeMillis());
+
+                //set offline with last seen timestamp
+                checkOnlineStatus(timestamp);
+                firebaseAuth.signOut();
+                checkUserStatus();
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

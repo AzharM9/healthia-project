@@ -40,6 +40,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.firebaseapp.AboutUsFragment;
+import com.example.firebaseapp.FeedbackFragment;
 import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.activitys.AddNewFriendsActivity;
 import com.example.firebaseapp.activitys.MainActivity;
@@ -870,25 +872,45 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //get item id
         int id = item.getItemId();
-        if (id == R.id.action_logout){
-            String timestamp = String.valueOf(System.currentTimeMillis());
+        switch (id){
+            case (R.id.action_logout):
+                String timestamp = String.valueOf(System.currentTimeMillis());
 
-            //set offline with last seen timestamp
-            checkOnlineStatus(timestamp);
-            firebaseAuth.signOut();
-            checkUserStatus();
+                //set offline with last seen timestamp
+                checkOnlineStatus(timestamp);
+                firebaseAuth.signOut();
+                checkUserStatus();
+                break;
+
+            case (R.id.action_chatlist):
+                actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
+                actionBar.setTitle("Chats");
+//                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                ChatListFragment fragment1 = new ChatListFragment();
+                FragmentTransaction ft1 = getActivity().getSupportFragmentManager().beginTransaction();
+                ft1.replace(R.id.content, fragment1, "");
+                ft1.addToBackStack(null);
+                ft1.commit();
+                break;
+
+            case (R.id.action_about_us):
+                AboutUsFragment fragment2 = new AboutUsFragment();
+                FragmentTransaction ft2 = getActivity().getSupportFragmentManager().beginTransaction();
+                ft2.replace(R.id.content, fragment2, "");
+                ft2.addToBackStack(null);
+                ft2.commit();
+                break;
+
+            case (R.id.action_feedback):
+                FeedbackFragment fragment3 = new FeedbackFragment();
+                FragmentTransaction ft3 = getActivity().getSupportFragmentManager().beginTransaction();
+                ft3.replace(R.id.content, fragment3, "");
+                ft3.addToBackStack(null);
+                ft3.commit();
+                break;
         }
-        if (id == R.id.action_chatlist){
-            actionBar = ((DashboardActivity) getActivity()).getSupportActionBar();
-            actionBar.setTitle("Chats");
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            ChatListFragment fragment6 = new ChatListFragment();
-            FragmentTransaction ft6 = getActivity().getSupportFragmentManager().beginTransaction();
-            ft6.replace(R.id.content, fragment6, "");
-            ft6.addToBackStack(null);
-            ft6.commit();
-        }
+
         return super.onOptionsItemSelected(item);
     }
 

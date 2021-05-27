@@ -513,9 +513,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                         Toast.makeText(ForumDetailActivity.this, "Reply added...", Toast.LENGTH_SHORT).show();
                         commentEt.setText("");
                         updateReplyCount();
-
-                        addToHisNotifications(""+hisUid, ""+ fId, "Replied on your forum");
-//                        sendPushNotification(hisUid, "New Forum Reply", hisName, "replied on your forum");
+                        if (!hisUid.equals(myUid)) addToHisNotifications(""+hisUid, ""+ fId, "Replied on your forum");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

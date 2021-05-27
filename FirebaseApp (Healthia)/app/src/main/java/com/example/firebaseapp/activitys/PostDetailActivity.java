@@ -442,8 +442,10 @@ public class PostDetailActivity extends AppCompatActivity {
                         likesRef.child(postId).child(myUid).setValue("Liked");
                         mProcessLike = false;
 
-                        addToHisNotifications(""+hisUid, ""+postId, "Liked your post");
-                        sendPushNotification(""+hisUid,"New Post Like", ""+myName, "liked your post");
+                        if (!hisUid.equals(myUid)){
+                            addToHisNotifications(""+hisUid, ""+postId, "Liked your post");
+                            sendPushNotification(""+hisUid,"New Post Like", ""+myName, "liked your post");
+                        }
                     }
                 }
             }
@@ -493,8 +495,10 @@ public class PostDetailActivity extends AppCompatActivity {
                         commentEt.setText("");
                         updateCommentCount();
 
-                        addToHisNotifications(""+hisUid, ""+postId, "Commented on your post");
-                        sendPushNotification(hisUid, "New Post Comment", myName, "commented on your post");
+                        if (!hisUid.equals(myUid)){
+                            addToHisNotifications(""+hisUid, ""+postId, "Commented on your post");
+                            sendPushNotification(hisUid, "New Post Comment", myName, "commented on your post");
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

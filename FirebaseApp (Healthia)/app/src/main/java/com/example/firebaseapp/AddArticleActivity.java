@@ -132,7 +132,7 @@ public class AddArticleActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                Toast.makeText(com.example.firebaseapp.AddArticleActivity.this, "Enter forum category...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(com.example.firebaseapp.AddArticleActivity.this, "Enter article category...", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -149,7 +149,7 @@ public class AddArticleActivity extends AppCompatActivity {
 
         } else {
             //add
-            actionBar.setTitle("Add New Forum");
+            actionBar.setTitle("Add New Article");
             uploadBtn.setText("Upload");
 
         }
