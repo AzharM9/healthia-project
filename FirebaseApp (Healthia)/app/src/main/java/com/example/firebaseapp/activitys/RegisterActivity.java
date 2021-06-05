@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String userRole = adapterView.getItemAtPosition(i).toString();
                 switch (userRole){
-                    case "Patient":
+                    case "Non Doctor":
                         mRegisterEt.setVisibility(View.GONE);
                         mRegisterEt.setText("0000000000000000");
                         role = userRole;

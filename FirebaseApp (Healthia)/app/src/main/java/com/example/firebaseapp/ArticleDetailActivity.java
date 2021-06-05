@@ -587,6 +587,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                             Glide.with(ArticleDetailActivity.this)
                                     .load(pImage)
                                     .placeholder(R.drawable.ic_image_black_24)
+                                    .apply(new RequestOptions().centerCrop())
                                     .into(aImageIv);
                         }
                         catch (Exception e){

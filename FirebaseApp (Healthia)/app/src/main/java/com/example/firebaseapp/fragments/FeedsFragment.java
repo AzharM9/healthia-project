@@ -406,40 +406,62 @@ public class FeedsFragment extends Fragment {
         pd.setMessage("Sharing your location address to your friends...");
         pd.show();
 
-        //get coordinate of curr location
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        DatabaseReference mFriendRef = FirebaseDatabase.getInstance().getReference("Friends");
+        mFriendRef.orderByKey().equalTo(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                        //get coordinate of curr location
+                        LocationRequest locationRequest = new LocationRequest();
+                        locationRequest.setInterval(10000);
+                        locationRequest.setFastestInterval(3000);
+                        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        LocationServices.getFusedLocationProviderClient(getActivity())
-                .requestLocationUpdates(locationRequest, new LocationCallback() {
-                    @SuppressLint("MissingPermission")
-                    @Override
-                    public void onLocationResult(@NonNull LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        LocationServices.getFusedLocationProviderClient(getContext())
-                                .removeLocationUpdates(this);
-                        if (locationResult.getLocations().size() > 0){
-                            int latestLocationIndex = locationResult.getLocations().size() -1;
+                        LocationServices.getFusedLocationProviderClient(getActivity())
+                                .requestLocationUpdates(locationRequest, new LocationCallback() {
+                                    @SuppressLint("MissingPermission")
+                                    @Override
+                                    public void onLocationResult(@NonNull LocationResult locationResult) {
+                                        super.onLocationResult(locationResult);
+                                        LocationServices.getFusedLocationProviderClient(getContext())
+                                                .removeLocationUpdates(this);
+                                        if (locationResult.getLocations().size() > 0){
+                                            int latestLocationIndex = locationResult.getLocations().size() -1;
 
-                            //get curr latitude & longitude
-                            double latitude =
-                                    locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                                            //get curr latitude & longitude
+                                            double latitude =
+                                                    locationResult.getLocations().get(latestLocationIndex).getLatitude();
 
-                            double longitude =
-                                    locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                                            double longitude =
+                                                    locationResult.getLocations().get(latestLocationIndex).getLongitude();
 
-                            Location location = new Location("providerNA");
-                            location.setLatitude(latitude);
-                            location.setLongitude(longitude);
-                            fetchAddressFromLatLong(location);
-                        }
-                        else {
-                            pd.dismiss();
-                        }
+                                            Location location = new Location("providerNA");
+                                            location.setLatitude(latitude);
+                                            location.setLongitude(longitude);
+                                            fetchAddressFromLatLong(location);
+                                        }
+                                        else {
+                                            pd.dismiss();
+                                        }
+                                    }
+                                }, Looper.getMainLooper());
                     }
-                }, Looper.getMainLooper());
+                    else{
+                        pd.dismiss();
+                        Toast.makeText(
+                                getContext(),
+                                "You don't have friends to share your location",
+                                Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void fetchAddressFromLatLong(Location location){
@@ -534,20 +556,20 @@ public class FeedsFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         for (DataSnapshot ds: snapshot.getChildren()) {
-                            String list_user_id = ds.getKey();
+                            String friend_user_id = ds.getKey();
 
                             HashMap<Object, String> hashMap = new HashMap<>();
                             hashMap.put("wId", timestamp);
-                            hashMap.put("pUid", list_user_id);
+                            hashMap.put("pUid", friend_user_id);
                             hashMap.put("sUid", firebaseAuth.getCurrentUser().getUid());
                             hashMap.put("notification", "Requesting health aid");
                             hashMap.put("timestamp", timestamp);
 
-                            mUserDatabase.child(list_user_id).child("Notifications").child(timestamp)
+                            mUserDatabase.child(friend_user_id).child("Notifications").child(timestamp)
                                     .setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    sendPushNotif(list_user_id, "New Urgent Request", myName, timestamp);
+                                    sendPushNotif(friend_user_id, "New Urgent Request", myName, timestamp);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
