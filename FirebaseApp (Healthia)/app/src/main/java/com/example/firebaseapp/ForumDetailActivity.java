@@ -633,19 +633,36 @@ public class ForumDetailActivity extends AppCompatActivity {
                         //show imageView
                         fImageIv.setVisibility(View.VISIBLE);
                         try{
-                            Picasso.get().load(pImage).into(fImageIv);
+//                            Picasso.get().load(pImage).into(fImageIv);
+                            Glide.with(ForumDetailActivity.this)
+                                    .load(pImage)
+                                    .placeholder(R.drawable.ic_image_black_24)
+                                    .apply(new RequestOptions().centerCrop())
+                                    .into(fImageIv);
                         }
                         catch (Exception e){
 
                         }
+                        fImageIv.setOnClickListener(v->{
+                            Intent intent = new Intent(ForumDetailActivity.this, FullScreenImageActivity.class);
+                            intent.putExtra("postId", fId);
+                            intent.putExtra("type", "Forums");
+                            startActivity(intent);
+                        });
                     }
 
                     //set user image in comment part
                     if (!hisDp.equals("")) {
                         try {
-                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+//                            Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(ForumDetailActivity.this)
+                                    .load(hisDp).placeholder(R.drawable.ic_default_img)
+                                    .into(uPictureIv);
                         } catch (Exception e) {
-                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+//                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(ForumDetailActivity.this)
+                                    .load(R.drawable.ic_default_img)
+                                    .into(uPictureIv);
                         }
                     }
                 }

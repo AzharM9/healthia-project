@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.firebaseapp.ArticleDetailActivity;
+import com.example.firebaseapp.FullScreenImageActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterComments;
 import com.example.firebaseapp.models.ModelComment;
@@ -625,6 +627,12 @@ public class PostDetailActivity extends AppCompatActivity {
                         catch (Exception e){
 
                         }
+                        pImageIv.setOnClickListener(v->{
+                            Intent intent = new Intent(PostDetailActivity.this, FullScreenImageActivity.class);
+                            intent.putExtra("postId", postId);
+                            intent.putExtra("type", "Posts");
+                            startActivity(intent);
+                        });
                     }
 
                     //set user image in comment part

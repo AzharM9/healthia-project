@@ -87,15 +87,6 @@
                         android:layout_marginRight="5dp"
                         android:autoLink="all"/>
 
-<!--                    <androidx.cardview.widget.CardView-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:cardCornerRadius="15dp"-->
-<!--                        app:cardElevation="0dp"-->
-<!--                        >-->
-<!--                        -->
-<!--                        -->
-<!--                    </androidx.cardview.widget.CardView>-->
                     <ImageView
                         android:id="@+id/pImageIv"
                         android:layout_width="match_parent"

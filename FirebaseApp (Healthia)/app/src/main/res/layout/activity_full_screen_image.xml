@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    tools:context=".FullScreenImageActivity">
+
+    <TextView
+        android:id="@+id/postIdString"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="postId-String"
+        android:visibility="gone"/>
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/imgDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_image_black_24"
+        android:adjustViewBounds="true" />
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_background"
+        android:textColor="#ffffff"
+        android:text="Close"
+        android:textSize="12sp"/>
+
+</RelativeLayout>

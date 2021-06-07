@@ -27,6 +27,7 @@ import retrofit2.Callback;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.firebaseapp.FullScreenImageActivity;
 import com.example.firebaseapp.activitys.AddPostActivity;
 import com.example.firebaseapp.activitys.PostDetailActivity;
 import com.example.firebaseapp.R;
@@ -180,8 +181,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             @Override
             public void onClick(View v) {
                 //star PostDetailActivity
-                Intent intent = new Intent(context, PostDetailActivity.class);
+                Intent intent = new Intent(context, FullScreenImageActivity.class);
                 intent.putExtra("postId", pId);
+                intent.putExtra("type", "Posts");
                 context.startActivity(intent);
             }
         });

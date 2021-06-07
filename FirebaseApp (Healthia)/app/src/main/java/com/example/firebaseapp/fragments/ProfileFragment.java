@@ -64,6 +64,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -662,14 +663,21 @@ public class ProfileFragment extends Fragment {
             if (requestCode == IMAGE_PICK_GALLERY_REQUEST_CODE) {
                 //image is picked from gallery, get url of image
                 image_uri = data.getData();
-
+                CropImage.activity(image_uri)
+                        .start(getContext(),this);
                 uploadProfileCoverPhoto(image_uri);
 
             }
             if (requestCode == IMAGE_PICK_CAMERA_REQUEST_CODE) {
                 //image is picked from camera, get uri of image
-
+                CropImage.activity(image_uri)
+                        .start(getContext(),this);
                 uploadProfileCoverPhoto(image_uri);
+            }
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                image_uri = result.getUri();
+
             }
         }
 
@@ -722,7 +730,7 @@ public class ProfileFragment extends Fragment {
                                             //url in database of user is added successfully
                                             //dismiss progress bar
                                             pd.dismiss();
-                                            Toast.makeText(getActivity(), "Image Updated...", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getActivity(), "Image Updated...", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {

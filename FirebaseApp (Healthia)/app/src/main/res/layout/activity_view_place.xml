@@ -10,7 +10,8 @@
         android:orientation="vertical"
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp">
 
         <ImageView
             android:id="@+id/photo"
@@ -18,50 +19,53 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
 
-    <LinearLayout
+        <LinearLayout
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+            <TextView
             android:id="@+id/place_name"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="Place Name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"/>
 
-        <TextView
+            <TextView
             android:id="@+id/place_address"
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="Place Address"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"/>
 
-        <TextView
+            <TextView
             android:id="@+id/place_open_hour"
             android:textSize="18sp"
             android:textStyle="bold"
             android:text="Open Now: "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" />
 
-        <RatingBar
+            <RatingBar
             android:id="@+id/ratingBar"
             android:max="5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <Button
+            <Button
             android:id="@+id/btn_show_map"
             android:text="Show On Map"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

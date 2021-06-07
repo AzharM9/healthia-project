@@ -593,6 +593,13 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         catch (Exception e){
 
                         }
+
+                        aImageIv.setOnClickListener(v->{
+                            Intent intent = new Intent(ArticleDetailActivity.this, FullScreenImageActivity.class);
+                            intent.putExtra("postId", aId);
+                            intent.putExtra("type", "Articles");
+                            startActivity(intent);
+                        });
                     }
 
                     //set user image in comment part
