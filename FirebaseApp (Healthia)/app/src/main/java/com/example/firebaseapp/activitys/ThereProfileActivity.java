@@ -66,7 +66,7 @@ public class ThereProfileActivity extends AppCompatActivity {
     private DatabaseReference mFriendDatabase;
 
     //views from xml
-    CardView cardView;
+    CardView cardView, doctorTagCv;
     ImageView avatarIv, coverIv;
     TextView nameTv, emailTv, phoneTv, ageTv, weightTv, heightTv;
     Button mProfileSendReqBtn, mDeclineBtn;
@@ -94,6 +94,7 @@ public class ThereProfileActivity extends AppCompatActivity {
 
         //init views
         cardView = findViewById(R.id.cardView);
+        doctorTagCv = findViewById(R.id.doctorTag);
         avatarIv = findViewById(R.id.avatarIv);
         coverIv = findViewById(R.id.coverIv);
         nameTv = findViewById(R.id.nameTv);
@@ -135,7 +136,11 @@ public class ThereProfileActivity extends AppCompatActivity {
                     String image = "" + ds.child("image").getValue();
                     String cover = "" + ds.child("cover").getValue();
                     String hideData = "" + ds.child("hideData").getValue();
+                    String role = ""+ds.child("role").getValue();
 
+                    if (role.equals("Doctor")) {
+                        doctorTagCv.setVisibility(View.VISIBLE);
+                    }else doctorTagCv.setVisibility(View.GONE);
                     //set data
                     nameTv.setText(name);
                     emailTv.setText(email);

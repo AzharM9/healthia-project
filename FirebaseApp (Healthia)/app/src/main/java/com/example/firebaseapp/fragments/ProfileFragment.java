@@ -15,6 +15,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -93,6 +94,7 @@ public class ProfileFragment extends Fragment {
 
     //views from xml
     CircleImageView avatarIv;
+    CardView doctorTagCv;
     ImageView coverIv;
     TextView nameTv, emailTv, phoneTv, ageTv, weightTv, heightTv;
     Button mFriendList;
@@ -120,7 +122,7 @@ public class ProfileFragment extends Fragment {
     String uid;
 
     //uri of picked image
-    Uri image_uri;
+    Uri image_uri, downloadUri;
 
     //for checking profile or cover photo
     String profileOrCoverPhoto;
@@ -179,6 +181,7 @@ public class ProfileFragment extends Fragment {
         avatarIv = view.findViewById(R.id.avatarIv);
         coverIv = view.findViewById(R.id.coverIv);
         nameTv = view.findViewById(R.id.nameTv);
+        doctorTagCv = view.findViewById(R.id.doctorTag);
         emailTv = view.findViewById(R.id.emailTv);
         phoneTv = view.findViewById(R.id.phoneTv);
         ageTv = view.findViewById(R.id.ageTv);
@@ -220,6 +223,11 @@ public class ProfileFragment extends Fragment {
                     String weight = "" + ds.child("weight").getValue();
                     String height = "" + ds.child("height").getValue();
                     String hideData = "" + ds.child("hideData").getValue();
+                    String role = ""+ds.child("role").getValue();
+
+                    if (role.equals("Doctor")) {
+                        doctorTagCv.setVisibility(View.VISIBLE);
+                    }else doctorTagCv.setVisibility(View.GONE);
 
                     //set data
                     nameTv.setText(name);
@@ -709,7 +717,7 @@ public class ProfileFragment extends Fragment {
                         //image is uploaded to storage, now get it's url and store in user's database
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful()) ;
-                        Uri downloadUri = uriTask.getResult();
+                        downloadUri = uriTask.getResult();
 
                         //check if image is uploaded or not and url is received
                         if (uriTask.isSuccessful()) {

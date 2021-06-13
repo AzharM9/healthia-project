@@ -154,7 +154,7 @@ public class AddArticleActivity extends AppCompatActivity {
 
         }
 
-        actionBar.setSubtitle(email);
+//        actionBar.setSubtitle(email);
 
         //get some info of current user to include in post
         userDbRef = FirebaseDatabase.getInstance().getReference("Users");

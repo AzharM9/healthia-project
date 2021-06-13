@@ -102,11 +102,37 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/avatarIv" />
 
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/doctorTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="#246EB9"
+                        app:layout_constraintTop_toBottomOf="@+id/nameTv"
+                        app:layout_constraintEnd_toEndOf="@+id/nameTv"
+                        app:layout_constraintStart_toStartOf="@+id/nameTv"
+                        >
+
+                        <TextView
+                            android:id="@+id/aCategoryTag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:maxLines="1"
+                            android:textAlignment="center"
+                            android:text="Doctor"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal" />
+                    </androidx.cardview.widget.CardView>
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/personalInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@+id/nameTv"
+                        app:layout_constraintTop_toBottomOf="@+id/doctorTag"
                         app:layout_constraintEnd_toEndOf="@+id/nameTv"
                         app:layout_constraintStart_toStartOf="@+id/nameTv"
                         >
