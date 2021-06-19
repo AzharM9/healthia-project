@@ -73,7 +73,6 @@ public class ForumDetailActivity extends AppCompatActivity {
     ImageView uPictureIv, fImageIv;
     TextView uNameTv, fTimeTv, fTitleTv, fDescriptionTv, pLikesTv, fCommentsTv, fCategoryTv;
     ImageButton moreBtn;
-//    Button likeBtn;
     LinearLayout profileLayout;
     RecyclerView recyclerView;
 
@@ -110,10 +109,8 @@ public class ForumDetailActivity extends AppCompatActivity {
         fTitleTv = findViewById(R.id.fTitleTv);
         fCategoryTv = findViewById(R.id.fCategoryTv);
         fDescriptionTv = findViewById(R.id.fDescriptionTv);
-//        pLikesTv = findViewById(R.id.pLikesTv);
         fCommentsTv = findViewById(R.id.fCommentsTv);
         moreBtn = findViewById(R.id.moreBtn);
-//        likeBtn = findViewById(R.id.likeBtn);
         profileLayout = findViewById(R.id.profileLayout);
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -130,11 +127,6 @@ public class ForumDetailActivity extends AppCompatActivity {
 
         loadUserInfo();
 
-//        setLikes();
-
-        //set subtitle of action bar
-        //actionBar.setSubtitle("SignedIn as: "+myEmail);
-
         loadComments();
 
         //send comment button click
@@ -145,13 +137,6 @@ public class ForumDetailActivity extends AppCompatActivity {
             }
         });
 
-        //like button click handle
-//        likeBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                likePost();
-//            }
-//        });
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -407,75 +392,6 @@ public class ForumDetailActivity extends AppCompatActivity {
         });
     }
 
-//    private void setLikes() {
-//        //when the details of post is loading, also check if current user has like it or not
-//        DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-//        likesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.child(postId).hasChild(myUid)){
-//                    //user has liked this post
-//                    /*To indicate that the post is liked by this (SignedIn) user
-//                     * Change drawable left icon of like button
-//                     * Change text of like button from "Like" to "Liked"*/
-////                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0,0,0);
-////                    likeBtn.setText("Liked");
-//                }
-//                else{
-//                    //user has not liked this post
-//                    /*To indicate that the post is not liked by this (SignedIn) user
-//                     * Change drawable left icon of like button
-//                     * Change text of like button from "Liked" to "Like"*/
-////                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0,0,0);
-////                    likeBtn.setText("Like");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-//
-//    private void likePost() {
-//        //get total number of likes for the post, whose like like button clicked
-//        //if currently signed in user has not liked it before
-//        //increase value by 1, otherwise decrease value by 1
-//        mProcessLike = true;
-//        //get id of the post clicked
-//        DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-//        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
-//        likesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (mProcessLike){
-//                    if (dataSnapshot.child(postId).hasChild(myUid)){
-//                        //already liked, so remove like
-//                        postsRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)-1));
-//                        likesRef.child(postId).child(myUid).removeValue();
-//                        mProcessLike = false;
-//
-//                    }
-//                    else{
-//                        //not liked, like it
-//                        postsRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)+1));
-//                        likesRef.child(postId).child(myUid).setValue("Liked");
-//                        mProcessLike = false;
-//
-//                        addToHisNotifications(""+hisUid, ""+postId, "Liked your post");
-//
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
     private void postReply() {
         pd = new ProgressDialog(this);
         pd.setMessage("Adding Reply...");
@@ -598,7 +514,6 @@ public class ForumDetailActivity extends AppCompatActivity {
                     String pTitle = ""+ds.child("fTitle").getValue();
                     String fCategory = ""+ds.child("fCategory").getValue();
                     String pDescr = ""+ds.child("fDescription").getValue();
-//                    pLikes = ""+ds.child("fLikes").getValue();
                     String pTimeStamp = ""+ds.child("fTime").getValue();
                     pImage = ""+ds.child("fImage").getValue();
                     hisDp = ""+ds.child("uDp").getValue();
@@ -617,9 +532,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                     fTitleTv.setText(pTitle);
                     fCategoryTv.setText(fCategory);
                     fDescriptionTv.setText(pDescr);
-//                    pLikesTv.setText(pLikes + "Likes");
                     fTimeTv.setText(pTime);
-//                    fCommentsTv.setText(commentCount+ " Comments");
 
                     uNameTv.setText(hisName);
 

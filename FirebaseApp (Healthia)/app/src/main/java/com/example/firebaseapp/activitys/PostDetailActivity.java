@@ -134,9 +134,6 @@ public class PostDetailActivity extends AppCompatActivity {
 
         setLikes();
 
-        //set subtitle of action bar
-        //actionBar.setSubtitle("SignedIn as: "+myEmail);
-
         loadComments();
 
         //send comment button click

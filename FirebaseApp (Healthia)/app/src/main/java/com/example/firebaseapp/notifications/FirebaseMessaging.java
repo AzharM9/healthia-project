@@ -31,7 +31,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
 
-    public static final String NOTIFICATION_CHANNEL_ID = "10001";
     Intent intent;
 
     @Override
@@ -56,7 +55,6 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             }
         }
 
-//        sendFriendRequestNotif(remoteMessage);
     }
 
     private void sendNormalNotification(RemoteMessage remoteMessage) {
@@ -157,50 +155,4 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         notification1.getManager().notify(j, builder.build());
     }
 
-    private void sendFriendRequestNotif(RemoteMessage remoteMessage){
-        //Notification for send Friend Request
-        //get notif data from cloud function
-        String notification_title = remoteMessage.getNotification().getTitle();
-        String notification_body = remoteMessage.getNotification().getBody();
-        String click_action = remoteMessage.getNotification().getClickAction();
-        String from_user_id = remoteMessage.getData().get("from_user_id");
-
-        //create notif
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(notification_title)
-                .setContentText(notification_body)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        //open other user profile base on uid get from cloud function
-        Intent resultIntent = new Intent(click_action);
-        resultIntent.putExtra("uid", from_user_id);
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-        int notificationId = (int) System.currentTimeMillis();
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-        /*validate if android version above Oreo (API 26) or not,
-        API >= 26 need channel for notification*/
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-        {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
-
-            builder.setChannelId(NOTIFICATION_CHANNEL_ID);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-
-        //set pendingIntent on notification
-        builder.setContentIntent(resultPendingIntent);
-
-        //launch notification
-        notificationManager.notify(notificationId, builder.build());
-    }
 }

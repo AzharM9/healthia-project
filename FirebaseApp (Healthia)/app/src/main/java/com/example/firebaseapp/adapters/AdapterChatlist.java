@@ -81,16 +81,6 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             holder.seenMessageIv.setVisibility(View.GONE);
         }
 
-
-        /*//set online status of other users in chatlist
-        if (userList.get(position).getOnlineStatus().equals("online")){
-            //online
-            holder.onlineStatusIv.setImageResource(R.drawable.circle_online);
-        }
-        else{
-            holder.onlineStatusIv.setImageResource(R.drawable.circle_offline);
-        }*/
-
         //handle click of user in chatlist
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

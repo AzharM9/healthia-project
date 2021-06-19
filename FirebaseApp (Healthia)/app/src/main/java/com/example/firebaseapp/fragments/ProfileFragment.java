@@ -42,7 +42,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.AboutUsFragment;
-import com.example.firebaseapp.FeedbackFragment;
 import com.example.firebaseapp.activitys.DashboardActivity;
 import com.example.firebaseapp.activitys.AddNewFriendsActivity;
 import com.example.firebaseapp.activitys.MainActivity;
@@ -919,11 +918,9 @@ public class ProfileFragment extends Fragment {
                 break;
 
             case (R.id.action_feedback):
-                FeedbackFragment fragment3 = new FeedbackFragment();
-                FragmentTransaction ft3 = getActivity().getSupportFragmentManager().beginTransaction();
-                ft3.replace(R.id.content, fragment3, "");
-                ft3.addToBackStack(null);
-                ft3.commit();
+                Uri uri = Uri.parse("https://bit.ly/app_healthia"); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
                 break;
         }
 

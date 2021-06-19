@@ -152,18 +152,6 @@
                             android:drawablePadding="5dp"
                             />
 
-<!--                        <Button-->
-<!--                            android:id="@+id/commentBtn"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:text="COMMENT"-->
-<!--                            style="?android:attr/buttonBarButtonStyle"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:drawableLeft="@drawable/ic_comment_black"-->
-<!--                            android:drawablePadding="5dp"-->
-<!--                            android:background="@color/white"-->
-<!--                            />-->
                     </LinearLayout>
 
                 </LinearLayout>

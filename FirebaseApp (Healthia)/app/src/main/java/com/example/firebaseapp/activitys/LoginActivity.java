@@ -172,10 +172,3 @@ public class LoginActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 }
-
-/*Testing
-* 1. Run project
-* 2. enter invalid email pattern e.g without @, .com, etc
-* 3. enter valid email/password
-* 4. enter not registered email fit should not accepted
-* 5. check registered user in firebase*/

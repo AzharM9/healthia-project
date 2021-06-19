@@ -3,16 +3,12 @@ package com.example.firebaseapp.activitys;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,9 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.firebaseapp.AboutUsFragment;
-import com.example.firebaseapp.FeedbackFragment;
 import com.example.firebaseapp.GetTimeAgo;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterChat;
@@ -43,13 +36,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,11 +128,6 @@ public class ChatActivity extends AppCompatActivity {
                     if (onlineStatus.equals("online")){
                         userStatusTv.setText(onlineStatus);
                     } else {
-                        // convert time stamp to proper time date
-//                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-//                        cal.setTimeInMillis(Long.parseLong(onlineStatus));
-//                        String datetime = DateFormat.format("dd/MM/yyyy hh:mm aa",cal).toString();
-//                        userStatusTv.setText("Last seen at: "+ datetime);
 
                         GetTimeAgo getTimeAgo = new GetTimeAgo();
                         long lastTime = Long.parseLong(onlineStatus);
@@ -407,50 +392,6 @@ public class ChatActivity extends AppCompatActivity {
         //set online
         checkOnlineStatus("online");
         super.onResume();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        //hide search view
-        menu.findItem(R.id.action_search).setVisible(false);
-        menu.findItem(R.id.action_nearby_clinic).setVisible(false);
-        menu.findItem(R.id.action_chatlist).setVisible(false);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //get item id
-        int id = item.getItemId();
-        switch (id){
-            case (R.id.action_about_us):
-                AboutUsFragment fragment2 = new AboutUsFragment();
-                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                ft2.replace(R.id.content, fragment2, "");
-                ft2.addToBackStack(null);
-                ft2.commit();
-                break;
-
-            case (R.id.action_feedback):
-                FeedbackFragment fragment3 = new FeedbackFragment();
-                FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
-                ft3.replace(R.id.content, fragment3, "");
-                ft3.addToBackStack(null);
-                ft3.commit();
-                break;
-
-            case (R.id.action_logout):
-                String timestamp = String.valueOf(System.currentTimeMillis());
-
-                //set offline with last seen timestamp
-                checkOnlineStatus(timestamp);
-                firebaseAuth.signOut();
-                checkUserStatus();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -229,11 +229,3 @@ public class RegisterActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 }
-
-/*Testing
-* 1. Run project
-* 2. Enter Invalid email pattern e.g without @, .com, etc
-* 3. enter empty password or less than 6 characters
-* 4. enter valid email/password
-* 5. enter existing(registered) email (it should not be accepted)
-* 6. check registered user in firebase*/

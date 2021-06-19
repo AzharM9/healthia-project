@@ -75,6 +75,12 @@ public class ViewPlaceActivity extends AppCompatActivity {
                     .placeholder(R.drawable.ic_image_black_24)
                     .error(R.drawable.ic_image_black_24)
                     .into(photo);
+        }else{
+            Picasso.get()
+                    .load(R.drawable.no_image_available)
+                    .placeholder(R.drawable.no_image_available)
+                    .error(R.drawable.no_image_available)
+                    .into(photo);
         }
 
         //Rating

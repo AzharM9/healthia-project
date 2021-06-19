@@ -55,15 +55,11 @@ public class ForumFragment extends Fragment {
     ActionBar actionBar;
 
     Spinner spinner;
-    AutoCompleteTextView dropdown_text;
     RecyclerView recyclerView;
     List<ModelForum> forumList;
     AdapterForum adapterForum;
 
-    ExtendedFloatingActionButton fab, maps;
-
-    //user info
-    String email, uid;
+    ExtendedFloatingActionButton fab;
 
 
     public ForumFragment() {
@@ -96,7 +92,6 @@ public class ForumFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         // init
-        maps = view.findViewById(R.id.maps);
         fab = view.findViewById(R.id.fab);
 
         //show newest posts first, for this load from from last
@@ -140,13 +135,6 @@ public class ForumFragment extends Fragment {
 
         //init post list
         forumList = new ArrayList<>();
-
-        maps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), MapsActivity.class));
-            }
-        });
 
         //handle fab click post
         fab.setOnClickListener(new View.OnClickListener() {
@@ -259,22 +247,6 @@ public class ForumFragment extends Fragment {
             }
         });
     }
-
-    private void checkUserStatus(){
-        //get current user
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-            //user is signed in stay here
-            email = user.getEmail();
-            uid = user.getUid();
-        }else{
-            //user not signed in, go to main activity
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
-        }
-
-    }
-
 
     //inflate option menu
     @Override

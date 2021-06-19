@@ -80,7 +80,7 @@ public class AddForumActivity extends AppCompatActivity {
     String name, email, uid, dp, forumType;
 
     //info of post to be edited
-    String editCategory, editTitle, editDescription, editImage;
+    String editTitle, editDescription, editImage;
 
     //image picked will be samed in this uri
     Uri image_uri = null;
@@ -152,8 +152,6 @@ public class AddForumActivity extends AppCompatActivity {
             uploadBtn.setText("Upload");
 
         }
-
-//        actionBar.setSubtitle(email);
 
         //get some info of current user to include in post
         userDbRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -506,7 +504,6 @@ public class AddForumActivity extends AppCompatActivity {
                                 hashMap.put("fDescription", description);
                                 hashMap.put("fImage", downloadUri);
                                 hashMap.put("fTime", timeStamp);
-//                                hashMap.put("pLikes", "0");
                                 hashMap.put("fReplies", "0");
 
                                 //path to store post data
@@ -560,7 +557,6 @@ public class AddForumActivity extends AppCompatActivity {
             hashMap.put("fDescription", description);
             hashMap.put("fImage", "noImage");
             hashMap.put("fTime", timeStamp);
-//            hashMap.put("pLikes", "0");
             hashMap.put("fReplies", "0");
 
             //path to store post data

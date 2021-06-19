@@ -57,16 +57,14 @@ public class ArticleDetailActivity extends AppCompatActivity {
             aId, pLikes, hisDp, hisName, pImage;
 
     boolean mProcessComment = false;
-    boolean mProcessLike = false;
 
     //progress bar
     ProgressDialog pd;
 
     //views
     ImageView uPictureIv, aImageIv;
-    TextView uNameTv, aTimeTv, aTitleTv, aDescriptionTv, pLikesTv, aCommentsTv, aCategoryTv;
+    TextView uNameTv, aTimeTv, aTitleTv, aDescriptionTv, aCommentsTv, aCategoryTv;
     ImageButton moreBtn;
-//    Button likeBtn;
     LinearLayout profileLayout;
     RecyclerView recyclerView;
 
@@ -101,10 +99,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
         aTitleTv = findViewById(R.id.aTitleTv);
         aCategoryTv = findViewById(R.id.aCategoryTv);
         aDescriptionTv = findViewById(R.id.fDescriptionTv);
-//        pLikesTv = findViewById(R.id.pLikesTv);
         aCommentsTv = findViewById(R.id.fCommentsTv);
         moreBtn = findViewById(R.id.moreBtn);
-//        likeBtn = findViewById(R.id.likeBtn);
         profileLayout = findViewById(R.id.profileLayout);
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -118,94 +114,18 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
         loadUserInfo();
 
-//        setLikes();
-
-        //set subtitle of action bar
-        //actionBar.setSubtitle("SignedIn as: "+myEmail);
-
-//        loadComments();
-
         //send comment button click
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                postReply();
+
             }
         });
 
-        //like button click handle
-//        likeBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                likePost();
-//            }
-//        });
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showMoreOptions();
-            }
-        });
-    }
-
-    private void addToHisNotifications(String hisUid, String pId, String notification) {
-        String timestamp = ""+System.currentTimeMillis();
-
-        HashMap<Object, String > hashMap = new HashMap<>();
-        hashMap.put("aId", pId);
-        hashMap.put("timestamp", timestamp);
-        hashMap.put("fUid", hisUid);
-        hashMap.put("notification", notification);
-        hashMap.put("sUid", myUid);
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(hisUid).child("Notifications").child(timestamp).setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //added successfully
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //failed
-                    }
-                });
-    }
-
-    private void loadComments() {
-        //layout(linear) for recycler view
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        //set layout to recycler view
-        recyclerView.setLayoutManager(layoutManager);
-
-        //init comment list
-        replyList = new ArrayList<>();
-
-        //Path of the post, to get it's comments
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(aId).child("Replies");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                replyList.clear();
-                for (DataSnapshot ds: snapshot.getChildren()){
-                    ModelReply modelReply = ds.getValue(ModelReply.class);
-
-                    replyList.add(modelReply);
-
-                    //setup adapter
-                    adapterReply = new AdapterReply(getApplicationContext(), replyList, myUid, aId);
-
-                    //set adapter
-                    recyclerView.setAdapter(adapterReply);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -356,149 +276,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
         });
     }
 
-//    private void setLikes() {
-//        //when the details of post is loading, also check if current user has like it or not
-//        DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-//        likesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.child(postId).hasChild(myUid)){
-//                    //user has liked this post
-//                    /*To indicate that the post is liked by this (SignedIn) user
-//                     * Change drawable left icon of like button
-//                     * Change text of like button from "Like" to "Liked"*/
-////                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0,0,0);
-////                    likeBtn.setText("Liked");
-//                }
-//                else{
-//                    //user has not liked this post
-//                    /*To indicate that the post is not liked by this (SignedIn) user
-//                     * Change drawable left icon of like button
-//                     * Change text of like button from "Liked" to "Like"*/
-////                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0,0,0);
-////                    likeBtn.setText("Like");
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-//
-//    private void likePost() {
-//        //get total number of likes for the post, whose like like button clicked
-//        //if currently signed in user has not liked it before
-//        //increase value by 1, otherwise decrease value by 1
-//        mProcessLike = true;
-//        //get id of the post clicked
-//        DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-//        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
-//        likesRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (mProcessLike){
-//                    if (dataSnapshot.child(postId).hasChild(myUid)){
-//                        //already liked, so remove like
-//                        postsRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)-1));
-//                        likesRef.child(postId).child(myUid).removeValue();
-//                        mProcessLike = false;
-//
-//                    }
-//                    else{
-//                        //not liked, like it
-//                        postsRef.child(postId).child("pLikes").setValue(""+(Integer.parseInt(pLikes)+1));
-//                        likesRef.child(postId).child(myUid).setValue("Liked");
-//                        mProcessLike = false;
-//
-//                        addToHisNotifications(""+hisUid, ""+postId, "Liked your post");
-//
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
-    private void postReply() {
-        pd = new ProgressDialog(this);
-        pd.setMessage("Adding Reply...");
-
-        //get data from comment edit text
-        String comment = commentEt.getText().toString().trim();
-        //validate
-        if (TextUtils.isEmpty(comment)){
-            //no value is entered
-            Toast.makeText(this, "Reply is empty...", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String timeStamp = String.valueOf(System.currentTimeMillis());
-
-        //each post will have a child "Comments" that will contain comment of that post
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(aId).child("Replies");
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        //put into in hashMap
-        hashMap.put("rId", timeStamp);
-        hashMap.put("reply", comment);
-        hashMap.put("timestamp", timeStamp);
-        hashMap.put("uid", myUid);
-        hashMap.put("uEmail", myEmail);
-        hashMap.put("uDp", myDp);
-        hashMap.put("uName", myName);
-
-        //put this data in db
-        ref.child(timeStamp).setValue(hashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //added
-                        pd.dismiss();
-                        Toast.makeText(ArticleDetailActivity.this, "Reply added...", Toast.LENGTH_SHORT).show();
-                        commentEt.setText("");
-//                        updateReplyCount();
-
-//                        addToHisNotifications(""+hisUid, ""+ aId, "Replied on your forum");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //failed not added
-                        pd.dismiss();
-                        Toast.makeText(ArticleDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void updateReplyCount() {
-        //whenever user adds comment increase the comment count as we did for like count
-        mProcessComment = true;
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Forums").child(aId);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (mProcessComment) {
-                    String comment = ""+ snapshot.child("fReplies").getValue();
-                    int newCommentVal = Integer.parseInt(comment) + 1;
-                    ref.child("fReplies").setValue(""+newCommentVal);
-                    mProcessComment = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
     private void loadUserInfo() {
         //get current user info
         Query myRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -567,9 +344,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     aTitleTv.setText(pTitle);
                     aCategoryTv.setText(aCategory);
                     aDescriptionTv.setText(pDescr);
-//                    pLikesTv.setText(pLikes + "Likes");
                     aTimeTv.setText(pTime);
-//                    fCommentsTv.setText(commentCount+ " Comments");
+
 
                     uNameTv.setText(hisName);
 

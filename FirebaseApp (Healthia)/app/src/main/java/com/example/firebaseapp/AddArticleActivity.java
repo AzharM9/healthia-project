@@ -81,7 +81,7 @@ public class AddArticleActivity extends AppCompatActivity {
     String name, email, uid, dp, forumType;
 
     //info of post to be edited
-    String editCategory, editTitle, editDescription, editImage;
+    String editTitle, editDescription, editImage;
 
     //image picked will be samed in this uri
     Uri image_uri = null;
@@ -507,8 +507,6 @@ public class AddArticleActivity extends AppCompatActivity {
                                 hashMap.put("aDescription", description);
                                 hashMap.put("aImage", downloadUri);
                                 hashMap.put("aTime", timeStamp);
-//                                hashMap.put("pLikes", "0");
-//                                hashMap.put("aReplies", "0");
 
                                 //path to store post data
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Articles");
@@ -561,8 +559,6 @@ public class AddArticleActivity extends AppCompatActivity {
             hashMap.put("aDescription", description);
             hashMap.put("aImage", "noImage");
             hashMap.put("aTime", timeStamp);
-//            hashMap.put("pLikes", "0");
-//            hashMap.put("aReplies", "0");
 
             //path to store post data
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Articles");

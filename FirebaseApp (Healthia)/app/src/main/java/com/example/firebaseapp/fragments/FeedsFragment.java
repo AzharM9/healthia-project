@@ -186,9 +186,7 @@ public class FeedsFragment extends Fragment {
             }
         });
 
-//        loadPosts();
         loadPosts2();
-
 
         setHasOptionsMenu(true); //to show menu option in fragment
         // Inflate the layout for this fragment
@@ -250,36 +248,6 @@ public class FeedsFragment extends Fragment {
                 });
 
 
-
-    }
-    private void loadPosts() {
-        //path of all posts
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
-
-        //get all data from this ref
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    ModelPost modelPost = ds.getValue(ModelPost.class);
-
-                    postList.add(modelPost);
-
-                    //adapter
-                    adapterPosts = new AdapterPosts(getActivity(), postList);
-
-                    //set adapter to recyclerView
-                    recyclerView.setAdapter(adapterPosts);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                //in case of error
-//                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
@@ -513,29 +481,7 @@ public class FeedsFragment extends Fragment {
 
                 uploadAddress(address);
                 Toast.makeText(getContext(), "Sending Request Success", Toast.LENGTH_SHORT).show();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                LinearLayout linearLayout = new LinearLayout(getActivity());
-//                linearLayout.setOrientation(LinearLayout.VERTICAL);
-//                linearLayout.setPadding(10,10,10,10);
-//
-//                ImageView imageView = new ImageView(getActivity());
-//                imageView.setImageResource(R.drawable.baseline_done_24);
-//                TextView textView = new TextView(getActivity());
-//                textView.setText("Sending Request Success");
-//                textView.setTextSize(14f);
-//                textView.setTextColor(Color.parseColor("#FF000000"));
-//                textView.setMaxLines(3);
-//                textView.setPadding(30,20,30,20);
-//                linearLayout.addView(imageView);
-//                linearLayout.addView(textView);
-//                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        dialogInterface.dismiss();
-//                    }
-//                });
-//
-//                builder.create().show();
+
             }
             else {
                 Toast.makeText(getContext(), "Failed getting result address", Toast.LENGTH_SHORT).show();
@@ -626,21 +572,6 @@ public class FeedsFragment extends Fragment {
         });
     }
 
-    private void checkUserStatus(){
-        //get current user
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-            //user is signed in stay here
-            email = user.getEmail();
-            uid = user.getUid();
-        }else{
-            //user not signed in, go to main activity
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
-        }
-
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -683,7 +614,6 @@ public class FeedsFragment extends Fragment {
                     searchPosts(s);
                 }
                 else{
-//                    loadPosts();
                     loadPosts2();
                 }
                 return false;
@@ -696,7 +626,6 @@ public class FeedsFragment extends Fragment {
                     searchPosts(s);
                 }
                 else{
-//                    loadPosts();
                     loadPosts2();
                 }
                 return false;

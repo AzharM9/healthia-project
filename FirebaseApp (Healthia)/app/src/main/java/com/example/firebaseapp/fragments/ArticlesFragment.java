@@ -59,15 +59,14 @@ public class ArticlesFragment extends Fragment {
     DatabaseReference userDbRef;
 
     Spinner spinner;
-    AutoCompleteTextView dropdown_text;
     RecyclerView recyclerView;
     List<ModelArticle> articleList;
     AdapterArticle adapterArticle;
 
-    ExtendedFloatingActionButton fab, maps;
+    ExtendedFloatingActionButton fab;
 
     //user info
-    String email, uid, role;
+    String email, role;
 
 
     public ArticlesFragment() {
@@ -101,7 +100,6 @@ public class ArticlesFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         // init
-        maps = view.findViewById(R.id.maps);
         fab = view.findViewById(R.id.fab);
 
         //show newest posts first, for this load from from last
@@ -167,15 +165,6 @@ public class ArticlesFragment extends Fragment {
             }
         });
 
-
-
-        maps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), MapsActivity.class));
-            }
-        });
-
         //handle fab click post
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,8 +174,6 @@ public class ArticlesFragment extends Fragment {
         });
 
         loadPosts();
-
-
 
         // Inflate the layout for this fragment
         return view;
@@ -287,23 +274,6 @@ public class ArticlesFragment extends Fragment {
             }
         });
     }
-
-    private void checkUserStatus(){
-        //get current user
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if(user != null){
-            //user is signed in stay here
-            email = user.getEmail();
-            uid = user.getUid();
-
-        }else{
-            //user not signed in, go to main activity
-            startActivity(new Intent(getActivity(), MainActivity.class));
-            getActivity().finish();
-        }
-
-    }
-
 
     //inflate option menu
     @Override

@@ -187,39 +187,11 @@
                             android:drawableLeft="@drawable/ic_like_black"
                             android:drawablePadding="5dp"
                             />
-
-<!--                        <Button-->
-<!--                            android:id="@+id/commentBtn"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_weight="1"-->
-<!--                            android:text="COMMENT"-->
-<!--                            style="?android:attr/buttonBarButtonStyle"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:drawableLeft="@drawable/ic_comment_black"-->
-<!--                            android:drawablePadding="5dp"-->
-<!--                            android:background="@color/white"-->
-<!--                            />-->
                     </LinearLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-            <!--List of comments-->
-<!--            <TextView-->
-<!--                android:text="Comments"-->
-<!--                android:textColor="@color/colorBlack"-->
-<!--                android:drawablePadding="5dp"-->
-<!--                android:padding="2dp"-->
-<!--                android:drawableStart="@drawable/ic_comment_black"-->
-<!--                android:drawableLeft="@drawable/ic_comment_black"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                />-->
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/recyclerView"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                tools:listitem="@layout/row_reply"/>-->
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
     <RelativeLayout

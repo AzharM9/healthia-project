@@ -79,7 +79,7 @@ public class AddPostActivity extends AppCompatActivity {
     String name, email, uid, dp;
 
     //info of post to be edited
-    String editTitle, editDescription, editImage;
+    String editDescription, editImage;
 
     //image picked will be samed in this uri
     Uri image_uri = null;
@@ -108,7 +108,6 @@ public class AddPostActivity extends AppCompatActivity {
         checkUserStatus();
 
         //init views
-//        titleEt = findViewById(R.id.pTitleEt);
         descriptionEt = findViewById(R.id.pDescriptionEt);
         imageIv = findViewById(R.id.pImageIv);
         uploadBtn = findViewById(R.id.pUploadBtn);
@@ -131,8 +130,6 @@ public class AddPostActivity extends AppCompatActivity {
             uploadBtn.setText("Upload");
 
         }
-
-//        actionBar.setSubtitle(email);
 
         //get some info of current user to include in post
         userDbRef = FirebaseDatabase.getInstance().getReference("Users");
