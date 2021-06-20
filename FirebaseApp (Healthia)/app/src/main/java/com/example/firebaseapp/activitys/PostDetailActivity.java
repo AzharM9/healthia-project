@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.firebaseapp.ArticleDetailActivity;
+import com.example.firebaseapp.ForumDetailActivity;
 import com.example.firebaseapp.FullScreenImageActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterComments;
@@ -270,6 +271,7 @@ public class PostDetailActivity extends AppCompatActivity {
         //show delete option  in only post(s) of currently signed-in user
         //add items in menu
         if (hisUid.equals(myUid)) {
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
             popupMenu.getMenu().add(Menu.NONE, 1, 0, "Edit");
         } else {
             popupMenu.getMenu().add(Menu.NONE, 2, 0, "Visit Profile");
@@ -280,7 +282,31 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 int id = menuItem.getItemId();
-                if(id == 1){
+                if (id == 0){
+                    //delete
+                    //delete is clicked
+                    //show delete message confirm dialog
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDetailActivity.this);
+                    builder.setTitle("Delete");
+                    builder.setMessage("Are you sure to delete this post?");
+                    //delete button
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            beginDelete();
+                            onBackPressed();
+                        }
+                    });
+                    //cancel delete button
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    // create and show dialog
+                    builder.create().show();
+                } else if(id == 1){
                     //Edit is clicked
                     //start AddPostActivity with key "editPost" and the id of the post clicked
                     Intent intent = new Intent(PostDetailActivity.this, AddPostActivity.class);

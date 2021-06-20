@@ -275,6 +275,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             beginDelete();
+                            onBackPressed();
                         }
                     });
                     //cancel delete button
