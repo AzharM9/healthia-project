@@ -388,8 +388,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
                                     .apply(new RequestOptions().override(50,50))
                                     .into(uPictureIv);
                         } catch (Exception e) {
-                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
-                            Glide.with(ArticleDetailActivity.this)
+//                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                            Glide.with(getApplicationContext())
                                     .load(R.drawable.ic_default_img)
                                     .apply(new RequestOptions().override(50,50))
                                     .into(uPictureIv);

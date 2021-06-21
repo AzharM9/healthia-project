@@ -574,7 +574,7 @@ public class ForumDetailActivity extends AppCompatActivity {
                                     .into(uPictureIv);
                         } catch (Exception e) {
 //                            Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
-                            Glide.with(ForumDetailActivity.this)
+                            Glide.with(getApplicationContext())
                                     .load(R.drawable.ic_default_img)
                                     .into(uPictureIv);
                         }
