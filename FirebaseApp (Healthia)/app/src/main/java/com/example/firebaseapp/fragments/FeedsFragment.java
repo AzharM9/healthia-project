@@ -202,6 +202,7 @@ public class FeedsFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list_user_id.clear();
+                        list_user_id.add(uid);
                         for (DataSnapshot ds: snapshot.getChildren()) {
 //                            list_user_id = ds.getKey();
 
@@ -219,7 +220,7 @@ public class FeedsFragment extends Fragment {
                                         ModelPost modelPost = ds.getValue(ModelPost.class);
 
                                         for (int i=0; i<list_user_id.size() ;i++){
-                                            if(modelPost.getUid().equals(uid) || modelPost.getUid().equals(list_user_id.get(i))){
+                                            if(modelPost.getUid().equals(list_user_id.get(i))){
                                                 postList.add(modelPost);
                                             }
                                         }
