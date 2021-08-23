@@ -61,9 +61,10 @@
 
                 <TextView
                     android:id="@+id/uNameTv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="Name"
                     android:textSize="12sp" />
 

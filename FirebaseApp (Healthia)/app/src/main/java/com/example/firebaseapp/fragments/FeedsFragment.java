@@ -15,7 +15,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
@@ -37,7 +36,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +46,6 @@ import com.example.firebaseapp.FetchAddressIntentService;
 import com.example.firebaseapp.MapsActivity;
 import com.example.firebaseapp.activitys.AddPostActivity;
 import com.example.firebaseapp.activitys.DashboardActivity;
-import com.example.firebaseapp.activitys.MainActivity;
 import com.example.firebaseapp.R;
 import com.example.firebaseapp.adapters.AdapterPosts;
 import com.example.firebaseapp.models.ModelPost;
@@ -66,7 +63,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -186,14 +182,14 @@ public class FeedsFragment extends Fragment {
             }
         });
 
-        loadPosts2();
+        loadPosts();
 
         setHasOptionsMenu(true); //to show menu option in fragment
         // Inflate the layout for this fragment
         return view;
     }
 
-    private void loadPosts2(){
+    private void loadPosts(){
 
         DatabaseReference mFriendsDatabase = FirebaseDatabase.getInstance().getReference("Friends");
 
@@ -203,6 +199,36 @@ public class FeedsFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list_user_id.clear();
                         list_user_id.add(uid);
+                        if (!snapshot.exists()){
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                            //query to load posts
+                            /*whenever user publishes a post the uid of this user is also saved as info of post
+                             * so we're retrieving posts having uid equal to uid of current user*/
+                            Query query = ref.orderByChild("uid").equalTo(uid);
+                            //get all data from this ref
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    postList.clear();
+                                    for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                        ModelPost myPosts = ds.getValue(ModelPost.class);
+
+                                        //add to list
+                                        postList.add(myPosts);
+
+                                        //adapter
+                                        adapterPosts = new AdapterPosts(getActivity(), postList);
+                                        //set this adapter to recyclerview
+                                        recyclerView.setAdapter(adapterPosts);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
                         for (DataSnapshot ds: snapshot.getChildren()) {
 //                            list_user_id = ds.getKey();
 
@@ -615,7 +641,7 @@ public class FeedsFragment extends Fragment {
                     searchPosts(s);
                 }
                 else{
-                    loadPosts2();
+                    loadPosts();
                 }
                 return false;
             }
@@ -627,7 +653,7 @@ public class FeedsFragment extends Fragment {
                     searchPosts(s);
                 }
                 else{
-                    loadPosts2();
+                    loadPosts();
                 }
                 return false;
             }

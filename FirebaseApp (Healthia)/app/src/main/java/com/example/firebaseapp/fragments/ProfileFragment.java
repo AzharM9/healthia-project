@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.provider.MediaStore;
-import android.text.TextUtils;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -483,6 +483,16 @@ public class ProfileFragment extends Fragment {
 
         //add edit text
         EditText editText = new EditText(getActivity());
+        if(key.equals("name")){
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
+        if (key.equals("phone")){
+            editText.setInputType(InputType.TYPE_CLASS_PHONE);
+        }
+        if (key.equals("age") || key.equals("weight") || key.equals("height")){
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
+
         editText.setHint("Enter " + key); //hint e.g. Edit name or Edit Phone
         linearLayout.addView(editText);
 
@@ -495,7 +505,17 @@ public class ProfileFragment extends Fragment {
                 //input text from edit text
                 String value = editText.getText().toString().trim();
                 //validate if user has entered something or not
-                if (!TextUtils.isEmpty(value)) {
+                if (key.equals("name") && value.length() < 3 || value.length() > 25){
+                    Toast.makeText(getActivity(), "name at least 3-25 characters", Toast.LENGTH_SHORT).show();
+                }else if (key.equals("phone") && value.length() < 10 || value.length() > 12){
+                    Toast.makeText(getActivity(), "phone number at least 10-12 digits", Toast.LENGTH_SHORT).show();
+                }else if (key.equals("age") && Integer.parseInt(value) > 100){
+                    Toast.makeText(getActivity(), "age must below 100", Toast.LENGTH_SHORT).show();
+                }else if (key.equals("weight") && Integer.parseInt(value) > 100){
+                    Toast.makeText(getActivity(), "weight must below 100", Toast.LENGTH_SHORT).show();
+                }else if (key.equals("height") && Integer.parseInt(value) > 200){
+                    Toast.makeText(getActivity(), "height must below 200", Toast.LENGTH_SHORT).show();
+                }else {
                     pd.show();
                     HashMap<String, Object> result = new HashMap<>();
                     result.put(key, value);
@@ -569,8 +589,6 @@ public class ProfileFragment extends Fragment {
                             }
                         });
                     }
-                } else {
-                    Toast.makeText(getActivity(), "Please enter " + key, Toast.LENGTH_SHORT).show();
                 }
             }
         });

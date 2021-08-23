@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String userRole = adapterView.getItemAtPosition(i).toString();
                 switch (userRole){
-                    case "Non Doctor":
+                    case "Normal User":
                         mRegisterEt.setVisibility(View.GONE);
                         mRegisterEt.setText("0000000000000000");
                         role = userRole;
@@ -134,8 +134,8 @@ public class RegisterActivity extends AppCompatActivity {
                     mPasswordEt.setError("Password length at least 6 characters");
                     mPasswordEt.setFocusable(true);
                 }
-                else if (!Patterns.PHONE.matcher(phone).matches()||phone.length() < 11 || phone.length() > 12){
-                    mPhoneEt.setError("Phone number length at least 11 digits and not including characters");
+                else if (!Patterns.PHONE.matcher(phone).matches()||phone.length() < 10 || phone.length() > 12){
+                    mPhoneEt.setError("Phone number length at least 10 digits and not including characters");
                 }
                 else if (!Patterns.PHONE.matcher(registerNum).matches()
                         || registerNum.length() < 16 || registerNum.length() > 16){
